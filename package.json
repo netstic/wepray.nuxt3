@@ -15,6 +15,9 @@
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
+    "@nuxtjs/i18n": "^8.1.1",
+    "@pinia/nuxt": "^0.5.1",
+    "@vueuse/nuxt": "^10.9.0",
     "autoprefixer": "^10.4.17",
     "daisyui": "^4.7.2",
     "postcss": "^8.4.35",

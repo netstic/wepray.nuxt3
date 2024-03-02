@@ -16,28 +16,23 @@
         ></login-partial>
       </div> -->
 
-      <div class="hero max-w-[1024px] my-auto">
+      <div class="hero max-w-[1024px] my-auto mb-10">
         <div class="hero-content flex-col lg:flex-row-reverse">
           <div class="text-center lg:text-left">
             <h1 class="text-5xl font-bold">
-              <span class="text-primary font-medium"> Join us in </span> prayer
-              <span class="text-primary font-medium">and</span> connection!
+              <span class="text-primary font-medium"> Junte-se a nós em </span>
+              oração <span class="text-primary font-medium">e</span> conexão!
             </h1>
             <p class="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
+              Porque, onde estiverem dois ou três reunidos em meu nome, aí estou
+              eu no meio deles.
+              <span class="flex justify-end font-mono text-xs">
+                Mateus 18:20
+              </span>
             </p>
-            <p class="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
-            </p>
-            <p class="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
-            </p>
+            <div class="px-4">
+              <LazyHomeCardPosts></LazyHomeCardPosts>
+            </div>
           </div>
           <HomeLoginPartial></HomeLoginPartial>
         </div>
@@ -79,15 +74,15 @@
 
 <script setup lang="ts">
 useHead({
-  title: "Home",
+  title: 'Home',
   htmlAttrs: {
-    "data-theme": "wp",
+    'data-theme': 'wp',
   },
   meta: [
     {
-      hid: "description",
-      name: "description",
-      content: "Home page",
+      hid: 'description',
+      name: 'description',
+      content: 'Home page',
     },
   ],
 });

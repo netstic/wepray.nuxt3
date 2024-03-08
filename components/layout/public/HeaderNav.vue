@@ -14,7 +14,7 @@
           <path d="M0 25 C 60 60 40 150 100 -8 Z"></path>
         </svg>
         <div
-          class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 py-2"
+          class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 py-2 max-w-[1024px]"
         >
           <div class="pl-4 flex items-center">
             <a
@@ -59,26 +59,26 @@
             <ul class="list-reset lg:flex justify-end flex-1 items-center">
               <li class="mr-3">
                 <a
-                  class="inline-block py-2 px-4 font-bold no-underline toggleColour"
+                  class="inline-block py-2 px-4 font-bold no-underline toggleColour rounded-md"
                   href="/#"
                 >
-                  <i class="mdi mdi-home"></i> {{ $t("Home") }}
+                  <i class="mdi mdi-home"></i> {{ $t('Home') }}
                 </a>
               </li>
               <li class="mr-3">
                 <nuxt-link
-                  class="inline-block py-2 px-4 font-bold no-underline toggleColour"
+                  class="inline-block py-2 px-4 font-bold no-underline toggleColour rounded-md"
                   to="/explore"
                 >
-                  <i class="mdi mdi-compass"></i> {{ $t("Explore") }}
+                  <i class="mdi mdi-compass"></i> {{ $t('Explore') }}
                 </nuxt-link>
               </li>
               <li class="mr-3">
                 <nuxt-link
-                  class="inline-block py-2 px-4 font-bold no-underline toggleColour"
+                  class="inline-block py-2 px-4 font-bold no-underline toggleColour rounded-md"
                   to="/login"
                 >
-                  <i class="mdi mdi-login-variant"></i> {{ $t("Login") }}
+                  <i class="mdi mdi-login-variant"></i> {{ $t('Login') }}
                 </nuxt-link>
               </li>
             </ul>

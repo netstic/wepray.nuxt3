@@ -20,5 +20,5 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@pinia/nuxt', '@nuxtjs/i18n', '@vueuse/nuxt'],
+  modules: ['@pinia/nuxt', '@nuxtjs/i18n', '@vueuse/nuxt', 'radix-vue'],
 });

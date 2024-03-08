@@ -2,7 +2,7 @@
   <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
     <div class="card-body gap-4">
       <h2 class="card-title">
-        {{ $t("Login") }}
+        {{ $t('Login') }}
       </h2>
 
       <form-input-error :errors="errors"></form-input-error>
@@ -52,7 +52,7 @@
               name="remember"
               class="checkbox"
             />
-            <span class="label-text">{{ $t("Remember Me") }}</span>
+            <span class="label-text">{{ $t('Remember Me') }}</span>
           </label>
         </div>
         <!-- <div class="block mt-4">
@@ -70,12 +70,21 @@
         </div> -->
 
         <nuxt-link class="link" to="/auth/forgot-password">
-          {{ $t("Forgot your password?") }}
+          {{ $t('Forgot your password?') }}
         </nuxt-link>
 
         <div class="form-control">
           <button type="button" class="btn btn-primary" @click="postLogin">
-            {{ $t("Login") }}
+            {{ $t('Login') }}
+          </button>
+        </div>
+        <div class="form-control">
+          <button
+            type="button"
+            class="btn btn-outline btn-secondary btn-sm active:animate-pulse"
+            @click="postLogin"
+          >
+            {{ $t('Sign Up') }}
           </button>
         </div>
       </form>
@@ -89,8 +98,8 @@
 <script setup lang="ts">
 const showPassword = ref(false);
 const row = ref({
-  email: "",
-  password: "",
+  email: '',
+  password: '',
   remember: false,
 });
 const errors = ref({});
@@ -100,77 +109,5 @@ const onShowPassword = () => {
 const back = () => {
   window.history.back();
 };
-const postLogin = () => {
-  //   this.$auth.reset('laravelSanctum')
-  //   this.$auth
-  //     .loginWith('laravelSanctum', {
-  //       data: row.value,
-  //     })
-  //     .then(
-  //       (res) => {
-  //         this.$nuxt.setLayout(
-  //           this.$store.state.auth.loggedIn ? 'private' : 'public'
-  //         )
-  //       },
-  //       (e) => {
-  //         const { data } = e.response
-  //         errors.value = data.errors
-  //       }
-  //     )
-  //     .catch((e) => {
-  //       this.$auth.logout('laravelSanctum')
-  //     })
-};
-
-//   export default {
-//     data() {
-//       return {
-//         showPassword: false,
-//         row: {
-//           email: '',
-//           password: '',
-//           remember: false,
-//         },
-//         errors: {},
-//       }
-//     },
-//     mounted() {
-//       setTimeout(async () => {
-//         if (this.$store.state.auth.loggedIn) {
-//           await this.$auth.fetchUser()
-//         }
-//       }, 800)
-//     },
-
-//     methods: {
-//       onShowPassword() {
-//         this.showPassword = !this.showPassword
-//       },
-//       back() {
-//         window.history.back()
-//       },
-//       postLogin() {
-//         this.$auth.reset('laravelSanctum')
-//         this.$auth
-//           .loginWith('laravelSanctum', {
-//             data: this.row,
-//           })
-//           .then(
-//             (res) => {
-//               this.$nuxt.setLayout(
-//                 this.$store.state.auth.loggedIn ? 'private' : 'public'
-//               )
-//             },
-//             (e) => {
-//               const { data } = e.response
-
-//               this.errors = data.errors
-//             }
-//           )
-//           .catch((e) => {
-//             this.$auth.logout('laravelSanctum')
-//           })
-//       },
-//     },
-//   }
+const postLogin = () => {};
 </script>

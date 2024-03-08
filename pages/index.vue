@@ -2,7 +2,7 @@
   <div>
     <div
       v-if="!loggedInUser"
-      class="flex justify-center items-center flex-col gap-4"
+      class="flex justify-center items-center flex-col gap-8"
     >
       <!-- <div class="flex flex-wrap bg-white">
         <div
@@ -16,8 +16,8 @@
         ></login-partial>
       </div> -->
 
-      <div class="hero max-w-[1024px] my-auto mb-10">
-        <div class="hero-content flex-col lg:flex-row-reverse">
+      <div class="hero max-w-[1024px] my-auto mb-32">
+        <div class="hero-content flex-col-reverse lg:flex-row-reverse">
           <div class="text-center lg:text-left">
             <h1 class="text-5xl font-bold">
               <span class="text-primary font-medium"> Junte-se a nós em </span>
@@ -30,11 +30,85 @@
                 Mateus 18:20
               </span>
             </p>
-            <div class="px-4">
+            <div class="px-4 h-[280px]">
               <LazyHomeCardPosts></LazyHomeCardPosts>
             </div>
           </div>
           <HomeLoginPartial></HomeLoginPartial>
+        </div>
+      </div>
+      <div class="clear-both"></div>
+      <div class="hero max-w-[1024px] my-auto mb-10">
+        <div class="hero-content flex-col lg:flex-row-reverse">
+          <div class="card shrink-0 w-full max-w-md shadow-2xl bg-base-100">
+            <form class="card-body">
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Email</span>
+                </label>
+                <input
+                  type="email"
+                  placeholder="email"
+                  class="input input-bordered"
+                  required
+                />
+              </div>
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Password</span>
+                </label>
+                <input
+                  type="password"
+                  placeholder="password"
+                  class="input input-bordered"
+                  required
+                />
+                <label class="label">
+                  <a href="#" class="label-text-alt link link-hover"
+                    >Forgot password?</a
+                  >
+                </label>
+              </div>
+              <div class="form-control mt-6">
+                <button class="btn btn-primary">Login</button>
+              </div>
+            </form>
+          </div>
+          <!-- .env form -->
+          <div class="card shrink-0 w-full max-w-md shadow-2xl bg-base-100">
+            <form class="card-body">
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Email</span>
+                </label>
+                <input
+                  type="email"
+                  placeholder="email"
+                  class="input input-bordered"
+                  required
+                />
+              </div>
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Password</span>
+                </label>
+                <input
+                  type="password"
+                  placeholder="password"
+                  class="input input-bordered"
+                  required
+                />
+                <label class="label">
+                  <a href="#" class="label-text-alt link link-hover"
+                    >Forgot password?</a
+                  >
+                </label>
+              </div>
+              <div class="form-control mt-6">
+                <button class="btn btn-primary">Login</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
 

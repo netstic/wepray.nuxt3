@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex flex-col gap-4 h-max">
+    <div class="flex flex-col gap-4">
       <CardPost
         class="absolute ease-in-out duration-300"
         v-for="(item, index) in posts"

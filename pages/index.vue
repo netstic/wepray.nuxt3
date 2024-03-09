@@ -17,8 +17,11 @@
       </div> -->
 
       <div class="hero max-w-[1024px] my-auto mb-32">
-        <div class="hero-content flex-col-reverse lg:flex-row-reverse">
-          <div class="text-center lg:text-left">
+        <div
+          class="hero-content items-start grid grid-cols-1 gap-4 lg:grid-cols-11 lg:gap-8 mx-auto"
+        >
+          <HomeLoginPartial class="col-span-4"></HomeLoginPartial>
+          <div class="text-center lg:text-left col-span-7">
             <h1 class="text-5xl font-bold">
               <span class="text-primary font-medium"> Junte-se a nós em </span>
               oração <span class="text-primary font-medium">e</span> conexão!
@@ -34,17 +37,16 @@
               <LazyHomeCardPosts></LazyHomeCardPosts>
             </div>
           </div>
-          <HomeLoginPartial></HomeLoginPartial>
         </div>
       </div>
       <div class="clear-both"></div>
       <div class="hero max-w-[1024px] mb-10">
         <div
-          class="hero-content items-start grid grid-cols-1 gap-4 lg:grid-cols-8 lg:gap-8 mx-auto"
+          class="hero-content items-start grid grid-cols-1 gap-4 lg:grid-cols-11 lg:gap-8 mx-auto"
         >
-          <HomeRegisterPartial class="col-span-3"></HomeRegisterPartial>
+          <HomeRegisterPartial class="col-span-4"></HomeRegisterPartial>
           <HomeCardCreatePostPartial
-            class="col-span-5"
+            class="col-span-7"
           ></HomeCardCreatePostPartial>
         </div>
       </div>

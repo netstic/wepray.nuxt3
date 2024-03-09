@@ -1,6 +1,7 @@
 ---
 title: About Us
 description: ''
+lang: 'en'
 ---
 
 WePray.org is an environment that encourages you to pray more.

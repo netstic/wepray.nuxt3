@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex flex-col gap-4">
+    <div class="">
       <CardPost
         class="absolute ease-in-out duration-300"
         v-for="(item, index) in posts"
@@ -9,12 +9,12 @@
         :class="{
           'z-10': isAtivo(index),
           'z-0': !isAtivo(index),
-          'mt-0': isAtivo(index),
-          'mt-4 ml-4': !isAtivo(index),
+          'mt-0 rounded-3xl shadow-2xl': isAtivo(index),
+          'mt-4 ml-24 opacity-60': !isAtivo(index),
         }"
       >
         <template #nav>
-          <div class="join">
+          <div class="join" v-if="isAtivo(index)">
             <button
               class="join-item btn"
               @click="btnPrevious"
@@ -84,6 +84,9 @@ const btnNext = () => {
     indexItem.value = currentIndex.value % 2 ? 1 : 0;
     console.log('currentIndex.value', currentIndex.value);
     console.log('indexItem.value', indexItem.value);
+  } else {
+    indexItem.value = 0;
+    currentIndex.value = 0;
   }
 };
 

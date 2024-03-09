@@ -49,9 +49,6 @@
         </div>
       </div>
     </div>
-    <client-only>
-      <home-rank-posts v-if="loggedInUser"> </home-rank-posts>
-    </client-only>
   </div>
 </template>
 

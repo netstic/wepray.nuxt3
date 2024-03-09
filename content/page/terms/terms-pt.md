@@ -1,6 +1,7 @@
 ---
 title: Termos de serviço
 description: ''
+lang: 'pt'
 ---
 
 Última atualização: 01 de Outubro de 2021

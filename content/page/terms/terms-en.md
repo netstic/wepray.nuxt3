@@ -1,6 +1,7 @@
 ---
 title: Terms of Service
 description: ''
+lang: 'en'
 ---
 
 Last updated: October 01, 2021

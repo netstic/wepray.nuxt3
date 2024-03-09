@@ -1,6 +1,7 @@
 ---
 title: Política de privacidade
 descrição: ''
+lang: pt
 ---
 
 Última atualização: 01 de outubro de 2021

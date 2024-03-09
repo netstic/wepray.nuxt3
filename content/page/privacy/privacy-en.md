@@ -1,6 +1,7 @@
 ---
 title: Privacy Policy
 description: ''
+lang: en
 ---
 
 Last uptaded: October 01, 2021

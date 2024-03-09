@@ -38,107 +38,16 @@
         </div>
       </div>
       <div class="clear-both"></div>
-      <div class="hero max-w-[1024px] my-auto mb-10">
-        <div class="hero-content flex-col lg:flex-row-reverse">
-          <div class="card shrink-0 w-full max-w-md shadow-2xl bg-base-100">
-            <form class="card-body">
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">Email</span>
-                </label>
-                <input
-                  type="email"
-                  placeholder="email"
-                  class="input input-bordered"
-                  required
-                />
-              </div>
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">Password</span>
-                </label>
-                <input
-                  type="password"
-                  placeholder="password"
-                  class="input input-bordered"
-                  required
-                />
-                <label class="label">
-                  <a href="#" class="label-text-alt link link-hover"
-                    >Forgot password?</a
-                  >
-                </label>
-              </div>
-              <div class="form-control mt-6">
-                <button class="btn btn-primary">Login</button>
-              </div>
-            </form>
-          </div>
-          <!-- .env form -->
-          <div class="card shrink-0 w-full max-w-md shadow-2xl bg-base-100">
-            <form class="card-body">
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">Email</span>
-                </label>
-                <input
-                  type="email"
-                  placeholder="email"
-                  class="input input-bordered"
-                  required
-                />
-              </div>
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">Password</span>
-                </label>
-                <input
-                  type="password"
-                  placeholder="password"
-                  class="input input-bordered"
-                  required
-                />
-                <label class="label">
-                  <a href="#" class="label-text-alt link link-hover"
-                    >Forgot password?</a
-                  >
-                </label>
-              </div>
-              <div class="form-control mt-6">
-                <button class="btn btn-primary">Login</button>
-              </div>
-            </form>
-          </div>
+      <div class="hero max-w-[1024px] mb-10">
+        <div
+          class="hero-content items-start grid grid-cols-1 gap-4 lg:grid-cols-8 lg:gap-8 mx-auto"
+        >
+          <HomeRegisterPartial class="col-span-3"></HomeRegisterPartial>
+          <HomeCardCreatePostPartial
+            class="col-span-5"
+          ></HomeCardCreatePostPartial>
         </div>
       </div>
-
-      <br />
-      <section id="section-post-register w-full">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          version="1.1"
-          width="100%"
-          height="60"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-          class="svg-page2"
-        >
-          <path d="M0 0 C 60 20 40 150 100 -8 Z"></path>
-        </svg>
-        <div class="flex flex-wrap mb-10">
-          <create-post-partial
-            class="w-full flex items-center text-center lg:text-left px-3 md:px-8 lg:w-1/2"
-          ></create-post-partial>
-
-          <register-partial
-            class="w-full flex items-center text-center mt-5 lg:text-left px-3 md:px-8 lg:w-1/2"
-          ></register-partial>
-        </div>
-        <br />
-        <br />
-        <br />
-        <br />
-      </section>
     </div>
     <client-only>
       <home-rank-posts v-if="loggedInUser"> </home-rank-posts>

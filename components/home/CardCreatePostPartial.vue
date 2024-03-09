@@ -1,7 +1,89 @@
 <template>
-  <div></div>
+  <div class="card shrink-0 shadow-2xl bg-base-100">
+    <div class="card-body gap-4">
+      <h2 class="card-title">
+        {{ $t('Send a Prayer Request') }}
+      </h2>
+
+      <!-- <form-input-error :errors="errors"></form-input-error> -->
+      <form method="POST" class="flex flex-col gap-4">
+        <div role="alert" class="alert">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            class="stroke-slate-500 shrink-0 w-4 h-4"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
+          </svg>
+          <span class="text-slate-600">
+            {{ $t('E-mail (It will not be published)') }}</span
+          >
+        </div>
+
+        <label class="input input-bordered flex items-center gap-2">
+          {{ $t('Name') }}
+          <input
+            type="text"
+            class="grow"
+            id="name"
+            v-model="row.name"
+            required
+          />
+        </label>
+        <div class="form-control justify-start items-start gap-4">
+          <label class="label cursor-pointer gap-4">
+            <input
+              v-model="row.anonymous"
+              type="checkbox"
+              name="anonymous"
+              class="checkbox"
+            />
+            <span class="label-text">{{
+              $t('Please do not post my name.')
+            }}</span>
+          </label>
+        </div>
+        <label class="input input-bordered flex items-center gap-2">
+          {{ $t('Email') }}
+          <input
+            type="email"
+            class="grow"
+            id="email"
+            v-model="row.email"
+            required
+          />
+        </label>
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">
+              {{ $t('What would you like us to pray about?') }}
+            </span>
+          </div>
+          <textarea
+            class="textarea textarea-bordered h-24"
+            id="body"
+            ref="body"
+            v-model="row.body"
+            name="body"
+          ></textarea>
+        </label>
+
+        <div class="form-control">
+          <button type="button" class="btn btn-primary" @click="onSubmit">
+            {{ $t('Publish') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </template>
-<script>
+<script setup lang="ts">
 const sucesso = ref(false);
 const row = ref({
   name: null,

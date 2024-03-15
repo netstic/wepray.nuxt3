@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-white py-8 w-full">
+  <footer class="bg-white py-8 w-full hidden">
     <div class="mx-auto px-8 max-w-[1024px]">
       <div class="table w-full">
         <div class="block sm:table-cell mb-5">
@@ -70,6 +70,38 @@
         </div>
       </div>
     </div>
+  </footer>
+  <footer class="footer p-10 bg-base-200 text-base-content">
+    <aside class="flex justify-center items-center text-center">
+      <a
+        href="https://www.revivalandreformation.org/"
+        target="_black"
+        rel="noreferrer noopener"
+        class="m-auto"
+      >
+        <img
+          src="https://euoro.wepray.org/img/R-R-Logo.png"
+          alt="REVIVAL & REFORMATION"
+          title="REVIVAL & REFORMATION"
+        />
+      </a>
+    </aside>
+    <nav>
+      <h6 class="footer-title">{{ $t('Legal') }}</h6>
+      <nuxt-link class="link link-hover" to="/page/terms">
+        {{ $t('Terms of Use') }}
+      </nuxt-link>
+      <nuxt-link class="link link-hover" to="/page/privacy">
+        {{ $t('Privacy policy') }}
+      </nuxt-link>
+    </nav>
+    <nav>
+      <h6 class="footer-title">Company</h6>
+      <a class="link link-hover">About us</a>
+      <a class="link link-hover">Contact</a>
+      <a class="link link-hover">Jobs</a>
+      <a class="link link-hover">Press kit</a>
+    </nav>
   </footer>
 </template>
 <script setup lang="ts"></script>

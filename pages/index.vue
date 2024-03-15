@@ -20,27 +20,31 @@
         <div
           class="hero-content items-start grid grid-cols-1 gap-4 lg:grid-cols-11 lg:gap-8 mx-auto"
         >
-          <HomeLoginPartial class="col-span-4"></HomeLoginPartial>
-          <div class="text-center lg:text-left col-span-7">
-            <h1 class="text-5xl font-bold">
+          <!-- <HomeLoginPartial class="col-span-4"></HomeLoginPartial> -->
+          <div class="text-center lg:text-left col-span-11">
+            <h1 class="text-5xl font-bold text-center">
               <span class="text-primary font-medium"> Junte-se a nós em </span>
               oração <span class="text-primary font-medium">e</span> conexão!
             </h1>
-            <p class="py-6">
+            <p class="py-6 text-center">
               Porque, onde estiverem dois ou três reunidos em meu nome, aí estou
               eu no meio deles.
               <span class="flex justify-end font-mono text-xs">
                 Mateus 18:20
               </span>
             </p>
-            <div class="px-4 h-[280px]">
-              <LazyHomeCardPosts></LazyHomeCardPosts>
+            <p class="flex items-center justify-center p-8 gap-6">
+              <button class="btn btn-primary">Faça o pedido de oração</button>
+              <button class="btn">Conexão com comunidade</button>
+            </p>
+            <div class="p-4 h-[480px] flex items-start justify-center">
+              <LazyHomeCardPosts class="w-[500px]"></LazyHomeCardPosts>
             </div>
           </div>
         </div>
       </div>
       <div class="clear-both"></div>
-      <div class="hero max-w-[1024px] mb-10">
+      <!-- <div class="hero max-w-[1024px] mb-10">
         <div
           class="hero-content items-start grid grid-cols-1 gap-4 lg:grid-cols-11 lg:gap-8 mx-auto"
         >
@@ -49,7 +53,7 @@
             class="col-span-7"
           ></HomeCardCreatePostPartial>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

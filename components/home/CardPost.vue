@@ -65,7 +65,6 @@ interface Props {
 const props = defineProps<Props>();
 
 const isShowImg = computed(() => {
-  console.log('item?.user?.img_show', props.item?.user?.img_show);
   return props.item?.user?.img_show ?? false;
 });
 

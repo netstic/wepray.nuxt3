@@ -17,7 +17,6 @@ export const useAuth = () => {
         user.value = data;
       },
       (e) => {
-        console.log(e);
         clearToken();
       }
     );
@@ -34,25 +33,18 @@ export const useAuth = () => {
         ] = `Bearer ${res.authorisation.token}`;
         getAuthMe();
       },
-      (e) => {
-        console.log(e);
-      }
+      (e) => {}
     );
-
-    // const response = await fetch('/api/login', {
-    //   method: 'POST',
-    //   body: JSON.stringify({ email, password }),
-    // });
-    // const data = await response.json();
-    // token.value = 'asdasdas';
-    // token.value = 'asdasdas';
-    // useApi('/api/login', {});
   };
+
+  const isLoggedIn = computed(() => token.value != null && user.value != null);
 
   return {
     token,
     login,
     user,
     getAuthMe,
+    clearToken,
+    isLoggedIn: isLoggedIn,
   };
 };

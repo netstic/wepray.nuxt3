@@ -73,17 +73,14 @@ useHead({
 });
 const route = useRoute();
 const loggedInUser = ref(false);
-console.log('token', token);
-// useApiPost('/api/login', {});
-console.log('token', token);
 
-if (token.value) {
-  authUserMe()
-    .then(({ data }) => {
-      console.log('res', data.language);
-    })
-    .catch((err) => {
-      console.log('err', err);
-    });
-}
+// useApiPost('/api/login', {});
+
+// if (token.value) {
+//   authUserMe()
+//     .then(({ data }) => {})
+//     .catch((err) => {
+
+//     });
+// }
 </script>

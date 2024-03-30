@@ -4,18 +4,13 @@
       v-if="!loggedInUser"
       class="flex justify-center items-center flex-col gap-8"
     >
-      <!-- <div class="flex flex-wrap bg-white">
-        <div
-          class="order-last w-full flex items-center text-center lg:text-left pt-8 px-8 md:px-8 lg:w-1/2 sm:order-last md:order-none lg:order-none xl:order-none md:pt-0 xl:pt-0"
-        >
-          <post-show-partial></post-show-partial>
-        </div>
-        <HomeLoginPartial></HomeLoginPartial>
-        <login-partial
-          class="w-full flex items-center text-center lg:text-left px-8 md:px-8 lg:w-1/2"
-        ></login-partial>
-      </div> -->
-
+      <button
+        class="btn"
+        @click="login('paulo.pcbr+teste@gmail.com', 'password')"
+      >
+        Login
+      </button>
+      {{ user }}
       <div class="hero max-w-[1024px] my-auto mb-32">
         <div
           class="hero-content items-start grid grid-cols-1 gap-4 lg:grid-cols-11 lg:gap-8 mx-auto"
@@ -59,6 +54,10 @@
 </template>
 
 <script setup lang="ts">
+import { authUserMe } from '~/services/auth';
+
+const { token, login, user } = useAuth();
+
 useHead({
   title: 'Home',
   htmlAttrs: {
@@ -74,4 +73,17 @@ useHead({
 });
 const route = useRoute();
 const loggedInUser = ref(false);
+console.log('token', token);
+// useApiPost('/api/login', {});
+console.log('token', token);
+
+if (token.value) {
+  authUserMe()
+    .then(({ data }) => {
+      console.log('res', data.language);
+    })
+    .catch((err) => {
+      console.log('err', err);
+    });
+}
 </script>

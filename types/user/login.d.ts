@@ -44,6 +44,7 @@ export interface User {
 }
 
 export interface IUser {
+  [x: string]: any | null;
   id: number;
   username: string;
   timezone: string;

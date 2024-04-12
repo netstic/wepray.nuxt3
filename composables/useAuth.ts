@@ -37,7 +37,7 @@ export const useAuth = () => {
     );
   };
 
-  const isLoggedIn = computed(() => token.value != null && user.value != null);
+  const isLoggedIn = useState(() => token.value != null && user.value != null);
 
   return {
     token,

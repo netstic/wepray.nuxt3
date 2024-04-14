@@ -11,7 +11,8 @@
                 x
               </div>
             </div> -->
-            <Avatar username="A"></Avatar>
+            <PostAvatarInfo></PostAvatarInfo>
+
             <div class="flex flex-col gap-0.5">
               <div>@{{ item?.user?.username ?? 'Anonymous' }}</div>
               <div>
@@ -26,8 +27,8 @@
           </div>
           <div>
             <div>
-              <button class="btn btn-circle btn-outline">
-                <IconFavorite class="w-4"></IconFavorite>
+              <button class="btn btn-circle btn-ghost">
+                <IconFavorite class="w-6"></IconFavorite>
               </button>
             </div>
             <!-- <img
@@ -62,6 +63,7 @@
   </div>
 </template>
 <script setup lang="ts">
+const hoverState = ref(false);
 interface IProps {
   item:
     | {

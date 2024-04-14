@@ -10,6 +10,12 @@ export const useAuth = () => {
     useCookie('token').value = null;
   };
 
+  const setTokenAndAuthMe = (token: string) => {
+    useCookie('token').value = token;
+    useApi().defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    return getAuthMe();
+  };
+
   const getAuthMe = () => {
     const resp = authUserMe();
     resp.then(
@@ -24,7 +30,10 @@ export const useAuth = () => {
   };
 
   const login = async (email?: string, password?: string) => {
-    const resp = useApiPost<ILogin>('/api/v1/auth/login', { email, password });
+    const resp = useApiPost<ILogin>('/api/v1/auth/login', {
+      email,
+      password,
+    });
     resp.then(
       (res) => {
         token.value = res.authorisation.token;
@@ -37,6 +46,22 @@ export const useAuth = () => {
     );
   };
 
+  const callbackAuth = (provider: string, query: any) => {
+    const resp = useApi().get<ILogin>(
+      `/api/v1/auth/provider/${provider}/callback`,
+      {
+        params: query,
+      }
+    );
+    resp.then(({ data }) => {
+      token.value = data.authorisation.token as string;
+      useApi().defaults.headers.common[
+        'Authorization'
+      ] = `Bearer ${data.authorisation.token}`;
+      getAuthMe();
+    });
+  };
+
   const isLoggedIn = useState(() => token.value != null && user.value != null);
 
   return {
@@ -46,5 +71,7 @@ export const useAuth = () => {
     getAuthMe,
     clearToken,
     isLoggedIn: isLoggedIn,
+    callbackAuth,
+    setTokenAndAuthMe,
   };
 };

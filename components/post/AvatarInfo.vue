@@ -6,7 +6,7 @@
       target="_blank"
       rel="noreferrer noopener"
     >
-      <Avatar username="A"></Avatar>
+      <Avatar :username="username"></Avatar>
     </HoverCardTrigger>
     <HoverCardPortal>
       <HoverCardContent
@@ -14,16 +14,16 @@
         :side-offset="5"
       >
         <div class="flex flex-col gap-[7px]">
-          <Avatar username="A" v-if="!loading"></Avatar>
+          <Avatar :username="username" v-if="!loading"></Avatar>
           <div v-if="!loading" class="flex flex-col gap-[15px]">
             <div>
               <div
                 class="text-mauve12 m-0 text-[15px] font-medium leading-[1.5]"
               >
-                Radix
+                xxxxxxxxxx
               </div>
               <div class="text-mauve10 m-0 text-[15px] leading-[1.5]">
-                @radix_ui
+                @{{ username }}
               </div>
             </div>
             <div class="text-mauve12 m-0 text-[15px] leading-[1.5]">
@@ -72,9 +72,18 @@
 </template>
 
 <script setup lang="ts">
-const hoverState = ref(false);
+import type { IPost } from '~/types/post/post';
 
+const hoverState = ref(false);
 const loading = ref(false);
+
+const props = defineProps<{
+  item: IPost;
+}>();
+
+const username = computed(() => {
+  return props.item.user?.username ?? 'Anonymous';
+});
 
 watchEffect(() => {
   //

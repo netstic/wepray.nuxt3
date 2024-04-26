@@ -11,16 +11,19 @@
                 x
               </div>
             </div> -->
-            <PostAvatarInfo></PostAvatarInfo>
+            <PostAvatarInfo :item="item"></PostAvatarInfo>
 
             <div class="flex flex-col gap-0.5">
-              <div>@{{ item?.user?.username ?? 'Anonymous' }}</div>
+              <div>@{{ username }}</div>
               <div>
                 <time
                   datetime="2021-01-01"
                   class="text-xs text-gray-500 font-sans font-normal"
                 >
-                  {{ item?.created_at ?? ' 8 de abr de 2024' }}
+                  {{
+                    useDateTime(item?.created_at?.toString()) ??
+                    ' 8 de abr de 2024'
+                  }}
                 </time>
               </div>
             </div>
@@ -40,9 +43,8 @@
           </div>
         </header>
 
-        <div class="h-56 overflow-hidden text-wrap flex items-center">
-          {{ item?.body ?? '' }}
-        </div>
+        <component :is="bodyCurrentComponent" :item="item"></component>
+
         <div class="card-actions justify-between">
           <div>
             <div class="tooltip" data-tip="pay">
@@ -63,16 +65,28 @@
   </div>
 </template>
 <script setup lang="ts">
-const hoverState = ref(false);
-interface IProps {
-  item:
-    | {
-        id: number;
-        title: string;
-        body: string;
-      }
-    | any;
-}
+import {
+  EPostType,
+  TPostViewType,
+  type IPost,
+  type IPostText,
+} from '~/types/post/post';
 
+import bodyText from './bodyText.vue';
+const bodyComponents: Record<TPostViewType | string, string | any> = {
+  [TPostViewType.Text]: bodyText,
+};
+
+interface IProps {
+  item: IPost;
+}
 const props = defineProps<IProps>();
+
+const bodyCurrentComponent = computed(() => {
+  return bodyComponents[props.item?.view_type ?? TPostViewType.Text];
+});
+
+const username = computed(() => {
+  return props.item?.user?.username ?? 'Anonymous';
+});
 </script>

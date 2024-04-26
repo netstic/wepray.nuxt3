@@ -4,13 +4,13 @@
       v-if="!loggedInUser"
       class="flex justify-center items-center flex-col gap-8"
     >
-      <button
+      <!-- <button
         class="btn"
         @click="login('paulo.pcbr+teste@gmail.com', 'password')"
       >
         Login
       </button>
-      {{ user }}
+      {{ user }} -->
       <div class="hero max-w-[1024px] my-auto mb-32">
         <div
           class="hero-content items-start grid grid-cols-1 gap-4 lg:grid-cols-11 lg:gap-8 mx-auto"

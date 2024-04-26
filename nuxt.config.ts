@@ -21,10 +21,13 @@ export default defineNuxtConfig({
   },
 
   modules: [
+    'radix-vue/nuxt',
     '@pinia/nuxt',
     '@nuxtjs/i18n',
     '@vueuse/nuxt',
-    'radix-vue',
     '@nuxt/content',
   ],
+  pinia: {
+    storesDirs: ['./stores/**', './custom-folder/stores/**'],
+  },
 });

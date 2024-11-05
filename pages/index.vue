@@ -11,7 +11,7 @@
         Login
       </button>
       {{ user }} -->
-      <div class="hero max-w-[1024px] my-auto mb-32">
+      <div class="hero layout-public-content-wrapper my-auto mb-32">
         <div
           class="hero-content items-start grid grid-cols-1 gap-4 lg:grid-cols-11 lg:gap-8 mx-auto"
         >
@@ -29,10 +29,17 @@
               </span>
             </p>
             <p class="flex items-center justify-center p-8 gap-6">
-              <button class="btn btn-primary">Faça o pedido de oração</button>
-              <button class="btn">Conexão com comunidade</button>
+              <button
+                class="btn btn-primary w-44"
+                @click="navigateTo('/signup')"
+              >
+                Iniciar a oração
+              </button>
+              <button class="btn w-44" @click="navigateTo('/login')">
+                Já tenho uma conta
+              </button>
             </p>
-            <div class="p-4 h-[480px] flex items-start justify-center">
+            <div class="mt-10 p-4 h-[480px] flex items-start justify-center">
               <LazyHomeCardPosts class="w-[500px]"></LazyHomeCardPosts>
             </div>
           </div>
@@ -54,12 +61,8 @@
 </template>
 
 <script setup lang="ts">
-import { authUserMe } from '~/services/auth';
-
-const { token, login, user } = useAuth();
-
 useHead({
-  title: 'Home',
+  title: 'Pessoas que amam orar - WePray',
   htmlAttrs: {
     'data-theme': 'wp',
   },
@@ -71,16 +74,6 @@ useHead({
     },
   ],
 });
-const route = useRoute();
+
 const loggedInUser = ref(false);
-
-// useApiPost('/api/login', {});
-
-// if (token.value) {
-//   authUserMe()
-//     .then(({ data }) => {})
-//     .catch((err) => {
-
-//     });
-// }
 </script>

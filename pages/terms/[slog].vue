@@ -77,7 +77,7 @@ useHead({
 const link = computed(() => {
   const lang = route.params.slog === 'en' ? 'pt' : 'en';
   return {
-    href: `/page/terms/${lang}`,
+    href: `/terms/${lang}`,
     text: lang !== 'en' ? 'Português' : 'English',
   };
 });

@@ -1,19 +1,19 @@
 .icon-xs {
-  @apply w-3 h-3;
-}
-
-.icon-sm {
   @apply w-4 h-4;
 }
 
-.icon-md {
+.icon-sm {
   @apply w-5 h-5;
 }
 
-.icon-lg {
+.icon-md {
   @apply w-6 h-6;
 }
 
+.icon-lg {
+  @apply w-7 h-7;
+}
+
 .icon-default {
-  @apply opacity-70;
+  @apply opacity-75;
 }

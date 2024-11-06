@@ -51,3 +51,12 @@ export interface IUser {
   language: string;
   acl: number;
 }
+
+export interface ISignupForm {
+  username: string;
+  email: string | null;
+  password: string | null;
+  password_confirmation: string | null;
+  'g-recaptcha-response'?: string | null;
+  name?: string;
+}

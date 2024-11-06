@@ -20,12 +20,18 @@
           <p class="uppercase text-grey text-sm sm:mb-6">{{ $t('Legal') }}</p>
           <ul class="list-reset text-xs mb-6">
             <li class="mt-2 inline-block mr-2 sm:block sm:mr-0">
-              <nuxt-link class="text-grey hover:text-grey-dark" to="/terms">
+              <nuxt-link
+                class="text-grey hover:text-grey-dark"
+                to="/page/terms"
+              >
                 {{ $t('Terms of Use') }}
               </nuxt-link>
             </li>
             <li class="mt-2 inline-block mr-2 sm:block sm:mr-0">
-              <nuxt-link class="text-grey hover:text-grey-dark" to="/privacy">
+              <nuxt-link
+                class="text-grey hover:text-grey-dark"
+                to="/page/privacy"
+              >
                 {{ $t('Privacy policy') }}
               </nuxt-link>
             </li>
@@ -46,12 +52,17 @@
               </a>
             </li>
             <li class="mt-2 inline-block mr-2 sm:block sm:mr-0">
-              <nuxt-link to="/aboutus" class="text-grey hover:text-grey-dark">{{
-                $t('About Us')
-              }}</nuxt-link>
+              <nuxt-link
+                to="/page/aboutus"
+                class="text-grey hover:text-grey-dark"
+                >{{ $t('About Us') }}</nuxt-link
+              >
             </li>
             <li class="mt-2 inline-block mr-2 sm:block sm:mr-0">
-              <nuxt-link class="text-grey hover:text-grey-dark" to="/contactus">
+              <nuxt-link
+                class="text-grey hover:text-grey-dark"
+                to="/page/contactus"
+              >
                 {{ $t('Contact Us') }}
               </nuxt-link>
             </li>

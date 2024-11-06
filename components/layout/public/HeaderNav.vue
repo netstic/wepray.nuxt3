@@ -14,7 +14,7 @@
           <path d="M0 25 C 60 60 40 150 100 -8 Z"></path>
         </svg>
         <div
-          class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 py-2 max-w-[1024px]"
+          class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 py-2 layout-public-content-wrapper"
         >
           <div class="pl-4 flex items-center">
             <a

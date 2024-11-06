@@ -2,7 +2,7 @@
 <script setup>
 definePageMeta({
   middleware: (from) => {
-    return navigateTo('/aboutus/en');
+    return navigateTo('/page/terms/en');
   },
 });
 </script>

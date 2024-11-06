@@ -1,38 +1,105 @@
 <template>
-  <div>
-    <div class="w-full">
+  <div class="layout-public-content-wrapper mx-auto bg-base-100">
+    <div class="card-body gap-4 max-w-3xl mx-auto">
       <h2
         class="w-full text-3xl font-semibold text-gray-800 md:text-4xl aos-init aos-animate"
       >
         {{ $t('Sign Up') }}
       </h2>
-      <div
-        class="w-full mt-6 px-2 py-2 bg-white shadow-md overflow-hidden sm:rounded-lg"
-      >
-        <form-input-error :errors="errors"></form-input-error>
 
-        <div class="m-0 md:m-3 flex justify-between">
-          <t-input
-            v-model="row.email"
-            class="w-full rounded-l-lg p-1 md:p-4 border-t mr-0 border-b border-l text-gray-800 border-gray-200 bg-white"
-            :placeholder="$t('E-mail')"
-            name="email"
-            type="email"
-            :variant="isCheckError('email') ? 'error' : undefined"
-          />
+      <p>
+        <span class="text-primary font-medium">Faça a diferença!</span> Seja
+        parte de uma comunidade engajada em oração e contribua para um mundo
+        melhor.
+      </p>
 
-          <button
-            v-if="!showForm"
-            type="button"
-            class="px-8 rounded-r-lg bg-gray-800 text-gray-200 font-bold p-4 uppercase border-gray-500 border-t border-b border-r"
-            @click="checkEmail"
+      <form class="form-control flex flex-col gap-4" @submit.prevent="onSubmit">
+        <DaisyFormInput
+          v-model="row.email"
+          placeholder="E-mail"
+          @keyup.enter="checkEmail"
+        >
+          <template #prepend>
+            <IconEmail size="sm" />
+          </template>
+        </DaisyFormInput>
+
+        <button
+          v-if="!isEmailChecked"
+          type="button"
+          class="btn btn-primary"
+          @click="checkEmail"
+          :disabled="!row.email"
+        >
+          {{ $t('Check') }}
+        </button>
+
+        <template v-if="isEmailChecked">
+          <DaisyFormInput v-model="row.name" placeholder="Name" />
+          <DaisyFormInput v-model="row.username" placeholder="Nome de usuário">
+            <template #prepend>
+              <IconUser size="sm" />
+            </template>
+            <template #append>
+              <div
+                class="tooltip 2xl:tooltip-top tooltip-left"
+                :data-tip="
+                  $t('Examples: Name, Name.Lastname, Name_1, nickname')
+                "
+              >
+                <IconQuestionCircleOutline />
+              </div>
+              <!-- <div
+            v-if="!isCheckError('username')"
+            class="flex items-center mt-1 mb-6 mx-3 font-light text-sm"
           >
-            {{ $t('Check') }}
-          </button>
-        </div>
+            <i class="mdi mdi-information mr-1"></i>
+            {{ $t('Examples: Name, Name.Lastname, Name_1, nickname') }}
+          </div> -->
+            </template>
+          </DaisyFormInput>
 
-        <template v-if="showForm">
-          <div class="flex items-center justify-between mt-4 mx-2">
+          <div class="flex flex-col gap-4 md:grid md:grid-cols-12">
+            <DaisyFormInput
+              v-model="row.password"
+              :type="isShowPassword ? 'text' : 'password'"
+              placeholder="Senha"
+              class="col-span-6"
+            >
+              <template #prepend>
+                <IconKey size="sm" />
+              </template>
+              <template #append>
+                <button type="button" @click="onShowPassword('password')">
+                  <IconEyeOutline v-if="!isShowPassword" />
+                  <IconEyeSlashOutline v-else />
+                </button>
+              </template>
+            </DaisyFormInput>
+
+            <DaisyFormInput
+              v-model="row.password_confirmation"
+              :type="isShowPasswordConfirmation ? 'text' : 'password'"
+              placeholder="Confirme sua senha"
+              class="col-span-6"
+              label="test"
+            >
+              <template #prepend>
+                <IconKey size="sm" />
+              </template>
+              <template #append>
+                <button
+                  type="button"
+                  @click="onShowPassword('passwordConfirmation')"
+                >
+                  <IconEyeOutline v-if="!isShowPasswordConfirmation" />
+                  <IconEyeSlashOutline v-else />
+                </button>
+              </template>
+            </DaisyFormInput>
+          </div>
+
+          <!-- <div class="flex items-center justify-between mt-4 mx-2">
             <div class="w-full px-1 mb-6">
               <label
                 name="name"
@@ -95,7 +162,7 @@
                 <t-input
                   id="password"
                   v-model="row.password"
-                  :type="showPassword ? 'text' : 'password'"
+                  :type="isShowPassword ? 'text' : 'password'"
                   name="password"
                   :variant="isCheckError('password') ? 'error' : undefined"
                   :placeholder="$t('at least 8 characters')"
@@ -103,10 +170,10 @@
                 <div
                   class="absolute inset-y-1 right-1 pr-3 flex items-center text-lg"
                 >
-                  <button @click="onShowPassword()">
-                    <i v-if="!showPassword" class="mdi mdi-eye-outline"></i>
+                  <button @click="onShowPasswords('password')">
+                    <i v-if="!isShowPassword" class="mdi mdi-eye-outline"></i>
                     <i
-                      v-if="showPassword"
+                      v-if="isShowPassword"
                       class="mdi mdi-eye-remove text-red-500"
                     ></i>
                   </button>
@@ -124,7 +191,7 @@
                 <t-input
                   id="password_confirmation"
                   v-model="row.password_confirmation"
-                  :type="showPassword ? 'text' : 'password'"
+                  :type="isShowPasswordConfirmation ? 'text' : 'password'"
                   name="password_confirmation"
                   :variant="
                     isCheckError('password_confirmation') ? 'error' : undefined
@@ -133,178 +200,124 @@
                 <div
                   class="absolute inset-y-1 right-1 pr-3 flex items-center text-lg"
                 >
-                  <button @click="onShowPassword()">
-                    <i v-if="!showPassword" class="mdi mdi-eye-outline"></i>
+                  <button @click="onShowPassword('passwordConfirmation')">
                     <i
-                      v-if="showPassword"
+                      v-if="!isShowPasswordConfirmation"
+                      class="mdi mdi-eye-outline"
+                    ></i>
+                    <i
+                      v-if="isShowPasswordConfirmation"
                       class="mdi mdi-eye-remove text-red-500"
                     ></i>
                   </button>
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </template>
-        <div class="md:flex items-center justify-between flex-col">
+        <!-- <div class="md:flex items-center justify-between flex-col">
           <recaptcha
             id="g-recaptcha-2"
             class="inline-flex items-center px-4 py-2"
-            @error="onError"
-            @success="onSuccess"
-            @expired="onExpired"
+            @error="onRecaptchaError"
+            @success="onRecaptchaSuccess"
+            @expired="onRecaptchaExpired"
           />
-        </div>
-        <div
-          v-if="showForm"
-          class="md:flex items-center justify-between mt-4 px-3 flex-col"
-        >
-          <button
-            type="button"
-            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150 ml-4 request"
-            @click="onSubmit"
+        </div> -->
+
+        <button v-if="isEmailChecked" type="submit" class="btn btn-primary">
+          {{ $t('Send') }}
+        </button>
+
+        <div class="flex gap-4 items-center mt-6">
+          <span class="font-semibold text-gray-600 md:text-lg"
+            >Ou se preferir</span
           >
-            {{ $t('Send') }}
+          <button class="btn btn-neutral-content flex-1">
+            <IconGoogle />
+            <span class="text-lg"> Entre com Google </span>
           </button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
-import { useNuxtApp, useRuntimeConfig } from 'nuxt/app';
+import { checkEmailUserService, createUserService } from '~/services/user';
+import type { ISignupForm } from '~/types/user/login';
 
-// Types
-interface SignupForm {
-  username: string;
-  email: string | null;
-  password: string | null;
-  password_confirmation: string | null;
-  'g-recaptcha-response'?: string | null;
-  name?: string;
-}
+useHead({
+  title: 'SignUp - WePray',
+});
 
-interface ErrorResponse {
-  response: {
-    status: number;
-    data: {
-      errors: Record<string, string[]>;
-    };
-  };
-}
-
-// State
-const showForm = ref(false);
-const showPassword = ref(false);
-const row = reactive<SignupForm>({
+const row = ref<ISignupForm>({
   username: '',
   email: null,
   password: null,
   password_confirmation: null,
 });
-const errors = reactive<Record<string, string[] | {}>>({});
 
-// Composables
-const nuxtApp = useNuxtApp();
-const config = useRuntimeConfig();
+const isEmailChecked = ref(false);
+const isShowPassword = ref(false);
+const isShowPasswordConfirmation = ref(false);
 
-// Page metadata
-useHead({
-  title: 'SignUp - WePray',
-});
-
-// Methods
-const isCheckError = (field: string): boolean => {
-  return Object.prototype.hasOwnProperty.call(errors, field);
-};
-
-const onShowPassword = () => {
-  showPassword.value = !showPassword.value;
-};
-
-const handleError = (e: ErrorResponse) => {
-  const { status, data } = e.response;
-
-  if (status === 422) {
-    errors.value = data.errors;
-  } else if (status === 404) {
-    nuxtApp.$router.push({
-      name: 'error',
-      query: { statusCode: 404, message: 'not found' },
-    });
-  } else if (status === 500) {
-    nuxtApp.$router.push({
-      name: 'error',
-      query: { statusCode: 500, message: 'Internal Server Error' },
-    });
-  } else {
-    nuxtApp.$router.push({
-      name: 'error',
-      query: { statusCode: status, message: 'Error' },
-    });
+const onShowPassword = (passwordTipo: 'password' | 'passwordConfirmation') => {
+  if (passwordTipo == 'password') {
+    return (isShowPassword.value = !isShowPassword.value);
+  } else if (passwordTipo == 'passwordConfirmation') {
+    return (isShowPasswordConfirmation.value =
+      !isShowPasswordConfirmation.value);
   }
 };
 
-const checkUsername = async () => {
-  const { username } = row;
-  try {
-    await nuxtApp.$axios.post(
-      `${config.public.baseApi}/api/v1/pub/user/check`,
-      { username }
-    );
-    errors.value = {};
-    showForm.value = true;
-  } catch (e) {
-    handleError(e as ErrorResponse);
-  }
-};
+// const checkUsername = async () => {
+//   const { username } = row;
+//   try {
+//     await useApi().post('/api/v1/pub/user/check', { username });
+//     errors.value = {};
+//     showForm.value = true;
+//   } catch (err: any) {
+//     errors.value = useHandleError(err);
+//   }
+// };
 
 const checkEmail = async () => {
-  const { email } = row;
-  try {
-    await nuxtApp.$axios.post(
-      `${config.public.baseApi}/api/v1/pub/user/check`,
-      { email }
-    );
-    errors.value = {};
-    showForm.value = true;
-  } catch (e) {
-    handleError(e as ErrorResponse);
-  }
+  if (!row.value.email) return;
+
+  checkEmailUserService(row.value.email)
+    .then(() => {
+      isEmailChecked.value = true;
+    })
+    .catch((err) => useHandleError(err));
 };
 
 const onSubmit = async () => {
-  try {
-    await nuxtApp.$axios.post(
-      `${config.public.baseApi}/api/v1/pub/user/register`,
-      row
-    );
+  createUserService(row.value)
+    .then(() => {})
+    .catch((err) => useHandleError(err));
 
-    try {
-      await nuxtApp.$auth.loginWith('laravelSanctum', {
-        data: row,
-      });
+  // try {
+  //   await nuxtApp.$auth.loginWith('laravelSanctum', {
+  //     data: row,
+  //   });
 
-      const layout = nuxtApp.$store.state.auth.loggedIn ? 'private' : 'public';
-      nuxtApp.setLayout(layout);
-    } catch (e) {
-      handleError(e as ErrorResponse);
-    }
-  } catch (e) {
-    handleError(e as ErrorResponse);
-  }
+  //   const layout = nuxtApp.$store.state.auth.loggedIn ? 'private' : 'public';
+  //   nuxtApp.setLayout(layout);
+  // } catch (err: any) {
+  //   errors.value = useHandleError(err);
+  // }
 };
 
-const onError = (_e: unknown) => {
-  // Handle recaptcha error if needed
-};
+// const onError = (_e: unknown) => {
+//   // Handle recaptcha error if needed
+// };
 
-const onSuccess = (token: string) => {
-  row['g-recaptcha-response'] = token;
-};
+// const onSuccess = (token: string) => {
+//   row['g-recaptcha-response'] = token;
+// };
 
-const onExpired = () => {
-  row['g-recaptcha-response'] = null;
-};
+// const onExpired = () => {
+//   row['g-recaptcha-response'] = null;
+// };
 </script>

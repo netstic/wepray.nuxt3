@@ -48,18 +48,24 @@
 </template>
 <script setup>
 const route = useRoute();
-const { data } = await useAsyncData('about-us-data', () =>
-  queryContent('page', 'about-us')
+const { data } = await useAsyncData('privacy-data', () =>
+  queryContent('page', 'privacy')
     .where({ lang: route.params.slog ?? 'en' })
     .findOne()
 );
 
 useHead({
-  title: data.value?.title ?? 'About Us',
+  title: data.value.title,
   htmlAttrs: {
     'data-theme': 'wp',
   },
-  meta: [],
+  meta: [
+    {
+      hid: 'description',
+      name: 'description',
+      content: data.value.description,
+    },
+  ],
 });
 
 // definePageMeta({
@@ -71,7 +77,7 @@ useHead({
 const link = computed(() => {
   const lang = route.params.slog === 'en' ? 'pt' : 'en';
   return {
-    href: `/aboutus/${lang}`,
+    href: `/page/privacy/${lang}`,
     text: lang !== 'en' ? 'Português' : 'English',
   };
 });

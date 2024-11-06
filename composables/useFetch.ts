@@ -3,6 +3,38 @@ export const useApi = () => {
   return $api;
 };
 
+interface ErrorResponse {
+  response: {
+    status: number;
+    data: {
+      errors: Record<string, string[]>;
+    };
+  };
+}
+
+export const useHandleError = (e: ErrorResponse) => {
+  const { status, data } = e.response;
+
+  if (status === 422) {
+    return data.errors;
+  } else if (status === 404) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Page Not Found',
+    });
+  } else if (status === 500) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+    });
+  } else {
+    throw createError({
+      statusCode: status,
+      statusMessage: 'Error',
+    });
+  }
+};
+
 export const useApiPost = <T = any>(
   url: string,
   data?: any,

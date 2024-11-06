@@ -1,7 +1,9 @@
 <template>
   <div>
     <LayoutPublicHeaderNav />
-    <slot />
+    <div class="min-h-[500px]">
+      <slot></slot>
+    </div>
     <LayoutPublicFooterNav />
   </div>
 </template>

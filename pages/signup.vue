@@ -14,7 +14,7 @@
       </p>
 
       <form class="form-control flex flex-col gap-4" @submit.prevent="onSubmit">
-        <DaisyFormInput
+        <WeprayFormInput
           v-model="row.email"
           placeholder="E-mail"
           @keyup.enter="checkEmail"
@@ -22,7 +22,7 @@
           <template #prepend>
             <IconEmail size="sm" />
           </template>
-        </DaisyFormInput>
+        </WeprayFormInput>
 
         <button
           v-if="!isEmailChecked"
@@ -35,8 +35,8 @@
         </button>
 
         <template v-if="isEmailChecked">
-          <DaisyFormInput v-model="row.name" placeholder="Name" />
-          <DaisyFormInput v-model="row.username" placeholder="Nome de usuário">
+          <WeprayFormInput v-model="row.name" placeholder="Name" />
+          <WeprayFormInput v-model="row.username" placeholder="Nome de usuário">
             <template #prepend>
               <IconUser size="sm" />
             </template>
@@ -57,10 +57,10 @@
             {{ $t('Examples: Name, Name.Lastname, Name_1, nickname') }}
           </div> -->
             </template>
-          </DaisyFormInput>
+          </WeprayFormInput>
 
           <div class="flex flex-col gap-4 md:grid md:grid-cols-12">
-            <DaisyFormInput
+            <WeprayFormInput
               v-model="row.password"
               :type="isShowPassword ? 'text' : 'password'"
               placeholder="Senha"
@@ -75,9 +75,9 @@
                   <IconEyeSlashOutline v-else />
                 </button>
               </template>
-            </DaisyFormInput>
+            </WeprayFormInput>
 
-            <DaisyFormInput
+            <WeprayFormInput
               v-model="row.password_confirmation"
               :type="isShowPasswordConfirmation ? 'text' : 'password'"
               placeholder="Confirme sua senha"
@@ -96,7 +96,7 @@
                   <IconEyeSlashOutline v-else />
                 </button>
               </template>
-            </DaisyFormInput>
+            </WeprayFormInput>
           </div>
 
           <!-- <div class="flex items-center justify-between mt-4 mx-2">
@@ -251,6 +251,8 @@ useHead({
   title: 'SignUp - WePray',
 });
 
+const { login } = useAuth();
+
 const row = ref<ISignupForm>({
   username: '',
   email: null,
@@ -293,8 +295,17 @@ const checkEmail = async () => {
 };
 
 const onSubmit = async () => {
-  createUserService(row.value)
-    .then(() => {})
+  const resCreate = createUserService(row.value);
+
+  resCreate
+    .then(() => {
+      const resLogin = login({
+        email: row.value.email!,
+        password: row.value.password!,
+      });
+
+      resLogin.catch((err) => useHandleError(err));
+    })
     .catch((err) => useHandleError(err));
 
   // try {

@@ -1,10 +1,15 @@
 import { authUserMe } from '~/services/auth';
-import type { ILogin, IUser } from '~/types/user/login';
+import type { ILoginResponse, ILogin, IUser } from '~/types/user/login';
 
 export const useAuth = () => {
   const user = useState<IUser | null>('user', () => null);
 
   const token = useCookie('token');
+
+  const resetAuth = () => {
+    user.value = null;
+    clearToken();
+  };
 
   const clearToken = () => {
     useCookie('token').value = null;
@@ -23,17 +28,14 @@ export const useAuth = () => {
         user.value = data;
       },
       (e) => {
-        clearToken();
+        resetAuth();
       }
     );
     resp;
   };
 
-  const login = async (email?: string, password?: string) => {
-    const resp = useApiPost<ILogin>('/api/v1/auth/login', {
-      email,
-      password,
-    });
+  const login = (payload: ILogin) => {
+    const resp = useApiPost<ILoginResponse>('/api/v1/auth/login', payload);
     resp.then(
       (res) => {
         token.value = res.authorisation.token;
@@ -44,10 +46,21 @@ export const useAuth = () => {
       },
       (e) => {}
     );
+    return resp;
+  };
+
+  const logout = () => {
+    const resp = useApiPost('/api/v1/auth/logout');
+
+    resp.then((res) => {
+      resetAuth();
+    });
+
+    return resp;
   };
 
   const callbackAuth = (provider: string, query: any) => {
-    const resp = useApi().get<ILogin>(
+    const resp = useApi().get<ILoginResponse>(
       `/api/v1/auth/provider/${provider}/callback`,
       {
         params: query,
@@ -60,6 +73,7 @@ export const useAuth = () => {
       ] = `Bearer ${data.authorisation.token}`;
       getAuthMe();
     });
+    return resp;
   };
 
   const isLoggedIn = useState(() => token.value != null && user.value != null);
@@ -73,5 +87,6 @@ export const useAuth = () => {
     isLoggedIn: isLoggedIn,
     callbackAuth,
     setTokenAndAuthMe,
+    logout,
   };
 };

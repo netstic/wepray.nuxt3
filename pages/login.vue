@@ -48,27 +48,34 @@
         </nuxt-link>
 
         <button class="btn btn-primary mt-4" @click="onLogin">
-          {{ $t('Ok') }}
+          {{ $t('Login') }}
         </button>
 
-        <div class="flex gap-4 items-center mt-6">
-          <span class="font-semibold text-gray-600 md:text-lg"
-            >Ou se preferir</span
-          >
-          <button
-            class="btn btn-neutral-content flex-1"
-            @click="onAuthProvider('google')"
-          >
-            <IconGoogle />
-            <span class="text-lg"> Entre com Google </span>
-          </button>
+        <div class="text-center font-semibold text-gray-600">
+          {{ $t('OR') }}
         </div>
+
+        <button
+          class="btn btn-neutral-content"
+          @click="onAuthProvider('google')"
+        >
+          <IconGoogle size="sm" />
+          <span> {{ $t('Login with Google') }} </span>
+        </button>
+
+        <button
+          class="btn btn-neutral-content"
+          @click="onAuthProvider('facebook')"
+        >
+          <IconFacebook size="sm" />
+          <span> {{ $t('Login with Facebook') }} </span>
+        </button>
       </div>
     </div>
 
     <div v-else class="mx-auto mt-40 text-center gap-4 flex flex-col">
       <div class="text-gray-700 text-lg">
-        Olá {{ user?.username }}, parece que você já está logado...
+        Olá {{ userName }}, parece que você já está logado...
       </div>
       <div class="flex gap-4 items-center justify-center">
         <button class="btn btn-neutral-content" @click="navigateTo('/')">
@@ -84,14 +91,15 @@
 </template>
 
 <script setup lang="ts">
-import type { IAuthProvider } from '~/types/user/auth';
+import type { TAuthProvider } from '~/types/user/auth';
 import type { ILogin } from '~/types/user/login';
 
 useHead({
   title: 'Login - WePray',
 });
 
-const { login, user, isLoggedIn, logout, setTokenAndAuthMe, token } = useAuth();
+const { login, isLoggedIn, userName, logout, setTokenAndAuthMe, token } =
+  useAuth();
 
 const row = ref<ILogin>({
   email: '',
@@ -123,7 +131,7 @@ const onLogin = () => {
   // }
 };
 
-const onAuthProvider = (provider: IAuthProvider) => {
+const onAuthProvider = (provider: TAuthProvider) => {
   let windowHandle: any = null;
 
   const width = 500;

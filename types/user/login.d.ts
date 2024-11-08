@@ -52,6 +52,7 @@ export interface User {
 export interface IUser {
   [x: string]: any | null;
   id: number;
+  name: string;
   username: string;
   timezone: string;
   language: string;

@@ -1,5 +1,5 @@
 import { authUserMe } from '~/services/auth';
-import type { IAuthProvider } from '~/types/user/auth';
+import type { TAuthProvider } from '~/types/user/auth';
 import type { ILoginResponse, ILogin, IUser } from '~/types/user/login';
 
 export const useAuth = () => {
@@ -60,7 +60,7 @@ export const useAuth = () => {
     return resp;
   };
 
-  const callbackAuth = (provider: IAuthProvider, query: any) => {
+  const callbackAuth = (provider: TAuthProvider, query: any) => {
     const resp = useApi().get<ILoginResponse>(
       `/api/v1/auth/provider/callback/${provider}`,
       {
@@ -75,6 +75,12 @@ export const useAuth = () => {
   };
 
   const isLoggedIn = computed(() => token.value != null && user.value != null);
+  const userName = computed(() => {
+    if (user.value) {
+      return user.value.username ?? user.value.name;
+    }
+    return '@';
+  });
 
   return {
     token,
@@ -86,5 +92,6 @@ export const useAuth = () => {
     callbackAuth,
     setTokenAndAuthMe,
     logout,
+    userName,
   };
 };

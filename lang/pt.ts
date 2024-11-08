@@ -50,6 +50,8 @@ export default {
   'See All': 'Ver tudo',
   Search: 'Pesquisa',
   Login: 'Login',
+  'Login with Facebook': 'Login com Facebook',
+  'Login with Google': 'Login com Google',
   'E-mail': 'E-mail',
   'E-mail (It will not be published)': 'E-mail (não será publicado)',
   'E-mail with instructions will arrive soon':
@@ -398,4 +400,5 @@ export default {
     comment: 'Fez comentário',
     like_first: 'Está orando por seu pedido ',
   },
+  OR: 'OU',
 };

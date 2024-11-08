@@ -50,6 +50,8 @@ export default {
   'See All': 'See All',
   Search: 'Search',
   Login: 'Login',
+  'Login with Facebook': 'Login with Facebook',
+  'Login with Google': 'Login with Google',
   'E-mail': 'E-mail',
   'E-mail (It will not be published)': 'E-mail (It will not be published)',
   Password: 'Password',
@@ -397,4 +399,5 @@ export default {
     comment: 'commented',
     like_first: 'Started praying for your prayer request',
   },
+  OR: 'OR',
 };

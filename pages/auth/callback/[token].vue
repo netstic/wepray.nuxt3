@@ -1,12 +1,14 @@
 <template>
-  <div>....</div>
+  <div>Autenticando...</div>
 </template>
 <script setup lang="ts">
 const { setTokenAndAuthMe } = useAuth();
 const { params } = useRoute();
 
-onMounted(async () => {
-  await setTokenAndAuthMe(params.token as string);
-  navigateTo('/');
+onMounted(() => {
+  const token = params.token as string;
+  setTokenAndAuthMe(token);
+  window.opener.postMessage({ token }, window.location.origin);
+  window.close();
 });
 </script>

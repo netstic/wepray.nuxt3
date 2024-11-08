@@ -1,4 +1,5 @@
 import { authUserMe } from '~/services/auth';
+import type { IAuthProvider } from '~/types/user/auth';
 import type { ILoginResponse, ILogin, IUser } from '~/types/user/login';
 
 export const useAuth = () => {
@@ -31,17 +32,17 @@ export const useAuth = () => {
         resetAuth();
       }
     );
-    resp;
+    return resp;
   };
 
   const login = (payload: ILogin) => {
-    const resp = useApiPost<ILoginResponse>('/api/v1/auth/login', payload);
+    const resp = useApi().post<ILoginResponse>('/api/v1/auth/login', payload);
     resp.then(
-      (res) => {
-        token.value = res.authorisation.token;
+      ({ data }) => {
+        token.value = data.authorisation.token;
         useApi().defaults.headers.common[
           'Authorization'
-        ] = `Bearer ${res.authorisation.token}`;
+        ] = `Bearer ${data.authorisation.token}`;
         getAuthMe();
       },
       (e) => {}
@@ -50,33 +51,30 @@ export const useAuth = () => {
   };
 
   const logout = () => {
-    const resp = useApiPost('/api/v1/auth/logout');
+    const resp = useApi().post('/api/v1/auth/logout');
 
-    resp.then((res) => {
+    resp.then(() => {
       resetAuth();
     });
 
     return resp;
   };
 
-  const callbackAuth = (provider: string, query: any) => {
+  const callbackAuth = (provider: IAuthProvider, query: any) => {
     const resp = useApi().get<ILoginResponse>(
-      `/api/v1/auth/provider/${provider}/callback`,
+      `/api/v1/auth/provider/callback/${provider}`,
       {
         params: query,
       }
     );
-    resp.then(({ data }) => {
-      token.value = data.authorisation.token as string;
-      useApi().defaults.headers.common[
-        'Authorization'
-      ] = `Bearer ${data.authorisation.token}`;
-      getAuthMe();
-    });
+    // resp.then(({ data }) => {
+    //   token.value = data.authorisation.token as string;
+    //   setTokenAndAuthMe(data.authorisation.token);
+    // });
     return resp;
   };
 
-  const isLoggedIn = useState(() => token.value != null && user.value != null);
+  const isLoggedIn = computed(() => token.value != null && user.value != null);
 
   return {
     token,
@@ -84,7 +82,7 @@ export const useAuth = () => {
     user,
     getAuthMe,
     clearToken,
-    isLoggedIn: isLoggedIn,
+    isLoggedIn,
     callbackAuth,
     setTokenAndAuthMe,
     logout,

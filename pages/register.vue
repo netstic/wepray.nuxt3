@@ -245,15 +245,15 @@
 
 <script setup lang="ts">
 import { checkEmailUserService, createUserService } from '~/services/user';
-import type { ISignupForm } from '~/types/user/login';
+import type { IRegisterForm } from '~/types/user/login';
 
 useHead({
-  title: 'SignUp - WePray',
+  title: 'Register - WePray',
 });
 
 const { login } = useAuth();
 
-const row = ref<ISignupForm>({
+const row = ref<IRegisterForm>({
   username: '',
   email: null,
   password: null,

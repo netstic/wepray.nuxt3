@@ -31,7 +31,7 @@
             <p class="flex items-center justify-center p-8 gap-6">
               <button
                 class="btn btn-primary w-44"
-                @click="navigateTo('/signup')"
+                @click="navigateTo('/register')"
               >
                 Iniciar a oração
               </button>

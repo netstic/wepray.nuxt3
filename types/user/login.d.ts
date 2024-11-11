@@ -59,7 +59,7 @@ export interface IUser {
   acl: number;
 }
 
-export interface ISignupForm {
+export interface IRegisterForm {
   username: string;
   email: string | null;
   password: string | null;

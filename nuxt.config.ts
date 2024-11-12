@@ -30,4 +30,15 @@ export default defineNuxtConfig({
   pinia: {
     storesDirs: ['./stores/**', './custom-folder/stores/**'],
   },
+
+  app: {
+    pageTransition: {
+      name: 'fade',
+      mode: 'out-in', // default
+    },
+    layoutTransition: {
+      name: 'fade',
+      mode: 'out-in', // default
+    },
+  },
 });

@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref } from 'vue';
 
 const emit = defineEmits<{
   isStartBtnShowing: [value: boolean];
@@ -64,6 +64,7 @@ const startBtn = ref(null);
 const smallCircle = ref(null);
 const circlePosition = ref({ x: 10, y: -50 });
 let animationFrameId: number | null = null;
+let timeoutId: NodeJS.Timeout | null = null;
 
 const isStartBtnVisible = ref(true);
 
@@ -90,7 +91,7 @@ const moveCircle = () => {
     circlePosition.value.y *= scale;
   }
 
-  setTimeout(() => {
+  timeoutId = setTimeout(() => {
     animationFrameId = requestAnimationFrame(moveCircle);
   }, 3000);
 };
@@ -103,6 +104,10 @@ const stopAnimation = () => {
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
     animationFrameId = null;
+  }
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+    timeoutId = null;
   }
 };
 

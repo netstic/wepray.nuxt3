@@ -400,4 +400,32 @@ export default {
     like_first: 'Started praying for your prayer request',
   },
   OR: 'OR',
+  'Site Language': 'Site Language',
+  'Get Started': 'Get Started',
+  'Connect Through Prayer Every Day': 'Connect through prayer every day',
+  'Join millions of people sharing prayers, supporting each other, and growing in faith together.':
+    'Join millions of people sharing prayers, supporting each other, and growing in faith together.',
+  'Share a Quick Prayer': 'Share a Quick Prayer',
+  'Your prayer will be shared with our community':
+    'Your prayer will be shared with our community',
+  'Why Join WePray?': 'Why Join WePray?',
+  'Ready to Start Your Prayer Journey?': 'Ready to Start Your Prayer Journey?',
+  'Join WePray Now': 'Join WePray Now',
+  'Type your prayer here': 'Type your prayer here',
+  '100% free • No ads • Spread love through prayer':
+    '100% free • No ads • Spread love through prayer',
+  'Submit prayer requests and receive support from a caring community':
+    'Submit prayer requests and receive support from a caring community',
+  'Join a global community of believers supporting each other':
+    'Join a global community of believers supporting each other',
+  'See how God works through prayers and testimonies':
+    'See how God works through prayers and testimonies',
+  'Share Your Heart': 'Share Your Heart',
+  'Connect with Others': 'Connect with Others',
+  'Track Your Journey': 'Track Your Journey',
+  'Take WePray Everywhere': 'Take WePray Everywhere',
+  'Download our mobile app and stay connected with your prayer community anytime, anywhere.':
+    'Download our mobile app and stay connected with your prayer community anytime, anywhere.',
+  'App Store': 'App Store',
+  'Google Play': 'Google Play',
 };

@@ -1,9 +1,9 @@
 <template>
   <footer class="bg-white py-8 w-full">
-    <div class="mx-auto px-8 layout-public-content-wrapper">
+    <div class="mx-auto public-layout-padding public-layout-width">
       <div class="table w-full">
-        <div class="block sm:table-cell mb-5">
-          <p class="uppercase text-grey text-sm sm:mb-2">&nbsp;</p>
+        <!-- <div class="block sm:table-cell mb-5">
+          <p class="uppercase text-grey sm:mb-2">&nbsp;</p>
           <a
             href="https://www.revivalandreformation.org/"
             target="_black"
@@ -15,21 +15,21 @@
               title="REVIVAL & REFORMATION"
             />
           </a>
-        </div>
-        <div class="block sm:table-cell">
-          <p class="uppercase text-grey text-sm sm:mb-6">{{ $t('Legal') }}</p>
-          <ul class="list-reset text-xs mb-6">
-            <li class="mt-2 inline-block mr-2 sm:block sm:mr-0">
+        </div> -->
+        <div class="block sm:table-cell mb-6 text-gray-900">
+          <p class="uppercase mb-4">{{ $t('Legal') }}</p>
+          <ul class="list-reset space-y-2">
+            <li>
               <nuxt-link
-                class="text-grey hover:text-grey-dark"
+                class="text-gray-500 hover:text-gray-700"
                 to="/page/terms"
               >
                 {{ $t('Terms of Use') }}
               </nuxt-link>
             </li>
-            <li class="mt-2 inline-block mr-2 sm:block sm:mr-0">
+            <li>
               <nuxt-link
-                class="text-grey hover:text-grey-dark"
+                class="text-gray-500 hover:text-gray-700"
                 to="/page/privacy"
               >
                 {{ $t('Privacy policy') }}
@@ -39,9 +39,9 @@
         </div>
 
         <div class="block sm:table-cell">
-          <p class="uppercase text-grey text-sm sm:mb-6">Company</p>
-          <ul class="list-reset text-xs mb-6">
-            <li class="mt-2 inline-block mr-2 sm:block sm:mr-0">
+          <p class="uppercase mb-4">Company</p>
+          <ul class="list-reset space-y-2">
+            <li class="text-gray-500 hover:text-gray-700">
               <a
                 href="https://revivalandreformation.org/uip/blog"
                 target="_black"
@@ -51,14 +51,14 @@
                 {{ $t('Official Blog') }}
               </a>
             </li>
-            <li class="mt-2 inline-block mr-2 sm:block sm:mr-0">
+            <li class="text-gray-500 hover:text-gray-700">
               <nuxt-link
                 to="/page/aboutus"
                 class="text-grey hover:text-grey-dark"
                 >{{ $t('About Us') }}</nuxt-link
               >
             </li>
-            <li class="mt-2 inline-block mr-2 sm:block sm:mr-0">
+            <li class="text-gray-500 hover:text-gray-700">
               <nuxt-link
                 class="text-grey hover:text-grey-dark"
                 to="/page/contactus"

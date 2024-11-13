@@ -401,4 +401,35 @@ export default {
     like_first: 'Está orando por seu pedido ',
   },
   OR: 'OU',
+  'Site Language': 'Idioma do site',
+  'Get Started': 'Começar',
+  'Connect Through Prayer Every Day':
+    'Conecte-se através da oração todos os dias',
+  'Join millions of people sharing prayers, supporting each other, and growing in faith together.':
+    'Junte-se a milhões de pessoas compartilhando orações, apoiando-se mutuamente e crescendo na fé juntos.',
+  'Share a Quick Prayer': 'Compartilhe uma Oração Rápida',
+  'Your prayer will be shared with our community':
+    'Sua oração será compartilhada com nossa comunidade',
+  'Why Join WePray?': 'Por que se juntar ao WePray?',
+  'Ready to Start Your Prayer Journey?':
+    'Pronto para começar sua jornada de oração?',
+  'Join WePray Now': 'Junte-se ao WePray agora',
+  'Type your prayer here': 'Escreva sua oração aqui',
+  'Share Prayer': 'Compartilhar Oração',
+  '100% free • No ads • Spread love through prayer':
+    '100% gratuito • Sem anúncios • Espalhe amor através da oração',
+  'Submit prayer requests and receive support from a caring community':
+    'Envie pedidos de oração e receba apoio de uma comunidade carinhosa',
+  'Join a global community of believers supporting each other':
+    'Junte-se a uma comunidade global de fiéis apoiando-se mutuamente',
+  'See how God works through prayers and testimonies':
+    'Veja como Deus trabalha através das orações e testemunhos',
+  'Share Your Heart': 'Compartilhe seu coração',
+  'Connect with Others': 'Conecte-se com outros',
+  'Track Your Journey': 'Acompanhe sua jornada',
+  'Take WePray Everywhere': 'Leve o WePray para todos os lugares',
+  'Download our mobile app and stay connected with your prayer community anytime, anywhere.':
+    'Baixe nosso aplicativo móvel e fique conectado com sua comunidade de oração em qualquer lugar, a qualquer momento.',
+  'App Store': 'App Store',
+  'Google Play': 'Google Play',
 };

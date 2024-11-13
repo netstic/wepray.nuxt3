@@ -9,28 +9,33 @@ export default {
     './error.vue',
   ],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        lg: '1080px',
+      },
+    },
   },
   plugins: [require('daisyui'), require('@tailwindcss/typography')],
 
   // daisyUI config (optional - here are the default values)
   daisyui: {
     themes: [
-      {
-        wp: {
-          'color-scheme': 'light',
-          primary: '#0D4B84',
-          secondary: '#F7931E',
-          // "secondary-content": "oklch(98.71% 0.0106 342.55)",
-          accent: '#F7931E',
-          neutral: '#2B3440',
-          'neutral-content': '#D7DDE4',
-          'base-100': 'oklch(100% 0 0)',
-          'base-200': '#F2F2F2',
-          'base-300': '#E5E6E6',
-          'base-content': '#1f2937',
-        },
-      },
+      'pastel',
+      // {
+      //   wp: {
+      //     'color-scheme': 'pastel',
+      //     primary: '#0D4B84',
+      //     secondary: '#F7931E',
+      //     // "secondary-content": "oklch(98.71% 0.0106 342.55)",
+      //     accent: '#F7931E',
+      //     neutral: '#2B3440',
+      //     'neutral-content': '#D7DDE4',
+      //     'base-100': 'oklch(100% 0 0)',
+      //     'base-200': '#F2F2F2',
+      //     'base-300': '#E5E6E6',
+      //     'base-content': '#1f2937',
+      //   },
+      // },
     ], // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]
     darkTheme: 'mytheme', // name of one of the included themes for dark mode
     base: true, // applies background color and foreground color for root element by default

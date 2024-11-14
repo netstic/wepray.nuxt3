@@ -5,7 +5,9 @@
     <div
       class="flex flex-col lg:grid lg:grid-cols-2 gap-12 items-center lg:text-start text-center"
     >
-      <div class="gap-4 flex flex-col items-center lg:items-start">
+      <div
+        class="gap-4 flex flex-col items-center lg:items-start relative z-10"
+      >
         <h1
           class="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-800 leading-tight"
         >
@@ -22,7 +24,7 @@
           <button
             ref="startBtn"
             @click="navigateTo('/register')"
-            class="w-full sm:w-auto wp-btn wp-btn-lg wp-btn-blue font-bold text-lg hover:scale-105 transition-all"
+            class="wp-btn wp-btn-lg wp-btn-blue font-bold text-lg hover:scale-105 transition-all"
           >
             {{ $t('Get Started') }}
           </button>

@@ -1,21 +1,21 @@
 <template>
-  <LayoutPublicHeaderNav :show-start-btn="showStartBtn" />
+  <HomeNavHeader :show-start-btn="showStartBtn" />
 
   <main>
-    <HomeHeroSection @is-start-btn-showing="showStartBtn = !$event" />
+    <HomeSectionHero @is-start-btn-showing="showStartBtn = !$event" />
 
-    <HomeQuickPrayerSection />
+    <HomeSectionQuickPrayer />
 
-    <HomeFeaturesSection />
+    <HomeSectionFeatures />
 
-    <HomeTestimonialsSection />
+    <HomeSectionTestimonials />
 
-    <HomeMobileAppSection />
+    <HomeSectionMobileApp />
 
-    <HomeCTASection />
+    <HomeSectionCTA />
   </main>
 
-  <LayoutPublicFooterNav />
+  <HomeNavFooter />
 </template>
 
 <script setup>

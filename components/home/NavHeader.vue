@@ -28,15 +28,15 @@
             role="button"
             class="wp-btn hover:bg-stone-200 flex font-semibold text-sm wp-btn-ghost uppercase text-gray-400"
           >
-            {{ $t('Site Language') }}: {{ $i18n.locale }}
+            {{ $t('Site Language') }}: {{ $t('lang.' + locale) }}
             <IconChevronDown />
           </div>
           <ul
             tabindex="0"
             class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
           >
-            <li v-for="locale in $i18n.availableLocales">
-              <a @click="setLocale(locale)">{{ locale }}</a>
+            <li v-for="locale in availableLocales">
+              <a @click="setLocale(locale)">{{ $t('lang.' + locale) }}</a>
             </li>
           </ul>
         </div>
@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-const { setLocale } = useI18n();
+const { setLocale, availableLocales, locale } = useI18n();
 
 const props = defineProps<{
   showStartBtn: boolean;

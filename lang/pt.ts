@@ -390,8 +390,9 @@ export default {
   Favorited: 'Favoritado',
   'Interface language': 'Idioma da interface',
   lang: {
-    pt: 'PT - Português',
-    en: 'EN - English',
+    pt: 'Português',
+    en: 'Inglês',
+    es: 'Espanhol',
   },
   'To pray': 'A Orar',
   Prayed: 'Orados',
@@ -407,7 +408,7 @@ export default {
     'Conecte-se através da oração todos os dias',
   'Join millions of people sharing prayers, supporting each other, and growing in faith together.':
     'Junte-se a milhões de pessoas compartilhando orações, apoiando-se mutuamente e crescendo na fé juntos.',
-  'Share a Quick Prayer': 'Compartilhe uma Oração Rápida',
+  'Share a Quick Prayer': 'Compartilhe uma oração rápida',
   'Your prayer will be shared with our community':
     'Sua oração será compartilhada com nossa comunidade',
   'Why Join WePray?': 'Por que se juntar ao WePray?',
@@ -432,4 +433,11 @@ export default {
     'Baixe nosso aplicativo móvel e fique conectado com sua comunidade de oração em qualquer lugar, a qualquer momento.',
   'App Store': 'App Store',
   'Google Play': 'Google Play',
+  Languages: 'Idiomas',
+  'Our mission': 'Nossa missão',
+  Team: 'Equipe',
+  Contact: 'Contato',
+  'Privacy and terms': 'Privacidade e termos',
+  Terms: 'Termos',
+  Privacy: 'Privacidade',
 };

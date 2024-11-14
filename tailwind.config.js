@@ -23,9 +23,9 @@ export default {
       'pastel',
       // {
       //   wp: {
-      //     'color-scheme': 'pastel',
+      //     'color-scheme': 'light',
       //     primary: '#0D4B84',
-      //     secondary: '#F7931E',
+      //     secondary: '#2196f3',
       //     // "secondary-content": "oklch(98.71% 0.0106 342.55)",
       //     accent: '#F7931E',
       //     neutral: '#2B3440',

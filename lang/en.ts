@@ -389,8 +389,9 @@ export default {
   Favorited: 'Favorited',
   'Interface language': 'Interface language',
   lang: {
-    pt: 'PT - Português',
-    en: 'EN - English',
+    pt: 'Portuguese',
+    en: 'English',
+    es: 'Spanish',
   },
   'To pray': 'To Pray',
   Prayed: 'Prayed',
@@ -405,10 +406,10 @@ export default {
   'Connect Through Prayer Every Day': 'Connect through prayer every day',
   'Join millions of people sharing prayers, supporting each other, and growing in faith together.':
     'Join millions of people sharing prayers, supporting each other, and growing in faith together.',
-  'Share a Quick Prayer': 'Share a Quick Prayer',
+  'Share a Quick Prayer': 'Share a quick prayer',
   'Your prayer will be shared with our community':
     'Your prayer will be shared with our community',
-  'Why Join WePray?': 'Why Join WePray?',
+  'Why Join WePray?': 'Why join WePray?',
   'Ready to Start Your Prayer Journey?': 'Ready to Start Your Prayer Journey?',
   'Join WePray Now': 'Join WePray Now',
   'Type your prayer here': 'Type your prayer here',
@@ -420,12 +421,19 @@ export default {
     'Join a global community of believers supporting each other',
   'See how God works through prayers and testimonies':
     'See how God works through prayers and testimonies',
-  'Share Your Heart': 'Share Your Heart',
-  'Connect with Others': 'Connect with Others',
-  'Track Your Journey': 'Track Your Journey',
+  'Share Your Heart': 'Share your heart',
+  'Connect with Others': 'Connect with others',
+  'Track Your Journey': 'Track your journey',
   'Take WePray Everywhere': 'Take WePray Everywhere',
   'Download our mobile app and stay connected with your prayer community anytime, anywhere.':
     'Download our mobile app and stay connected with your prayer community anytime, anywhere.',
   'App Store': 'App Store',
   'Google Play': 'Google Play',
+  Languages: 'Languages',
+  'Our mission': 'Our mission',
+  Team: 'Team',
+  Contact: 'Contact',
+  'Privacy and terms': 'Privacy and terms',
+  Terms: 'Terms',
+  Privacy: 'Privacy',
 };

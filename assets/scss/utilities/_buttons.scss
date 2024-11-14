@@ -13,3 +13,7 @@
 .wp-btn-blue {
   @apply bg-blue-600 hover:bg-blue-700 text-white;
 }
+
+.wp-btn-icon {
+  @apply rounded-[50%] transition-colors hover:bg-stone-200;
+}

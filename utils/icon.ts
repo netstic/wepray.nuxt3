@@ -5,6 +5,7 @@ export enum EIconSize {
   SM = 'sm',
   MD = 'md',
   LG = 'lg',
+  XL = 'xl',
 }
 
 const iconSizes: IIconSize = {
@@ -12,6 +13,7 @@ const iconSizes: IIconSize = {
   [EIconSize.SM]: 'icon-sm',
   [EIconSize.MD]: 'icon-md',
   [EIconSize.LG]: 'icon-lg',
+  [EIconSize.XL]: 'icon-xl',
 };
 
 export const getIconSize = (size: TIconSize) => {

@@ -8,9 +8,10 @@ export interface IIconSize {
   sm: 'icon-sm';
   md: 'icon-md';
   lg: 'icon-lg';
+  xl: 'icon-xl';
 }
 
-export type TIconSize = 'xs' | 'sm' | 'md' | 'lg';
+export type TIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export type TCustomClass =
   | string

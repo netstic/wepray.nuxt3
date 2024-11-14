@@ -27,6 +27,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxt/content',
     'nuxt-viewport',
+    '@nuxt/fonts',
   ],
   pinia: {
     storesDirs: ['./stores/**', './custom-folder/stores/**'],

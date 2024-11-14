@@ -19,32 +19,16 @@
           >
         </a>
 
-        <div
-          class="hidden lg:block dropdown dropdown-hover text-gray-700"
-          :class="{ 'lg:hidden': props.showStartBtn }"
-        >
-          <div
-            tabindex="0"
-            role="button"
-            class="wp-btn hover:bg-stone-200 flex font-semibold text-sm wp-btn-ghost uppercase text-gray-400"
-          >
-            {{ $t('Site Language') }}: {{ $t('lang.' + locale) }}
-            <IconChevronDown />
-          </div>
-          <ul
-            tabindex="0"
-            class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
-          >
-            <li v-for="locale in availableLocales">
-              <a @click="setLocale(locale)">{{ $t('lang.' + locale) }}</a>
-            </li>
-          </ul>
-        </div>
+        <NavHeaderDropdown
+          :show-start-btn="props.showStartBtn"
+          :label="`${$t('Site Language')}: ${$t('lang.' + locale)}`"
+          :items="localeDropdownArray"
+        />
 
         <button
           v-if="showStartBtn"
           @click="navigateTo('/register')"
-          class="wp-btn wp-btn-blue font-bold"
+          class="wp-btn-full wp-btn-blue font-bold"
         >
           {{ $t('Get Started') }}
         </button>
@@ -54,9 +38,16 @@
 </template>
 
 <script setup lang="ts">
-const { setLocale, availableLocales, locale } = useI18n();
+const { setLocale, availableLocales, locale, t } = useI18n();
 
 const props = defineProps<{
   showStartBtn: boolean;
 }>();
+
+const localeDropdownArray = computed(() =>
+  availableLocales.map((locale) => ({
+    label: t('lang.' + locale),
+    callback: () => setLocale(locale),
+  }))
+);
 </script>

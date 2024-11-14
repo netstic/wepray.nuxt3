@@ -19,6 +19,11 @@
 </template>
 
 <script setup>
+definePageMeta({
+  layout: false,
+  colorMode: 'light',
+});
+
 import { ref } from 'vue';
 
 const showStartBtn = ref(false);

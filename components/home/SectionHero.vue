@@ -1,6 +1,6 @@
 <template>
   <section
-    class="mt-20 mx-auto public-layout-padding sm:pt-10 pb-12 md:py-32 public-layout-width"
+    class="mt-20 mx-auto public-layout-padding bg-white dark:bg-gray-900 sm:pt-10 pb-12 md:py-32 public-layout-width"
   >
     <div
       class="flex flex-col lg:grid lg:grid-cols-2 gap-12 items-center lg:text-start text-center"
@@ -21,13 +21,23 @@
           }}
         </p>
         <div class="space-y-4 mt-4">
-          <button
-            ref="startBtn"
-            @click="navigateTo('/register')"
-            class="wp-btn wp-btn-lg wp-btn-blue font-bold text-lg hover:scale-105 transition-all"
-          >
-            {{ $t('Get Started') }}
-          </button>
+          <div class="space-x-2">
+            <button
+              ref="startBtn"
+              @click="navigateTo('/register')"
+              class="py-6 px-2 rounded-full wp-btn-lg wp-btn-blue font-bold text-lg hover:scale-105 transition-all"
+            >
+              {{ $t('Get Started') }}
+            </button>
+
+            <button
+              ref="startBtn"
+              @click="navigateTo('/login')"
+              class="wp-btn-full wp-btn-lg wp-btn-plain text-lg hover:scale-105 transition-all"
+            >
+              {{ $t('Login') }}
+            </button>
+          </div>
           <p class="text-gray-500 text-sm">
             {{ $t('100% free • No ads • Spread love through prayer') }}
           </p>

@@ -1,5 +1,5 @@
 <template>
-  <section class="py-24 bg-gray-50">
+  <section class="py-16 bg-gray-50">
     <div class="public-layout-padding public-layout-width mx-auto text-center">
       <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-8">
         {{ $t('Ready to Start Your Prayer Journey?') }}

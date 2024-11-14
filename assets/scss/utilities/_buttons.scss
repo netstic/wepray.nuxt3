@@ -1,5 +1,9 @@
 .wp-btn {
-  @apply px-6 py-2 rounded-full transition-colors;
+  @apply px-6 py-2 rounded-lg transition-colors font-bold hover:bg-stone-100;
+}
+
+.wp-btn-full {
+  @apply px-6 py-2 rounded-full transition-colors font-bold hover:bg-stone-100;
 }
 
 .wp-btn-lg {
@@ -10,10 +14,14 @@
   @apply bg-transparent;
 }
 
+.wp-btn-plain {
+  @apply hover:bg-transparent;
+}
+
 .wp-btn-blue {
   @apply bg-blue-600 hover:bg-blue-700 text-white;
 }
 
 .wp-btn-icon {
-  @apply rounded-[50%] transition-colors hover:bg-stone-200;
+  @apply rounded-[50%] transition-colors hover:bg-stone-100;
 }

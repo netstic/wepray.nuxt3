@@ -11,34 +11,22 @@
 
         <div>
           <div class="md:flex hidden py-1 items-center space-x-2">
-            <div class="dropdown dropdown-hover text-gray-700">
-              <div
-                tabindex="0"
-                role="button"
-                class="wp-btn hover:bg-stone-200 flex font-semibold text-sm wp-btn-ghost uppercase text-gray-400"
-              >
-                {{ $t('Site Language') }}: {{ $t('lang.' + locale) }}
-                <IconChevronDown />
-              </div>
-              <ul
-                tabindex="0"
-                class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
-              >
-                <li v-for="locale in availableLocales">
-                  <a @click="setLocale(locale)">{{ $t('lang.' + locale) }}</a>
-                </li>
-              </ul>
-            </div>
+            <NavHeaderDropdown
+              class="hidden md:block text-gray-700"
+              :show-start-btn="false"
+              :label="`${$t('Site Language')}: ${$t('lang.' + locale)}`"
+              :items="localeDropdownArray"
+            />
 
             <button
               @click="navigateTo('/login')"
-              class="wp-btn bg-white hover:bg-stone-200 border border-gray-400 font-bold"
+              class="wp-btn-full bg-white hover:bg-stone-200 border border-gray-400 font-bold"
             >
               {{ $t('Login') }}
             </button>
             <button
               @click="navigateTo('/register')"
-              class="wp-btn wp-btn-blue font-bold"
+              class="wp-btn-full wp-btn-blue font-bold"
             >
               {{ $t('Get Started') }}
             </button>
@@ -50,18 +38,15 @@
             </button>
             <ul
               v-if="isMenuOpen"
-              class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 absolute -bottom-[8.3rem] right-0 shadow"
+              class="z-[1] dropdown-content cursor-pointer w-52 p-2 absolute -bottom-[10.0rem] right-0 shadow text-gray-600 bg-white dark:bg-gray-800"
             >
-              <li>
-                <a @click="navigateTo('/login')">{{ $t('Login') }}</a>
-              </li>
-              <li>
-                <a @click="navigateTo('/register')">{{ $t('Get Started') }}</a>
-              </li>
-              <li>
-                <a @click="() => languageDialog?.showModal()"
-                  >{{ $t('Site Language') }}: {{ $t('lang.' + locale) }}</a
-                >
+              <li
+                v-for="(item, index) in menuArray"
+                :key="index"
+                class="wp-btn"
+                @click="item.callback"
+              >
+                <span>{{ item.label }}</span>
               </li>
             </ul>
           </div>
@@ -69,29 +54,51 @@
       </div>
     </nav>
 
-    <dialog ref="languageDialog" class="modal">
-      <div class="modal-box max-w-[15rem]">
-        <form method="dialog">
-          <button
-            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          >
-            ✕
-          </button>
-        </form>
-        <p v-for="locale in availableLocales" :key="locale" class="">
-          <button @click="setLocale(locale)" class="btn btn-ghost w-full">
+    <div v-if="isLocaleDialogOpen" class="custom-dialog">
+      <div class="rounded-lg bg-white dark:bg-gray-800 pt-4 pb-4 px-4 relative">
+        <div
+          class="absolute bg-white rounded-full p-2 cursor-pointer -top-4 -right-4"
+          @click="closeLocaleDialog"
+        >
+          <IconX class="text-gray-600 dark:text-gray-400" />
+        </div>
+        <p v-for="locale in availableLocales" :key="locale">
+          <button @click="setLocale(locale)" class="wp-btn w-full">
             {{ $t('lang.' + locale) }}
           </button>
         </p>
       </div>
-    </dialog>
+    </div>
   </header>
 </template>
 
 <script setup lang="ts">
-const { setLocale, availableLocales, locale } = useI18n();
+const { setLocale, availableLocales, locale, t } = useI18n();
+
 const isMenuOpen = ref(false);
-const languageDialog = ref<HTMLDialogElement | null>(null);
+const isLocaleDialogOpen = ref(false);
+
+const localeDropdownArray = computed(() =>
+  availableLocales.map((locale) => ({
+    label: t('lang.' + locale),
+    callback: () => setLocale(locale),
+  }))
+);
+
+const menuArray = computed(() => [
+  {
+    label: t('Login'),
+    callback: () => navigateTo('/login'),
+  },
+  {
+    label: t('Get Started'),
+    callback: () => navigateTo('/register'),
+  },
+  {
+    label: `${t('Site Language')}: ${locale.value.toUpperCase()}`,
+    callback: () => openLocaleDialog(),
+  },
+]);
 
 const toggleMenu = (event: MouseEvent) => {
   isMenuOpen.value = !isMenuOpen.value;
@@ -100,6 +107,15 @@ const toggleMenu = (event: MouseEvent) => {
 
 const closeMenu = () => {
   isMenuOpen.value = false;
+};
+
+const openLocaleDialog = () => {
+  isLocaleDialogOpen.value = true;
+  closeMenu();
+};
+
+const closeLocaleDialog = () => {
+  isLocaleDialogOpen.value = false;
 };
 
 onMounted(() => {
@@ -123,3 +139,18 @@ onUnmounted(() => {
   window.removeEventListener('resize', closeMenu);
 });
 </script>
+
+<style lang="scss" scoped>
+.custom-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+</style>

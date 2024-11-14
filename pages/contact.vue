@@ -5,7 +5,7 @@
     <div class="bg-white shadow overflow-hidden sm:rounded-lg">
       <div class="px-4 py-5 sm:p-6">
         <h2 class="text-lg leading-6 font-medium text-gray-900 mb-4">
-          Get in touch with the PrayerConnect team
+          Get in touch with the WePray team
         </h2>
         <form @submit.prevent="submitForm" class="space-y-6">
           <div>

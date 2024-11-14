@@ -13,10 +13,7 @@
             class="flex-grow wp-input resize-none overflow-hidden"
             @input="autoGrow"
           ></textarea>
-          <button
-            class="px-6 py-2 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-700 transition-colors"
-            @click="submitQuickPrayer"
-          >
+          <button class="wp-btn wp-btn-blue" @click="submitQuickPrayer">
             {{ $t('Send') }}
           </button>
         </div>

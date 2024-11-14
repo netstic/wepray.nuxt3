@@ -10,7 +10,7 @@
         </a>
 
         <div>
-          <div class="md:flex hidden items-center space-x-2">
+          <div class="md:flex hidden py-1 items-center space-x-2">
             <div class="dropdown dropdown-hover text-gray-700">
               <div
                 tabindex="0"
@@ -32,7 +32,7 @@
 
             <button
               @click="navigateTo('/login')"
-              class="wp-btn bg-white font-bold"
+              class="wp-btn bg-white hover:bg-stone-200 border border-gray-400 font-bold"
             >
               {{ $t('Login') }}
             </button>

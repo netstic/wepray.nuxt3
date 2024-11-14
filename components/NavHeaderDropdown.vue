@@ -19,7 +19,7 @@
       <IconChevronDown />
       <ul
         tabindex="0"
-        class="bg-white z-[1] w-52 p-2 shadow absolute text-gray-600 mt-10 normal-case"
+        class="bg-white rounded-lg z-[1] w-52 p-2 shadow absolute text-gray-600 mt-9 normal-case"
         :class="{ hidden: !isMenuOpen }"
       >
         <li

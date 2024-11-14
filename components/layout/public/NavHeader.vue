@@ -38,7 +38,7 @@
             </button>
             <ul
               v-if="isMenuOpen"
-              class="z-[1] dropdown-content cursor-pointer w-52 p-2 absolute -bottom-[10.0rem] right-0 shadow text-gray-600 bg-white dark:bg-gray-800"
+              class="z-[1] rounded-lg dropdown-content cursor-pointer w-52 p-2 absolute -bottom-[8.5rem] right-0 shadow text-gray-600 bg-white"
             >
               <li
                 v-for="(item, index) in menuArray"
@@ -55,12 +55,12 @@
     </nav>
 
     <div v-if="isLocaleDialogOpen" class="custom-dialog">
-      <div class="rounded-lg bg-white dark:bg-gray-800 pt-4 pb-4 px-4 relative">
+      <div class="rounded-lg bg-white pt-4 pb-4 px-4 relative">
         <div
           class="absolute bg-white rounded-full p-2 cursor-pointer -top-4 -right-4"
           @click="closeLocaleDialog"
         >
-          <IconX class="text-gray-600 dark:text-gray-400" />
+          <IconX class="text-gray-600" />
         </div>
         <p v-for="locale in availableLocales" :key="locale">
           <button @click="setLocale(locale)" class="wp-btn w-full">

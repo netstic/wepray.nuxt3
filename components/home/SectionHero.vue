@@ -1,6 +1,6 @@
 <template>
   <section
-    class="mt-20 mx-auto public-layout-padding bg-white dark:bg-gray-900 sm:pt-10 pb-12 md:py-32 public-layout-width"
+    class="mt-20 mx-auto public-layout-padding bg-white sm:pt-10 pb-12 md:py-32 public-layout-width"
   >
     <div
       class="flex flex-col lg:grid lg:grid-cols-2 gap-12 items-center lg:text-start text-center"

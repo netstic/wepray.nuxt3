@@ -25,14 +25,14 @@ export default defineNuxtConfig({
     storesDirs: ['./stores/**', './custom-folder/stores/**'],
   },
 
-  app: {
-    pageTransition: {
-      name: 'fade',
-      mode: 'out-in', // default
-    },
-    layoutTransition: {
-      name: 'fade',
-      mode: 'out-in', // default
-    },
-  },
+  // app: {
+  //   pageTransition: {
+  //     name: 'fade',
+  //     mode: 'out-in', // default
+  //   },
+  //   layoutTransition: {
+  //     name: 'fade',
+  //     mode: 'out-in', // default
+  //   },
+  // },
 });

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Autenticando....</h1>
+    <h1>Authenticating....</h1>
   </div>
 </template>
 <script setup lang="ts">
@@ -9,19 +9,22 @@ import { validAuthProviders, type TAuthProvider } from '~/types/user/auth';
 const { query, params } = useRoute();
 const { callbackAuth } = useAuth();
 
+const { t } = useI18n();
+
 onMounted(() => {
   const provider = params.provider as TAuthProvider;
 
   if (!validAuthProviders.includes(provider)) {
-    console.error(`Invalid auth provider: ${provider}`);
-    window.close();
-    return;
+    throw createError({
+      statusCode: 422,
+      message: `${t('Invalid auth provider')}: ${provider}`,
+    });
   }
 
   callbackAuth(provider, query)
     .then(({ data }) => {
       window.opener.postMessage(
-        { responseToken: data.authorisation.token },
+        { responseToken: data.authorisation.token, provider },
         window.location.origin
       );
       window.close();

@@ -1,334 +1,173 @@
 <template>
-  <div class="layout-public-content-wrapper mx-auto bg-base-100">
-    <div class="card-body gap-4 max-w-3xl mx-auto">
-      <h2
-        class="w-full text-3xl font-semibold text-gray-800 md:text-4xl aos-init aos-animate"
-      >
-        {{ $t('Sign Up') }}
-      </h2>
-
-      <p>
-        <span class="text-primary font-medium">Faça a diferença!</span> Seja
-        parte de uma comunidade engajada em oração e contribua para um mundo
-        melhor.
-      </p>
-
-      <form class="form-control flex flex-col gap-4" @submit.prevent="onSubmit">
-        <WeprayFormInput
-          v-model="row.email"
-          placeholder="E-mail"
-          @keyup.enter="checkEmail"
+  <div
+    class="fixed top-4 left-4 text-gray-600 dark:text-gray-400 text-xl cursor-pointer"
+    @click="hasHistory ? $router.go(-1) : navigateTo('/')"
+  >
+    <IconCloseSquare size="xl" />
+  </div>
+  <div
+    class="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col justify-center items-center p-4 transition-colors duration-300"
+  >
+    <div
+      class="w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 transition-colors duration-300"
+    >
+      <div class="flex justify-center mb-8">
+        <svg
+          class="w-16 h-16 text-blue-600 dark:text-blue-400"
+          viewBox="0 0 24 24"
+          fill="currentColor"
         >
-          <template #prepend>
-            <IconEmail size="sm" />
-          </template>
-        </WeprayFormInput>
-
-        <button
-          v-if="!isEmailChecked"
-          type="button"
-          class="btn btn-primary"
-          @click="checkEmail"
-          :disabled="!row.email"
-        >
-          {{ $t('Check') }}
-        </button>
-
-        <template v-if="isEmailChecked">
-          <WeprayFormInput v-model="row.name" placeholder="Name" />
-          <WeprayFormInput v-model="row.username" placeholder="Nome de usuário">
-            <template #prepend>
-              <IconUser size="sm" />
-            </template>
-            <template #append>
-              <div
-                class="tooltip 2xl:tooltip-top tooltip-left"
-                :data-tip="
-                  $t('Examples: Name, Name.Lastname, Name_1, nickname')
-                "
-              >
-                <IconQuestionCircleOutline />
-              </div>
-              <!-- <div
-            v-if="!isCheckError('username')"
-            class="flex items-center mt-1 mb-6 mx-3 font-light text-sm"
-          >
-            <i class="mdi mdi-information mr-1"></i>
-            {{ $t('Examples: Name, Name.Lastname, Name_1, nickname') }}
-          </div> -->
-            </template>
-          </WeprayFormInput>
-
-          <div class="flex flex-col gap-4 md:grid md:grid-cols-12">
-            <WeprayFormInput
-              v-model="row.password"
-              :type="isShowPassword ? 'text' : 'password'"
-              placeholder="Senha"
-              class="col-span-6"
-            >
-              <template #prepend>
-                <IconKey size="sm" />
-              </template>
-              <template #append>
-                <button type="button" @click="onShowPassword('password')">
-                  <IconEyeOutline v-if="!isShowPassword" />
-                  <IconEyeSlashOutline v-else />
-                </button>
-              </template>
-            </WeprayFormInput>
-
-            <WeprayFormInput
-              v-model="row.password_confirmation"
-              :type="isShowPasswordConfirmation ? 'text' : 'password'"
-              placeholder="Confirme sua senha"
-              class="col-span-6"
-              label="test"
-            >
-              <template #prepend>
-                <IconKey size="sm" />
-              </template>
-              <template #append>
-                <button
-                  type="button"
-                  @click="onShowPassword('passwordConfirmation')"
-                >
-                  <IconEyeOutline v-if="!isShowPasswordConfirmation" />
-                  <IconEyeSlashOutline v-else />
-                </button>
-              </template>
-            </WeprayFormInput>
-          </div>
-
-          <!-- <div class="flex items-center justify-between mt-4 mx-2">
-            <div class="w-full px-1 mb-6">
-              <label
-                name="name"
-                class="block font-medium text-sm text-gray-700"
-              >
-                {{ $t('Name') }}
-              </label>
-              <t-input
-                id="name"
-                v-model="row.name"
-                type="name"
-                name="name"
-                :variant="isCheckError('name') ? 'error' : undefined"
-              ></t-input>
-            </div>
-          </div>
-          <div class="flex items-center justify-between mt-4 mx-2">
-            <div class="w-full px-1 mb-0">
-              <label
-                name="username"
-                class="block font-medium text-sm text-gray-700"
-              >
-                {{ $t('Username') }}
-              </label>
-              <t-input
-                id="username"
-                v-model="row.username"
-                type="username"
-                name="username"
-                :variant="isCheckError('username') ? 'error' : undefined"
-                @blur="checkUsername"
-              ></t-input>
-            </div>
-          </div>
-          <div
-            v-if="!isCheckError('username')"
-            class="flex items-center mt-1 mb-6 mx-3 font-light text-sm"
-          >
-            <i class="mdi mdi-information mr-1"></i>
-            {{ $t('Examples: Name, Name.Lastname, Name_1, nickname') }}
-          </div>
-          <div
-            v-if="isCheckError('username')"
-            class="flex items-center mt-1 mb-6 mx-3 font-light text-sm text-red-500"
-          >
-            <i class="mdi mdi-information mr-1"></i>
-            {{ $t('Only letters, numbers and dot (.) are allowed.') }}
-          </div>
-          <div
-            class="flex flex-col md:flex-row items-center justify-between mt-4 mx-2"
-          >
-            <div class="w-full px-1 mb-6">
-              <label
-                name="password"
-                class="block font-medium text-sm text-gray-700"
-              >
-                {{ $t('Password') }}
-              </label>
-              <div class="relative">
-                <t-input
-                  id="password"
-                  v-model="row.password"
-                  :type="isShowPassword ? 'text' : 'password'"
-                  name="password"
-                  :variant="isCheckError('password') ? 'error' : undefined"
-                  :placeholder="$t('at least 8 characters')"
-                ></t-input>
-                <div
-                  class="absolute inset-y-1 right-1 pr-3 flex items-center text-lg"
-                >
-                  <button @click="onShowPasswords('password')">
-                    <i v-if="!isShowPassword" class="mdi mdi-eye-outline"></i>
-                    <i
-                      v-if="isShowPassword"
-                      class="mdi mdi-eye-remove text-red-500"
-                    ></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="w-full px-1 mb-6">
-              <label
-                name="password_confirmation"
-                class="block font-medium text-sm text-gray-700"
-              >
-                {{ $t('Confirm password') }}
-              </label>
-              <div class="relative">
-                <t-input
-                  id="password_confirmation"
-                  v-model="row.password_confirmation"
-                  :type="isShowPasswordConfirmation ? 'text' : 'password'"
-                  name="password_confirmation"
-                  :variant="
-                    isCheckError('password_confirmation') ? 'error' : undefined
-                  "
-                ></t-input>
-                <div
-                  class="absolute inset-y-1 right-1 pr-3 flex items-center text-lg"
-                >
-                  <button @click="onShowPassword('passwordConfirmation')">
-                    <i
-                      v-if="!isShowPasswordConfirmation"
-                      class="mdi mdi-eye-outline"
-                    ></i>
-                    <i
-                      v-if="isShowPasswordConfirmation"
-                      class="mdi mdi-eye-remove text-red-500"
-                    ></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div> -->
-        </template>
-        <!-- <div class="md:flex items-center justify-between flex-col">
-          <recaptcha
-            id="g-recaptcha-2"
-            class="inline-flex items-center px-4 py-2"
-            @error="onRecaptchaError"
-            @success="onRecaptchaSuccess"
-            @expired="onRecaptchaExpired"
+          <path
+            d="M17 3V5V7H15V9H17V11V13H19V11V9V7V5V3H17ZM11 9V7V5V3H9V5V7V9V11V13H11V11V9ZM3 13V15V17V19V21H5V19V17V15V13V11H3V13ZM15 21V19V17H13V15H15V13H17V15V17V19V21H15ZM11 21V19V17V15V13H9V15V17V19V21H11ZM7 11V9V7H5V9V11V13H7V11Z"
           />
-        </div> -->
-
-        <button v-if="isEmailChecked" type="submit" class="btn btn-primary">
-          {{ $t('Send') }}
-        </button>
-
-        <div class="flex gap-4 items-center mt-6">
-          <span class="font-semibold text-gray-600 md:text-lg"
-            >Ou se preferir</span
+        </svg>
+      </div>
+      <h1
+        class="text-2xl font-bold text-center mb-8 text-gray-800 dark:text-white"
+      >
+        Create your PrayerConnect account
+      </h1>
+      <form @submit.prevent="handleRegister">
+        <div class="mb-4">
+          <label
+            for="username"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Username</label
           >
-          <button class="btn btn-neutral-content flex-1">
-            <IconGoogle />
-            <span class="text-lg"> Entre com Google </span>
-          </button>
+          <input
+            id="username"
+            v-model="username"
+            type="text"
+            required
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            placeholder="Choose a username"
+          />
         </div>
+        <div class="mb-4">
+          <label
+            for="email"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Email</label
+          >
+          <input
+            id="email"
+            v-model="email"
+            type="email"
+            required
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            placeholder="Enter your email"
+          />
+        </div>
+        <div class="mb-4">
+          <label
+            for="password"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Password</label
+          >
+          <div class="relative">
+            <input
+              id="password"
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+              required
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              placeholder="Create a password"
+            />
+            <button
+              type="button"
+              @click="togglePasswordVisibility('password')"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500"
+            >
+              <IconEyeOutline v-if="showPassword" />
+              <IconEyeSlashOutline v-else />
+            </button>
+          </div>
+        </div>
+        <div class="mb-6">
+          <label
+            for="password_confirmation"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >Confirm Password</label
+          >
+          <div class="relative">
+            <input
+              id="password_confirmation"
+              v-model="password_confirmation"
+              :type="showPasswordConfirmation ? 'text' : 'password'"
+              required
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              placeholder="Confirm your password"
+            />
+            <button
+              type="button"
+              @click="togglePasswordVisibility('confirmation')"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500"
+            >
+              <IconEyeOutline v-if="showPasswordConfirmation" />
+              <IconEyeSlashOutline v-else />
+            </button>
+          </div>
+        </div>
+        <button
+          type="submit"
+          class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-offset-gray-800"
+        >
+          Create Account
+        </button>
       </form>
+      <div class="mt-6 text-center">
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+          Already have an account?
+          <NuxtLink
+            to="/login"
+            class="text-blue-600 dark:text-blue-400 hover:underline"
+            >Log in</NuxtLink
+          >
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { checkEmailUserService, createUserService } from '~/services/user';
-import type { IRegisterForm } from '~/types/user/login';
-
-useHead({
-  title: 'Register - WePray',
+<script setup>
+definePageMeta({
+  layout: false,
+  colorMode: 'dark',
 });
 
-const { login } = useAuth();
+const hasHistory = ref(false);
 
-const row = ref<IRegisterForm>({
-  username: '',
-  email: null,
-  password: null,
-  password_confirmation: null,
-});
+import { ref } from 'vue';
 
-const isEmailChecked = ref(false);
-const isShowPassword = ref(false);
-const isShowPasswordConfirmation = ref(false);
+const username = ref('');
+const email = ref('');
+const password = ref('');
+const password_confirmation = ref('');
+const showPassword = ref(false);
+const showPasswordConfirmation = ref(false);
 
-const onShowPassword = (passwordTipo: 'password' | 'passwordConfirmation') => {
-  if (passwordTipo == 'password') {
-    return (isShowPassword.value = !isShowPassword.value);
-  } else if (passwordTipo == 'passwordConfirmation') {
-    return (isShowPasswordConfirmation.value =
-      !isShowPasswordConfirmation.value);
+const togglePasswordVisibility = (field) => {
+  if (field === 'password') {
+    showPassword.value = !showPassword.value;
+  } else if (field === 'confirmation') {
+    showPasswordConfirmation.value = !showPasswordConfirmation.value;
   }
 };
 
-// const checkUsername = async () => {
-//   const { username } = row;
-//   try {
-//     await useApi().post('/api/v1/pub/user/check', { username });
-//     errors.value = {};
-//     showForm.value = true;
-//   } catch (err: any) {
-//     errors.value = useHandleError(err);
-//   }
-// };
-
-const checkEmail = async () => {
-  if (!row.value.email) return;
-
-  checkEmailUserService(row.value.email)
-    .then(() => {
-      isEmailChecked.value = true;
-    })
-    .catch((err) => useHandleError(err));
+const handleRegister = () => {
+  // Here you would typically handle the registration logic
+  console.log('Registration attempted with:', {
+    username: username.value,
+    email: email.value,
+    password: password.value,
+    password_confirmation: password_confirmation.value,
+  });
+  // You might want to use a store action or make an API call here
 };
 
-const onSubmit = async () => {
-  const resCreate = createUserService(row.value);
-
-  resCreate
-    .then(() => {
-      const resLogin = login({
-        email: row.value.email!,
-        password: row.value.password!,
-      });
-
-      resLogin.catch((err) => useHandleError(err));
-    })
-    .catch((err) => useHandleError(err));
-
-  // try {
-  //   await nuxtApp.$auth.loginWith('laravelSanctum', {
-  //     data: row,
-  //   });
-
-  //   const layout = nuxtApp.$store.state.auth.loggedIn ? 'private' : 'public';
-  //   nuxtApp.setLayout(layout);
-  // } catch (err: any) {
-  //   errors.value = useHandleError(err);
-  // }
-};
-
-// const onError = (_e: unknown) => {
-//   // Handle recaptcha error if needed
-// };
-
-// const onSuccess = (token: string) => {
-//   row['g-recaptcha-response'] = token;
-// };
-
-// const onExpired = () => {
-//   row['g-recaptcha-response'] = null;
-// };
+onMounted(() => {
+  if (window.history.length > 1) {
+    hasHistory.value = true;
+  }
+});
 </script>

@@ -10,6 +10,10 @@
   @apply px-8 py-4;
 }
 
+.wp-btn-sm {
+  @apply px-4 py-2;
+}
+
 .wp-btn-ghost {
   @apply bg-transparent;
 }
@@ -24,4 +28,8 @@
 
 .wp-btn-icon {
   @apply rounded-[50%] transition-colors hover:bg-stone-100;
+}
+
+.wp-btn-auth {
+  @apply bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-offset-gray-800;
 }

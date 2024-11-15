@@ -436,4 +436,17 @@ export default {
   'Privacy and terms': 'Privacidad y términos',
   Terms: 'Términos',
   Privacy: 'Privacidad',
+  'Go back home': 'Volver a la página principal',
+  'Invalid auth provider': 'Proveedor de autenticación inválido',
+  'Log in to WePray': 'Iniciar sesión en WePray',
+  'Email or Username': 'Correo electrónico o nombre de usuario',
+  'Enter your email or username':
+    'Introduce tu correo electrónico o nombre de usuario',
+  'Log in': 'Iniciar sesión',
+  'Enter your password': 'Introduce tu contraseña',
+  'Don t have an account?': '¿No tienes una cuenta?',
+  'Sign up': 'Registrarse',
+  'Or continue with': 'O continuar con',
+  Facebook: 'Facebook',
+  Google: 'Google',
 };

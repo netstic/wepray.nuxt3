@@ -60,7 +60,7 @@
         <p class="text-sm text-gray-600 dark:text-gray-400">
           {{ $t("Don't have an account?") }}
           <NuxtLink
-            to="/register"
+            to="/welcome"
             class="wp-link"
             :class="{ 'pointer-events-none': someAuthProviderLoading }"
             >{{ $t('Sign up') }}</NuxtLink

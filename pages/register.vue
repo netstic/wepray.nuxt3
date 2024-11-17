@@ -1,7 +1,7 @@
 <template>
   <div
     class="fixed top-4 left-4 text-gray-600 dark:text-gray-400 text-xl cursor-pointer"
-    @click="hasHistory ? $router.go(-1) : navigateTo('/')"
+    @click="hasWindowHistory ? $router.go(-1) : navigateTo('/')"
   >
     <IconCloseSquare size="xl" />
   </div>
@@ -12,116 +12,101 @@
       class="w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 transition-colors duration-300"
     >
       <div class="flex justify-center mb-8">
-        <svg
-          class="w-16 h-16 text-blue-600 dark:text-blue-400"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path
-            d="M17 3V5V7H15V9H17V11V13H19V11V9V7V5V3H17ZM11 9V7V5V3H9V5V7V9V11V13H11V11V9ZM3 13V15V17V19V21H5V19V17V15V13V11H3V13ZM15 21V19V17H13V15H15V13H17V15V17V19V21H15ZM11 21V19V17V15V13H9V15V17V19V21H11ZM7 11V9V7H5V9V11V13H7V11Z"
-          />
-        </svg>
+        <LogoWp custom-class="w-16 h-16 text-blue-600 dark:text-blue-400" />
       </div>
       <h1
         class="text-2xl font-bold text-center mb-8 text-gray-800 dark:text-white"
       >
-        Create your PrayerConnect account
+        {{ $t('Create your WePray account') }}
       </h1>
-      <form @submit.prevent="handleRegister">
-        <div class="mb-4">
-          <label
-            for="username"
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-            >Username</label
-          >
-          <input
-            id="username"
-            v-model="username"
-            type="text"
+      <form @submit.prevent="onRegister">
+        <template v-if="!isEmailChecked">
+          <WeprayFormInput
+            v-model="row.email"
+            :label="$t('Email')"
+            :placeholder="$t('Enter your email')"
             required
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            placeholder="Choose a username"
+            class="mb-4"
+            @keyup.enter="checkEmail"
           />
-        </div>
-        <div class="mb-4">
-          <label
-            for="email"
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-            >Email</label
+
+          <button
+            type="button"
+            @click="checkEmail"
+            :disabled="!row.email"
+            class="w-full wp-btn-auth"
           >
-          <input
-            id="email"
-            v-model="email"
-            type="email"
+            {{ $t('Check') }}
+          </button>
+        </template>
+
+        <template v-if="isEmailChecked">
+          <div>{{ row.email }}</div>
+          <WeprayFormInput
+            v-model="row.age"
+            :label="$t('Age')"
+            :placeholder="$t('Enter your age')"
             required
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            placeholder="Enter your email"
+            class="mb-4"
           />
-        </div>
-        <div class="mb-4">
-          <label
-            for="password"
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-            >Password</label
+          <WeprayFormInput
+            v-model="row.username"
+            :label="$t('Username')"
+            :placeholder="$t('Choose a username')"
+            required
+            class="mb-4"
+          />
+
+          <WeprayFormInput
+            v-model="row.password"
+            :label="$t('Password')"
+            :placeholder="$t('Create a password')"
+            :type="isShowPassword ? 'text' : 'password'"
+            required
+            class="mb-4"
           >
-          <div class="relative">
-            <input
-              id="password"
-              v-model="password"
-              :type="showPassword ? 'text' : 'password'"
-              required
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-              placeholder="Create a password"
-            />
-            <button
-              type="button"
-              @click="togglePasswordVisibility('password')"
-              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500"
-            >
-              <IconEyeOutline v-if="showPassword" />
-              <IconEyeSlashOutline v-else />
-            </button>
-          </div>
-        </div>
-        <div class="mb-6">
-          <label
-            for="password_confirmation"
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-            >Confirm Password</label
+            <template #append>
+              <button
+                type="button"
+                @click="togglePasswordVisibility('password')"
+              >
+                <IconEyeSlashOutline v-if="isShowPassword" />
+                <IconEyeOutline v-else />
+              </button>
+            </template>
+          </WeprayFormInput>
+
+          <WeprayFormInput
+            v-model="row.password_confirmation"
+            :label="$t('Confirm Password')"
+            :placeholder="$t('Confirm your password')"
+            :type="isShowPasswordConfirmation ? 'text' : 'password'"
+            required
+            class="mb-6"
           >
-          <div class="relative">
-            <input
-              id="password_confirmation"
-              v-model="password_confirmation"
-              :type="showPasswordConfirmation ? 'text' : 'password'"
-              required
-              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-              placeholder="Confirm your password"
-            />
-            <button
-              type="button"
-              @click="togglePasswordVisibility('confirmation')"
-              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500"
-            >
-              <IconEyeOutline v-if="showPasswordConfirmation" />
-              <IconEyeSlashOutline v-else />
-            </button>
-          </div>
-        </div>
-        <button
-          type="submit"
-          class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-offset-gray-800"
-        >
-          Create Account
-        </button>
+            <template #append>
+              <button
+                type="button"
+                @click="togglePasswordVisibility('passwordConfirmation')"
+              >
+                <IconEyeSlashOutline v-if="isShowPasswordConfirmation" />
+                <IconEyeOutline v-else />
+              </button>
+            </template>
+          </WeprayFormInput>
+
+          <button type="submit" class="w-full wp-btn-auth">
+            {{ $t('Create Account') }}
+          </button>
+        </template>
       </form>
       <div class="mt-6 text-center">
         <p class="text-sm text-gray-600 dark:text-gray-400">
-          Already have an account?
+          {{ $t('Already have an account?') }}
           <NuxtLink
             to="/login"
             class="text-blue-600 dark:text-blue-400 hover:underline"
-            >Log in</NuxtLink
+            >{{ $t('Log in') }}</NuxtLink
           >
         </p>
       </div>
@@ -129,45 +114,74 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { ref } from 'vue';
+import { checkEmailUserService, createUserService } from '~/services/user';
+import type { IRegisterForm } from '~/types/user/login';
+
 definePageMeta({
   layout: false,
   colorMode: 'dark',
 });
 
-const hasHistory = ref(false);
+const hasWindowHistory = ref(false);
 
-import { ref } from 'vue';
+const { login } = useAuth();
 
-const username = ref('');
-const email = ref('');
-const password = ref('');
-const password_confirmation = ref('');
-const showPassword = ref(false);
-const showPasswordConfirmation = ref(false);
+const row = ref<IRegisterForm>({
+  email: null,
+  age: null,
+  username: null,
+  password: null,
+  password_confirmation: null,
+});
 
-const togglePasswordVisibility = (field) => {
-  if (field === 'password') {
-    showPassword.value = !showPassword.value;
-  } else if (field === 'confirmation') {
-    showPasswordConfirmation.value = !showPasswordConfirmation.value;
+const isEmailChecked = ref(false);
+const isShowPassword = ref(false);
+const isShowPasswordConfirmation = ref(false);
+
+const checkEmail = () => {
+  if (!row.value.email) return;
+
+  checkEmailUserService(row.value.email)
+    .then(() => {
+      isEmailChecked.value = true;
+    })
+    .catch((err) => useHandleError(err));
+};
+
+const togglePasswordVisibility = (
+  passwordTipo: 'password' | 'passwordConfirmation'
+) => {
+  if (passwordTipo === 'password') {
+    isShowPassword.value = !isShowPassword.value;
+  } else if (passwordTipo === 'passwordConfirmation') {
+    isShowPasswordConfirmation.value = !isShowPasswordConfirmation.value;
   }
 };
 
-const handleRegister = () => {
-  // Here you would typically handle the registration logic
-  console.log('Registration attempted with:', {
-    username: username.value,
-    email: email.value,
-    password: password.value,
-    password_confirmation: password_confirmation.value,
-  });
-  // You might want to use a store action or make an API call here
+const onRegister = () => {
+  const resCreate = createUserService(row.value);
+
+  resCreate
+    .then(() => {
+      const resLogin = login({
+        username: row.value.email!,
+        password: row.value.password!,
+      });
+
+      resLogin
+        .then(() => {
+          navigateTo('/pray');
+        })
+        .catch((err) => useHandleError(err));
+    })
+    .catch((err) => useHandleError(err));
 };
 
 onMounted(() => {
   if (window.history.length > 1) {
-    hasHistory.value = true;
+    hasWindowHistory.value = true;
   }
 });
 </script>

@@ -25,7 +25,7 @@
               {{ $t('Login') }}
             </button>
             <button
-              @click="navigateTo('/register')"
+              @click="navigateTo('/welcome')"
               class="wp-btn-full wp-btn-blue font-bold"
             >
               {{ $t('Get Started') }}
@@ -92,7 +92,7 @@ const menuArray = computed(() => [
   },
   {
     label: t('Get Started'),
-    callback: () => navigateTo('/register'),
+    callback: () => navigateTo('/welcome'),
   },
   {
     label: `${t('Site Language')}: ${locale.value.toUpperCase()}`,

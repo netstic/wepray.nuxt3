@@ -69,9 +69,9 @@ const selectedGoal = ref('');
 const selectedTime = ref(null);
 
 const goals = [
-  { id: 'daily', text: 'Daily prayer routine', icon: CalendarIcon },
-  { id: 'community', text: 'Connect with prayer community', icon: UsersIcon },
-  { id: 'study', text: 'Study scripture', icon: BookOpenIcon },
+  { id: 'daily', text: 'Daily prayer routine', icon: 'CalendarIcon' },
+  { id: 'community', text: 'Connect with prayer community', icon: 'UsersIcon' },
+  { id: 'study', text: 'Study scripture', icon: 'BookOpenIcon' },
 ];
 
 const times = [

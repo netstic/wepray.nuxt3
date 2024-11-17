@@ -5,7 +5,7 @@
         {{ $t('Ready to Start Your Prayer Journey?') }}
       </h2>
       <button
-        @click="navigateTo('/register')"
+        @click="navigateTo('/welcome')"
         class="px-8 py-4 bg-blue-600 text-white font-bold rounded-full text-lg hover:bg-blue-700 transition-colors transform hover:scale-105 duration-200"
       >
         {{ $t('Join WePray Now') }}

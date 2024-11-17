@@ -27,7 +27,7 @@
 
         <button
           v-if="showStartBtn"
-          @click="navigateTo('/register')"
+          @click="navigateTo('/welcome')"
           class="wp-btn-full wp-btn-blue font-bold"
         >
           {{ $t('Get Started') }}

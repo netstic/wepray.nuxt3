@@ -448,4 +448,12 @@ export default {
   'Or continue with': 'Or continue with',
   Facebook: 'Facebook',
   Google: 'Google',
+  'Create your WePray account': 'Create your WePray account',
+  'Enter your email': 'Enter your email',
+  Age: 'Age',
+  'Enter your age': 'Enter your age',
+  'Choose a username': 'Choose a username',
+  'Create a password': 'Create a password',
+  'Confirm your password': 'Confirm your password',
+  'Already have an account?': 'Already have an account?',
 };

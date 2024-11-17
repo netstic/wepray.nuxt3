@@ -24,7 +24,7 @@
           <div class="space-x-2">
             <button
               ref="startBtn"
-              @click="navigateTo('/register')"
+              @click="navigateTo('/welcome')"
               class="py-6 px-2 rounded-full wp-btn-lg wp-btn-blue font-bold text-lg hover:scale-105 transition-all"
             >
               {{ $t('Get Started') }}

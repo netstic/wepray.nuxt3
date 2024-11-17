@@ -300,7 +300,7 @@ const onSubmit = async () => {
   resCreate
     .then(() => {
       const resLogin = login({
-        email: row.value.email!,
+        username: row.value.email!,
         password: row.value.password!,
       });
 

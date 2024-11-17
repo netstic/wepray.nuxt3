@@ -452,4 +452,12 @@ export default {
   'Or continue with': 'Ou continue com',
   Facebook: 'Facebook',
   Google: 'Google',
+  'Create your WePray account': 'Crie sua conta WePray',
+  'Enter your email': 'Digite seu email',
+  Age: 'Idade',
+  'Enter your age': 'Digite sua idade',
+  'Choose a username': 'Escolha um nome de usuário',
+  'Create a password': 'Crie uma senha',
+  'Confirm your password': 'Confirme sua senha',
+  'Already have an account?': 'Já tem uma conta?',
 };

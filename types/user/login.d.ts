@@ -60,10 +60,11 @@ export interface IUser {
 }
 
 export interface IRegisterForm {
-  username: string;
+  username: string | null;
   email: string | null;
   password: string | null;
   password_confirmation: string | null;
   'g-recaptcha-response'?: string | null;
   name?: string;
+  age: number | null;
 }

@@ -5,7 +5,7 @@
     <template v-if="!props.isLoading">
       <slot></slot>
     </template>
-    <LoaderSubmit v-else />
+    <LoaderButtonSubmit v-else />
   </button>
 </template>
 

@@ -2,57 +2,46 @@
   <div
     class="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white"
   >
-    <LayoutSessionHeader @back="goBack" />
+    <LayoutSessionHeader
+      :progress="{
+        barWidth: progress,
+        todayGoalCount: stepper.indexOf(currentStep),
+        dailyGoalCount: goalCount,
+      }"
+      @back="goBack"
+    />
 
     <LayoutSessionMain>
-      <transition name="fade" mode="out-in">
-        <LayoutSessionMainContent
-          v-if="currentStep"
-          :key="currentStep.id"
-          :title="currentStep.title"
-          class="max-w-md"
+      <LayoutSessionMainContent title="Prayer Session" class="app-layout-width">
+        <button
+          class="text-left px-6 py-8 rounded-lg transition-colors duration-200 flex items-center bg-white dark:border shadow dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
         >
-          <div
-            v-if="currentStep.id === 'feature'"
-            v-for="(item, index) in currentStep.options"
-            :key="index"
-            class="bg-white dark:bg-gray-800 rounded-lg p-4 transform transition-all duration-300 hover:scale-105"
-          >
-            <h3
-              class="text-lg flex items-center font-semibold mb-2 text-blue-600 dark:text-blue-400"
-            >
-              <component
-                :is="item.icon"
-                v-if="item.icon"
-                class="w-6 h-6 mr-4 text-blue-600 dark:text-blue-400"
-              />
-              {{ item.title }}
-            </h3>
-            <p class="text-gray-700 dark:text-gray-300">
-              {{ item.text }}
-            </p>
-          </div>
+          Prayer of Week
+        </button>
+
+        <div class="flex flex-col sm:grid sm:grid-cols-2 gap-4">
           <button
-            v-else
-            v-for="(option, optionId) in currentStep.options"
-            :key="optionId"
-            @click="selectOption(option)"
-            class="w-full text-left px-6 py-4 rounded-lg transition-colors duration-200 flex items-center"
-            :class="[
-              isSelected(option)
-                ? 'bg-blue-100 dark:bg-blue-900 border-2 border-blue-500'
-                : 'bg-white dark:border shadow dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700',
-            ]"
+            class="text-left px-6 py-6 rounded-lg transition-colors duration-200 flex items-center bg-white dark:border shadow dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
           >
-            <component
-              :is="option.icon"
-              v-if="option.icon"
-              class="w-6 h-6 mr-4 text-blue-600 dark:text-blue-400"
-            />
-            <span class="text-lg font-medium">{{ option.text }}</span>
+            Community Prayers
           </button>
-        </LayoutSessionMainContent>
-      </transition>
+          <button
+            class="text-left px-6 py-6 rounded-lg transition-colors duration-200 flex items-center bg-white dark:border shadow dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            World Missions
+          </button>
+          <button
+            class="text-left px-6 py-6 rounded-lg transition-colors duration-200 flex items-center bg-white dark:border shadow dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            Family Intercessory
+          </button>
+          <button
+            class="text-left px-6 py-6 rounded-lg transition-colors duration-200 flex items-center bg-white dark:border shadow dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            Friends Intercessory
+          </button>
+        </div>
+      </LayoutSessionMainContent>
     </LayoutSessionMain>
 
     <LayoutSessionFooter>
@@ -71,7 +60,7 @@
 
 <script setup>
 import Wp from '~/components/logo/Wp.vue';
-import { ref, computed } from 'vue';
+import { ref, computed, markRaw } from 'vue';
 
 definePageMeta({
   colorMode: 'dark',
@@ -81,13 +70,13 @@ const { t } = useI18n();
 
 const stepperOptions = {
   goal: [
-    { value: 'daily', text: 'Daily prayer routine', icon: Wp },
+    { value: 'daily', text: 'Daily prayer routine', icon: markRaw(Wp) },
     {
       value: 'community',
       text: 'Connect with prayer community',
-      icon: Wp,
+      icon: markRaw(Wp),
     },
-    { value: 'study', text: 'Study scripture', icon: Wp },
+    { value: 'study', text: 'Study scripture', icon: markRaw(Wp) },
   ],
   feature: [
     {
@@ -95,21 +84,21 @@ const stepperOptions = {
       text: t(
         'Submit prayer requests and receive support from a caring community'
       ),
-      icon: Wp,
+      icon: markRaw(Wp),
     },
     {
       title: t('Connect with Others'),
       text: t(
         'Help other people praying for them and sending encouragement messages'
       ),
-      icon: Wp,
+      icon: markRaw(Wp),
     },
     {
       title: t('Track Your Journey'),
       text: t(
         'Create the habit of praying, receiving new requests and suggestions daily'
       ),
-      icon: Wp,
+      icon: markRaw(Wp),
     },
   ],
   daily: [
@@ -143,6 +132,11 @@ const stepper = ref([
 
 const currentStep = ref(stepper.value[0]);
 
+const goalCount = ref(stepper.value.length);
+const progress = computed(
+  () => (stepper.value.indexOf(currentStep.value) / goalCount.value) * 100
+);
+
 const canContinue = computed(() => {
   return currentStep.value.selectedOption !== null;
 });
@@ -160,7 +154,7 @@ const nextStep = () => {
   if (currentStepIndex < stepper.value.length - 1) {
     return (currentStep.value = stepper.value[currentStepIndex + 1]);
   }
-  navigateTo('/session');
+  startJourney();
 };
 
 const goBack = () => {
@@ -169,6 +163,15 @@ const goBack = () => {
     return (currentStep.value = stepper.value[currentStepIndex - 1]);
   }
   navigateTo('/pray');
+};
+
+const startJourney = () => {
+  console.log('Starting journey with:', {
+    goal: currentStep.value.selectedOption,
+    time: currentStep.value.selectedOption,
+  });
+  // Here you would typically navigate to the next page or start the user's journey
+  // For example: router.push('/dashboard')
 };
 </script>
 

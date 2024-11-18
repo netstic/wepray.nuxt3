@@ -1,7 +1,8 @@
 @use "app";
 
-// Public
-@use "layouts/public-content";
+// Layouts
+@use "layouts/public-layout";
+@use "layouts/app-layout";
 
 // Utilities
 @use "utilities/icons";

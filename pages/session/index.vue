@@ -21,5 +21,6 @@
 definePageMeta({
   layout: 'session',
   colorMode: 'dark',
+  middleware: 'session',
 });
 </script>

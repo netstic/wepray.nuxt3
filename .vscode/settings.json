@@ -3,7 +3,8 @@
     "home",
     "signup",
     "login",
-    "register"
+    "register",
+    "session"
   ],
   "cSpell.words": [
     "Wepray"

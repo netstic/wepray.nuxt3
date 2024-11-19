@@ -20,6 +20,7 @@
 definePageMeta({
   layout: 'session',
   colorMode: 'dark',
+  middleware: 'session',
 });
 
 const { sessionCookie, setSessionCookie } = useSession();

@@ -1,93 +1,113 @@
 <template>
-  <div
-    class="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white"
-  >
-    <LayoutSessionHeader @back="goBack" />
-
-    <LayoutSessionMain>
-      <transition name="fade" mode="out-in">
-        <LayoutSessionMainContent
-          v-if="currentStep"
-          :key="currentStep.id"
-          :title="currentStep.title"
-          class="max-w-md"
-        >
-          <div
-            v-if="currentStep.id === 'feature'"
-            v-for="(item, index) in currentStep.options"
-            :key="index"
-            class="bg-white dark:bg-gray-800 rounded-lg p-4 transform transition-all duration-300 hover:scale-105"
+  <transition name="fade" mode="out-in">
+    <div v-if="!route.query.step" class="wp-loader-navigation">
+      <LoaderNavigation />
+    </div>
+    <div
+      class="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white"
+      v-else
+    >
+      <LayoutSessionHeader @back="goBack" />
+      <LayoutSessionMain>
+        <transition name="fade" mode="out-in">
+          <LayoutSessionMainContent
+            v-if="currentStep"
+            :key="currentStep.id"
+            :title="currentStep.title"
+            class="app-layout-width"
           >
-            <h3
-              class="text-lg flex items-center font-semibold mb-2 text-blue-600 dark:text-blue-400"
+            <div
+              v-if="currentStep.id === 'feature'"
+              v-for="(item, index) in currentStep.options"
+              :key="index"
+              class="bg-white lg:w-1/2 mx-auto w-full sm:w-2/3 dark:bg-gray-800 rounded-lg p-4 transform transition-all duration-300 hover:scale-105"
+            >
+              <h3
+                class="text-lg flex items-center font-semibold mb-2 text-blue-600 dark:text-blue-400"
+              >
+                <component
+                  :is="item.icon"
+                  v-if="item.icon"
+                  class="w-6 h-6 mr-4 text-blue-600 dark:text-blue-400"
+                />
+                {{ item.title }}
+              </h3>
+              <p class="text-gray-700 dark:text-gray-300">
+                {{ item.text }}
+              </p>
+            </div>
+            <button
+              v-else
+              v-for="(option, optionId) in currentStep.options"
+              :key="optionId"
+              @click="selectOption(option)"
+              class="wp-btn-session-item-raw lg:w-1/2 mx-auto w-full sm:w-2/3"
+              :class="[
+                isSelected(option)
+                  ? 'wp-btn-session-item-selected'
+                  : 'wp-btn-session-item-unselected',
+              ]"
             >
               <component
-                :is="item.icon"
-                v-if="item.icon"
-                class="w-6 h-6 mr-4 text-blue-600 dark:text-blue-400"
+                :is="option.icon"
+                v-if="option.icon"
+                class="wp-btn-session-item-icon"
               />
-              {{ item.title }}
-            </h3>
-            <p class="text-gray-700 dark:text-gray-300">
-              {{ item.text }}
-            </p>
-          </div>
+              <span class="wp-btn-session-item-text">{{ option.text }}</span>
+            </button>
+          </LayoutSessionMainContent>
+        </transition>
+      </LayoutSessionMain>
+      <LayoutSessionFooter>
+        <div class="flex-1 flex justify-end">
           <button
-            v-else
-            v-for="(option, optionId) in currentStep.options"
-            :key="optionId"
-            @click="selectOption(option)"
-            class="w-full text-left px-6 py-4 rounded-lg transition-colors duration-200 flex items-center"
-            :class="[
-              isSelected(option)
-                ? 'bg-blue-100 dark:bg-blue-900 border-2 border-blue-500'
-                : 'bg-white dark:border shadow dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700',
-            ]"
+            @click="nextStep"
+            :disabled="!canContinue"
+            class="wp-btn-session-submit flex-1 sm:flex-none"
           >
-            <component
-              :is="option.icon"
-              v-if="option.icon"
-              class="w-6 h-6 mr-4 text-blue-600 dark:text-blue-400"
-            />
-            <span class="text-lg font-medium">{{ option.text }}</span>
+            Continue
           </button>
-        </LayoutSessionMainContent>
-      </transition>
-    </LayoutSessionMain>
-
-    <LayoutSessionFooter>
-      <template #append>
-        <button
-          @click="nextStep"
-          :disabled="!canContinue"
-          class="wp-btn-session-submit"
-        >
-          Continue
-        </button>
-      </template>
-    </LayoutSessionFooter>
-  </div>
+        </div>
+      </LayoutSessionFooter>
+    </div>
+  </transition>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Wp from '~/components/logo/Wp.vue';
 import { ref, computed } from 'vue';
+import { useRoute } from 'vue-router';
 
 definePageMeta({
   colorMode: 'dark',
+  middleware: (from) => {
+    if ((useCookie('welcome').value as any)?.daily) {
+      return navigateTo('/pray');
+    }
+  },
 });
 
 const { t } = useI18n();
 
-const stepperOptions = {
+const { welcomeCookie, setWelcomeCookie } = useSession();
+
+const route = useRoute();
+
+interface IStepperOption {
+  title?: string;
+  value?: string | number;
+  text: string;
+  icon?: any;
+}
+const stepperOptions: Record<string, IStepperOption[]> = {
   goal: [
-    { value: 'daily', text: 'Daily prayer routine', icon: Wp },
+    { value: 'daily', text: 'Daily prayer routine', icon: markRaw(Wp) },
     {
       value: 'community',
       text: 'Connect with prayer community',
-      icon: Wp,
+      icon: markRaw(Wp),
     },
-    { value: 'study', text: 'Study scripture', icon: Wp },
+    { value: 'study', text: 'Study scripture', icon: markRaw(Wp) },
   ],
   feature: [
     {
@@ -95,21 +115,21 @@ const stepperOptions = {
       text: t(
         'Submit prayer requests and receive support from a caring community'
       ),
-      icon: Wp,
+      icon: markRaw(Wp),
     },
     {
       title: t('Connect with Others'),
       text: t(
         'Help other people praying for them and sending encouragement messages'
       ),
-      icon: Wp,
+      icon: markRaw(Wp),
     },
     {
       title: t('Track Your Journey'),
       text: t(
         'Create the habit of praying, receiving new requests and suggestions daily'
       ),
-      icon: Wp,
+      icon: markRaw(Wp),
     },
   ],
   daily: [
@@ -131,7 +151,7 @@ const stepper = ref([
     id: 'feature',
     title: 'We can help you!',
     options: stepperOptions.feature,
-    selectedOption: true,
+    selectedOption: { value: true },
   },
   {
     id: 'daily',
@@ -141,35 +161,77 @@ const stepper = ref([
   },
 ]);
 
-const currentStep = ref(stepper.value[0]);
+const currentStep = ref(
+  stepper.value.find((step) => step.id === route.query.step)
+);
 
 const canContinue = computed(() => {
-  return currentStep.value.selectedOption !== null;
+  return !!currentStep.value?.selectedOption?.value;
 });
 
-const selectOption = (option) => {
+const selectOption = (option: any) => {
+  if (!currentStep.value) return;
   currentStep.value.selectedOption = option;
 };
 
-const isSelected = (option) => {
-  return currentStep.value.selectedOption === option;
+const isSelected = (option: any) => {
+  return currentStep.value?.selectedOption === option;
 };
 
 const nextStep = () => {
+  if (!currentStep.value) return;
   const currentStepIndex = stepper.value.indexOf(currentStep.value);
-  if (currentStepIndex < stepper.value.length - 1) {
-    return (currentStep.value = stepper.value[currentStepIndex + 1]);
+
+  if (currentStep.value?.id !== 'feature') {
+    if (!welcomeCookie.value) {
+      setWelcomeCookie({});
+    }
+
+    welcomeCookie.value[currentStep.value?.id] =
+      currentStep.value?.selectedOption?.value;
+
+    setWelcomeCookie(welcomeCookie.value);
   }
+
+  if (currentStepIndex < stepper.value.length - 1) {
+    return navigateTo({
+      name: 'welcome',
+      query: { step: stepper.value[currentStepIndex + 1].id },
+    });
+  }
+
   navigateTo('/session');
 };
 
 const goBack = () => {
+  if (!currentStep.value) return;
   const currentStepIndex = stepper.value.indexOf(currentStep.value);
   if (currentStepIndex > 0) {
-    return (currentStep.value = stepper.value[currentStepIndex - 1]);
+    return navigateTo({
+      name: 'welcome',
+      query: { step: stepper.value[currentStepIndex - 1].id },
+    });
   }
   navigateTo('/pray');
 };
+
+watch(route, () => {
+  currentStep.value = stepper.value.find(
+    (step) => step.id === route.query.step
+  );
+});
+
+onBeforeMount(() => {
+  if (!route.query.step) {
+    navigateTo({ name: 'welcome', query: { step: stepper.value[0].id } });
+  }
+});
+
+onMounted(() => {
+  if (!welcomeCookie.value) {
+    setWelcomeCookie({});
+  }
+});
 </script>
 
 <style scoped>

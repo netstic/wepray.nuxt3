@@ -7,6 +7,15 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  layout: false,
+  middleware: (from) => {
+    if (!(useCookie('welcome').value as any)?.daily) {
+      return navigateTo({ path: '/welcome', query: { step: 'daily' } });
+    }
+  },
+});
+
 const { userName, logout } = useAuth();
 
 const onLogout = () => {

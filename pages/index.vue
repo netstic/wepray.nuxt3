@@ -22,6 +22,11 @@
 definePageMeta({
   layout: false,
   colorMode: 'light',
+  middleware: (from) => {
+    if (useCookie('welcome').value) {
+      return navigateTo('/pray');
+    }
+  },
 });
 
 import { ref } from 'vue';

@@ -5,7 +5,7 @@
       <slot name="title" v-else></slot>
     </LayoutSessionMainTitle>
 
-    <div class="flex flex-col gap-4 flex-1 justify-center app-layout-margin">
+    <div class="flex flex-col gap-4 flex-1 app-layout-margin mt-20">
       <slot></slot>
     </div>
   </div>

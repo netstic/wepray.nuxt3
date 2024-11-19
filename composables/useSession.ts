@@ -15,7 +15,7 @@ export const useSession = () => {
   const dailyGoalCount = computed(() => welcomeCookie.value?.daily);
   const todayGoalCount = computed(() => sessionCookie.value?.prayerCount || 0);
   const progress = computed(() => {
-    if (!dailyGoalCount.value || !todayGoalCount.value)
+    if (!dailyGoalCount.value && !todayGoalCount.value)
       return {
         barWidth: 0,
         todayGoalCount: 0,

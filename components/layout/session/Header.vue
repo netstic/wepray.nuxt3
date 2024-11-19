@@ -15,7 +15,9 @@
         >
           <div
             class="bg-blue-600 h-2.5 rounded-full transition-all duration-500 ease-in-out"
-            :style="{ width: `${props.progress.barWidth}%` }"
+            :style="{
+              width: `${Math.min(Math.max(props.progress.barWidth, 0), 100)}%`,
+            }"
           ></div>
         </div>
         <div class="flex items-center">

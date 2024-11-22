@@ -155,6 +155,7 @@
 <script setup>
 definePageMeta({
   layout: 'public',
+  colorMode: 'light',
 });
 
 import { ref } from 'vue';

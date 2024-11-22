@@ -9,7 +9,7 @@
         v-model="model"
         :type="props.type"
         :required="props.required"
-        class="wp-input-sm"
+        :class="props.inputClass ?? 'wp-input-sm'"
         :placeholder="props.placeholder"
         :disabled="props.disabled"
       />
@@ -35,6 +35,7 @@ const props = withDefaults(
     placeholder?: string;
     required?: boolean;
     disabled?: boolean;
+    inputClass?: string;
   }>(),
   {
     type: 'text',

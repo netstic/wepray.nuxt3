@@ -20,21 +20,23 @@
               v-if="currentStep.id === 'feature'"
               v-for="(item, index) in currentStep.options"
               :key="index"
-              class="bg-white lg:w-1/2 mx-auto w-full sm:w-2/3 dark:bg-gray-800 rounded-lg p-4 transform transition-all duration-300 hover:scale-105"
+              class="bg-white flex gap-4 lg:w-1/2 mx-auto w-full sm:w-2/3 dark:bg-gray-800 rounded-lg p-4 transform transition-all duration-300 hover:scale-105"
             >
-              <h3
-                class="text-lg flex items-center font-semibold mb-2 text-blue-600 dark:text-blue-400"
-              >
-                <component
-                  :is="item.icon"
-                  v-if="item.icon"
-                  class="w-6 h-6 mr-4 text-blue-600 dark:text-blue-400"
-                />
-                {{ item.title }}
-              </h3>
-              <p class="text-gray-700 dark:text-gray-300">
-                {{ item.text }}
-              </p>
+              <component
+                :is="item.icon"
+                v-if="item.icon"
+                class="w-16 h-16 text-blue-600 dark:text-blue-400"
+              />
+              <div class="flex-1">
+                <h3
+                  class="text-lg flex items-center font-semibold mb-2 text-blue-600 dark:text-blue-400"
+                >
+                  {{ item.title }}
+                </h3>
+                <p class="text-gray-700 dark:text-gray-300">
+                  {{ item.text }}
+                </p>
+              </div>
             </div>
             <button
               v-else
@@ -101,15 +103,30 @@ interface IStepperOption {
 }
 const stepperOptions: Record<string, IStepperOption[]> = {
   goal: [
-    { value: 'daily', text: 'Daily prayer routine', icon: markRaw(Wp) },
     {
-      value: 'community',
-      text: 'Connect with prayer community',
+      value: 'daily_habit',
+      text: t('Daily prayer routine'),
       icon: markRaw(Wp),
     },
-    { value: 'study', text: 'Study scripture', icon: markRaw(Wp) },
+    {
+      value: 'community_connection',
+      text: t('Connect with prayer community'),
+      icon: markRaw(Wp),
+    },
+    {
+      value: 'study_prayer',
+      text: t('Find new ways to pray'),
+      icon: markRaw(Wp),
+    },
   ],
   feature: [
+    {
+      title: t('Upgrade your prayer life'),
+      text: t(
+        'Take your prayer life to a new level, receiving new requests and suggestions daily'
+      ),
+      icon: markRaw(Wp),
+    },
     {
       title: t('Share your heart'),
       text: t(
@@ -121,13 +138,6 @@ const stepperOptions: Record<string, IStepperOption[]> = {
       title: t('Connect with Others'),
       text: t(
         'Help other people praying for them and sending encouragement messages'
-      ),
-      icon: markRaw(Wp),
-    },
-    {
-      title: t('Track Your Journey'),
-      text: t(
-        'Create the habit of praying, receiving new requests and suggestions daily'
       ),
       icon: markRaw(Wp),
     },

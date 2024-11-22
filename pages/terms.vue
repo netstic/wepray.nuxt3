@@ -5,11 +5,13 @@
     <!-- <p class="text-gray-600 mb-6">Last updated: November 14, 2024</p> -->
 
     <ContentRenderer :value="data!">
-      <h1 class="w-full text-3xl font-semibold text-gray-800 md:text-4xl py-4">
+      <h1
+        class="w-full text-3xl font-semibold text-gray-800 dark:text-white md:text-4xl py-4"
+      >
         {{ data?.title }}
       </h1>
 
-      <div class="prose lg:prose-xl text-justify">
+      <div class="prose lg:prose-xl text-justify dark:text-gray-300">
         <ContentRendererMarkdown :value="data!" />
       </div>
     </ContentRenderer>
@@ -44,6 +46,7 @@
 <script setup lang="ts">
 definePageMeta({
   layout: 'public',
+  colorMode: 'light',
 });
 
 const { locale } = useI18n();

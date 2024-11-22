@@ -1,5 +1,10 @@
 <template>
-  <header>
+  <header
+    :class="[
+      'fixed z-[8888] top-0 left-0 right-0 dark:bg-gray-900 bg-gray-100',
+      { 'border-b border-gray-300 dark:border-gray-700': isScrolled },
+    ]"
+  >
     <div
       class="app-layout-width mx-auto app-layout-padding h-16 flex items-center justify-between"
     >
@@ -46,6 +51,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+
 export interface ILayoutSessionHeaderProgress {
   barWidth: number;
   todayGoalCount: number;
@@ -59,6 +66,22 @@ const props = defineProps<{
 const emit = defineEmits<{
   back: [value: void];
 }>();
+
+const isScrolled = ref(false);
+
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 0;
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 </script>
 
-<style scoped></style>
+<style scoped>
+/* Add any additional styles for the border if needed */
+</style>

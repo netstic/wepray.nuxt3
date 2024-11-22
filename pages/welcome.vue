@@ -3,10 +3,7 @@
     <div v-if="!route.query.step" class="wp-loader-navigation">
       <LoaderNavigation />
     </div>
-    <div
-      class="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white"
-      v-else
-    >
+    <div v-else>
       <LayoutSessionHeader @back="goBack" />
       <LayoutSessionMain>
         <transition name="fade" mode="out-in">
@@ -20,7 +17,7 @@
               v-if="currentStep.id === 'feature'"
               v-for="(item, index) in currentStep.options"
               :key="index"
-              class="bg-white flex gap-4 lg:w-1/2 mx-auto w-full sm:w-2/3 dark:bg-gray-800 rounded-lg p-4 transform transition-all duration-300 hover:scale-105"
+              class="bg-white flex gap-2 sm:gap-4 lg:w-1/2 mx-auto w-full sm:w-2/3 dark:bg-gray-800 rounded-2xl p-4 transform transition-all duration-300 hover:scale-105"
             >
               <component
                 :is="item.icon"
@@ -60,16 +57,17 @@
           </LayoutSessionMainContent>
         </transition>
       </LayoutSessionMain>
+
       <LayoutSessionFooter>
-        <div class="flex-1 flex justify-end">
+        <template #append>
           <button
             @click="nextStep"
             :disabled="!canContinue"
-            class="wp-btn-session-submit flex-1 sm:flex-none"
+            class="wp-btn-session-submit w-full sm:w-auto"
           >
             Continue
           </button>
-        </div>
+        </template>
       </LayoutSessionFooter>
     </div>
   </transition>
@@ -110,7 +108,7 @@ const stepperOptions: Record<string, IStepperOption[]> = {
     },
     {
       value: 'community_connection',
-      text: t('Connect with prayer community'),
+      text: t('Connect with community'),
       icon: markRaw(Wp),
     },
     {
@@ -209,7 +207,6 @@ const nextStep = () => {
       query: { step: stepper.value[currentStepIndex + 1].id },
     });
   }
-
   navigateTo('/session');
 };
 
@@ -226,9 +223,11 @@ const goBack = () => {
 };
 
 watch(route, () => {
-  currentStep.value = stepper.value.find(
-    (step) => step.id === route.query.step
-  );
+  if (route.query.step) {
+    currentStep.value = stepper.value.find(
+      (step) => step.id === route.query.step
+    );
+  }
 });
 
 onBeforeMount(() => {
@@ -244,7 +243,7 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s ease;

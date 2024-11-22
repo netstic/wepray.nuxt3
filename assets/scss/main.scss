@@ -6,10 +6,16 @@
 
 // Utilities
 @use "utilities/icons";
+@use "utilities/avatars";
 @use "utilities/buttons";
 @use "utilities/inputs";
 @use "utilities/utilities";
 
 body {
+  @apply bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white;
   font-family: sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
 }

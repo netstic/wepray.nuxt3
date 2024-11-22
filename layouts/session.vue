@@ -2,11 +2,7 @@
   <div v-if="!progress" class="wp-loader-navigation">
     <LoaderNavigation />
   </div>
-  <div
-    v-else
-    id="session-layout"
-    class="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white"
-  >
+  <div v-else id="session-layout">
     <LayoutSessionHeader
       :progress="progress"
       @click="hasWindowHistory ? $router.go(-1) : navigateTo('/session')"

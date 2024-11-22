@@ -1,16 +1,19 @@
 <template>
   <footer
-    class="sm:bg-white sm:dark:bg-gray-900 sm:border-t sm:border-gray-200 sm:dark:border-gray-700"
+    :class="[
+      'fixed bottom-0 right-0 left-0 bg-gray-100 dark:bg-gray-900 sm:border-t border-gray-300 dark:border-gray-700',
+      { 'border-t': !isScrolledUp },
+    ]"
   >
     <div
-      class="app-layout-width mx-auto app-layout-padding h-20 sm:h-28 flex items-center justify-between"
+      class="app-layout-width mx-auto app-layout-padding flex flex-col sm:flex-row gap-2 sm:gap-4 items-center justify-between my-4 sm:my-10"
     >
       <slot v-if="!$slots.prepend && !$slots.append"></slot>
       <template v-else>
-        <div>
+        <div class="w-full text-start">
           <slot name="prepend"> </slot>
         </div>
-        <div>
+        <div class="w-full text-end">
           <slot name="append"> </slot>
         </div>
       </template>
@@ -18,6 +21,23 @@
   </footer>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue';
+
+const isScrolledUp = ref(true);
+
+const checkScrollPosition = () => {
+  isScrolledUp.value =
+    window.innerHeight + window.scrollY >= document.body.offsetHeight;
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', checkScrollPosition);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', checkScrollPosition);
+});
+</script>
 
 <style scoped></style>

@@ -13,17 +13,17 @@
   <!-- </div> -->
 </template>
 
-<!-- <script setup lang="ts">
-const nuxtApp = useNuxtApp();
-const loading = ref(false);
-nuxtApp.hook('page:start', () => {
-  console.log('page:start');
-  loading.value = true;
-});
-nuxtApp.hook('page:finish', () => {
-  loading.value = false;
-});
-</script> -->
+<script setup lang="ts">
+// const nuxtApp = useNuxtApp();
+// const loading = ref(false);
+// nuxtApp.hook('page:start', () => {
+//   console.log('page:start');
+//   loading.value = true;
+// });
+// nuxtApp.hook('page:finish', () => {
+//   loading.value = false;
+// });
+</script>
 
 <style>
 /* .fade-enter-active,

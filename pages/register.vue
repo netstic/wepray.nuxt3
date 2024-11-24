@@ -19,6 +19,11 @@
       >
         {{ $t('Create your WePray account') }}
       </h1>
+      <p class="text-center text-gray-600 dark:text-gray-400 mb-6">
+        {{
+          $t("Enter your email address and we'll sign you up in a few seconds.")
+        }}
+      </p>
       <form @submit.prevent="onRegister">
         <template v-if="!isEmailChecked">
           <WeprayFormInput

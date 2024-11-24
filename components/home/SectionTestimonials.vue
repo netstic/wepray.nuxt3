@@ -69,7 +69,6 @@ const testimonials = [
   animation: float 15s linear infinite;
 }
 
-/* Generate random starting positions and delays for each petal */
 @for $i from 1 through 20 {
   .petal:nth-child(#{$i}) {
     left: -50px;

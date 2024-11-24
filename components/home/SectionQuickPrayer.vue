@@ -5,14 +5,13 @@
         {{ $t('Share a Quick Prayer') }}
       </h2>
       <div class="max-w-2xl mx-auto">
-        <div class="flex flex-col gap-4">
-          <textarea
+        <div class="flex flex-col gap-2">
+          <WeprayFormTextarea
             v-model="quickPrayer"
             :placeholder="$t('Type your prayer here') + '...'"
             rows="2"
-            class="flex-grow wp-input resize-none overflow-hidden"
-            @input="autoGrow"
-          ></textarea>
+            textarea-class="w-full flex-grow wp-input resize-none overflow-hidden"
+          />
           <button class="wp-btn wp-btn-blue" @click="submitQuickPrayer">
             {{ $t('Send') }}
           </button>
@@ -33,11 +32,5 @@ const quickPrayer = ref('');
 const submitQuickPrayer = () => {
   console.log('Prayer submitted:', quickPrayer.value);
   quickPrayer.value = '';
-};
-
-const autoGrow = (event: Event) => {
-  const target = event.target as HTMLTextAreaElement;
-  target.style.height = 'auto';
-  target.style.height = target.scrollHeight + 'px';
 };
 </script>

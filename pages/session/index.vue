@@ -1,8 +1,10 @@
 <template>
   <LayoutSessionMainContent title="Prayer Session" class="app-layout-width">
-    <p class="text-xl text-center font-semibold mb-4">
-      What are you praying for today?
-    </p>
+    <div class="text-xl text-center font-semibold mb-2">
+      <p>Let's pray together!</p>
+
+      <p class="text-lg font-normal">Choose your path:</p>
+    </div>
     <!-- <button
       class="wp-btn-session-item-lg text-2xl justify-center"
       @click="navigateTo('/session/suggestions')"

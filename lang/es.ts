@@ -457,4 +457,21 @@ export default {
   'Create a password': 'Crea una contraseña',
   'Confirm your password': 'Confirma tu contraseña',
   'Already have an account?': '¿Ya tienes una cuenta?',
+  wp_contact_email: 'info@wepray.org',
+  wp_contact_phone: '+55 (19) 99925-2434',
+  wp_contact_address:
+    'WePray, Rua Joao Fructuoso Miranda Filho, 331, Hortolandia, SP, ZIP 13184-060, Brazil',
+  'Follow us': 'Seguirnos',
+  Twitter: 'Twitter',
+  Instagram: 'Instagram',
+  'Other ways to reach us': 'Otros medios de contacto',
+  'Send Message': 'Enviar mensaje',
+  'Enter your message': 'Introduce tu mensaje',
+  'General Inquiry': 'Consulta general',
+  'Technical Support': 'Soporte técnico',
+  Feedback: 'Feedback',
+  'Partnership Opportunities': 'Oportunidades de colaboración',
+  'Enter your full name': 'Introduce tu nombre completo',
+  'Get in touch with the WePray team':
+    'Ponerse en contacto con el equipo de WePray',
 };

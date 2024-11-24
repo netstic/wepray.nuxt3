@@ -1,7 +1,7 @@
 <template>
   <HomeNavHeader :show-start-btn="showStartBtn" />
 
-  <main>
+  <main class="bg-white">
     <HomeSectionHero @is-start-btn-showing="showStartBtn = !$event" />
 
     <HomeSectionQuickPrayer />

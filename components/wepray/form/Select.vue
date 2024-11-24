@@ -1,18 +1,27 @@
 <template>
   <div>
     <template v-if="props.label">
-      <label :for="inputId" class="wp-input-label">{{ props.label }}</label>
+      <label :for="selectId" class="wp-input-label">{{ props.label }}</label>
     </template>
     <div class="relative">
-      <input
-        :id="inputId"
+      <select
+        :id="selectId"
         v-model="model"
-        :type="props.type"
         :required="props.required"
-        :class="props.inputClass ?? 'wp-input-sm'"
-        :placeholder="props.placeholder"
+        :class="props.selectClass ?? 'wp-input-sm'"
         :disabled="props.disabled"
-      />
+      >
+        <option v-if="props.placeholder" value="" disabled selected>
+          {{ props.placeholder }}
+        </option>
+        <option
+          v-for="option in props.options"
+          :key="option.value"
+          :value="option.value"
+        >
+          {{ option.label }}
+        </option>
+      </select>
       <template v-if="$slots.append">
         <div
           class="absolute right-0 inset-y-0 flex items-center pr-3 text-gray-400 hover:text-gray-500"
@@ -27,23 +36,28 @@
 <script setup lang="ts">
 import { useInputId } from '~/composables/useInputId';
 
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
 const props = withDefaults(
   defineProps<{
     label?: string;
-    type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search';
+    options: SelectOption[];
     placeholder?: string;
     required?: boolean;
     disabled?: boolean;
-    inputClass?: string;
+    selectClass?: string;
   }>(),
   {
-    type: 'text',
+    options: () => [],
   }
 );
 
 const model = defineModel();
 
-const inputId = useInputId(props.label);
+const selectId = useInputId(props.label);
 </script>
 
 <style scoped></style>

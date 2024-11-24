@@ -4,6 +4,18 @@ export default defineNuxtConfig({
     vueI18n: './i18n.config.ts', // if you are using custom path, default
   },
   css: ['~/assets/scss/main.scss'],
+
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern',
+          silenceDeprecations: ['legacy-js-api'],
+        },
+      },
+    },
+  },
+
   postcss: {
     plugins: {
       tailwindcss: {},

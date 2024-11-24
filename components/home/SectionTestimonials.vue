@@ -57,6 +57,8 @@ const testimonials = [
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:math';
+
 .petal {
   width: 12px;
   height: 12px;
@@ -71,10 +73,10 @@ const testimonials = [
 @for $i from 1 through 20 {
   .petal:nth-child(#{$i}) {
     left: -50px;
-    top: #{random(100)}vh;
-    animation-delay: #{random(15) * -1}s;
-    animation-duration: #{10 + random(10)}s;
-    transform: scale(#{0.5 + random(5) * 0.1});
+    top: #{math.random(100)}vh;
+    animation-delay: #{math.random(15) * -1}s;
+    animation-duration: #{10 + math.random(10)}s;
+    transform: scale(#{0.5 + math.random(5) * 0.1});
   }
 }
 

@@ -16,6 +16,7 @@ export default defineNuxtConfig({
     },
   },
 
+  // For some reason, this is needed to avoid tailwindcss error
   postcss: {
     plugins: {
       tailwindcss: {},
@@ -33,18 +34,15 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
   ],
 
+  runtimeConfig: {
+    public: {
+      grecaptcha: {
+        siteKey: process.env.RECAPTCHA_SITEKEY,
+      },
+    },
+  },
+
   pinia: {
     storesDirs: ['./stores/**', './custom-folder/stores/**'],
   },
-
-  // app: {
-  //   pageTransition: {
-  //     name: 'fade',
-  //     mode: 'out-in', // default
-  //   },
-  //   layoutTransition: {
-  //     name: 'fade',
-  //     mode: 'out-in', // default
-  //   },
-  // },
 });

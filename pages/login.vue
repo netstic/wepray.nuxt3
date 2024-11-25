@@ -22,7 +22,7 @@
       </h1>
       <form @submit.prevent="onLogin">
         <WeprayFormInput
-          v-model="row.username"
+          v-model="row.login"
           :label="$t('Email or Username')"
           :placeholder="$t('Enter your email or username')"
           required
@@ -38,13 +38,14 @@
           class="mb-6"
           :disabled="someAuthProviderLoading"
         />
-        <button
+        <WeprayButton
           type="submit"
           class="w-full wp-btn-auth"
           :disabled="someAuthProviderLoading"
+          :loading="isLoginLoading"
         >
           {{ $t('Log in') }}
-        </button>
+        </WeprayButton>
       </form>
 
       <div class="mt-4 text-center">
@@ -66,6 +67,13 @@
             >{{ $t('Sign up') }}</NuxtLink
           >
         </p>
+      </div>
+
+      <div
+        v-if="errorMessage"
+        class="mt-4 p-4 bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-200 rounded-md"
+      >
+        {{ errorMessage }}
       </div>
 
       <div class="mt-8">
@@ -119,9 +127,14 @@ definePageMeta({
 const hasWindowHistory = ref(false);
 
 const { login, isLoggedIn, logout, setTokenAndAuthMe, token } = useAuth();
+const { executeRecaptcha } = useGoogleRecaptcha();
 
+const { t } = useI18n();
+
+const errorMessage = ref('');
+const isLoginLoading = ref(false);
 const row = ref<ILogin>({
-  username: null,
+  login: null,
   password: null,
 });
 
@@ -135,16 +148,28 @@ const someAuthProviderLoading = computed(() =>
   Object.values(isAuthLoading.value).some((value) => value)
 );
 
-const onLogin = () => {
+const onLogin = async () => {
   if (isLoggedIn.value) {
     return handleUnauthorized();
   }
 
-  login(row.value)
+  errorMessage.value = '';
+  isLoginLoading.value = true;
+
+  const { token } = await executeRecaptcha(RecaptchaAction.login);
+
+  login({ ...row.value, 'g-recaptcha-response': token })
     .then(() => {
       navigateTo('/pray');
     })
-    .catch((err) => useHandleError(err));
+    .catch(() => {
+      errorMessage.value = t(
+        'An error occurred while logging in. Please try again.'
+      );
+    })
+    .finally(() => {
+      isLoginLoading.value = false;
+    });
 };
 
 const onAuthProvider = (provider: TAuthProvider) => {

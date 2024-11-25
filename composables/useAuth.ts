@@ -35,8 +35,10 @@ export const useAuth = () => {
     return resp;
   };
 
-  const login = (payload: ILogin) => {
-    const resp = useApi().post<ILoginResponse>('/api/v1/auth/login', payload);
+  const login = (payload: ILogin, headers?: Record<string, string>) => {
+    const resp = useApi().post<ILoginResponse>('/api/v1/auth/login', payload, {
+      headers,
+    });
     resp.then(
       ({ data }) => {
         token.value = data.authorisation.token;

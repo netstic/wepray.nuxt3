@@ -1,6 +1,9 @@
 <template>
   <header
-    class="fixed top-0 left-0 right-0 bg-white border-b-2 border-b-gray-200 z-50"
+    :class="[
+      'fixed top-0 left-0 right-0 bg-white z-50',
+      { 'border-b border-gray-200': isScrolled },
+    ]"
   >
     <nav class="container mx-auto px-4 py-2 public-layout-width">
       <div
@@ -40,6 +43,12 @@
 <script setup lang="ts">
 const { setLocale, availableLocales, locale, t } = useI18n();
 
+const isScrolled = ref(false);
+
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 0;
+};
+
 const props = defineProps<{
   showStartBtn: boolean;
 }>();
@@ -50,4 +59,12 @@ const localeDropdownArray = computed(() =>
     callback: () => setLocale(locale),
   }))
 );
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 </script>

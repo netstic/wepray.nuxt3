@@ -35,9 +35,13 @@
           class="mb-6"
           required
         />
-        <button type="submit" class="w-full wp-btn-auth">
-          {{ $t('Send Reset Link') }}
-        </button>
+        <WeprayButton
+          :loading="isForgotPasswordLoading"
+          type="submit"
+          class="w-full wp-btn-auth"
+        >
+          {{ $t('Send reset link') }}
+        </WeprayButton>
       </form>
       <div class="mt-6 text-center">
         <p class="text-sm text-gray-600 dark:text-gray-400">
@@ -51,10 +55,10 @@
       </div>
       <!-- Success message -->
       <div
-        v-if="showSuccessMessage"
+        v-if="successMessage"
         class="mt-4 p-4 bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-200 rounded-md"
       >
-        Password reset link sent successfully. Please check your email.
+        {{ successMessage }}
       </div>
       <!-- Error message -->
       <div
@@ -69,6 +73,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { forgotPasswordService } from '~/services/user';
 
 definePageMeta({
   layout: false,
@@ -77,40 +82,38 @@ definePageMeta({
 
 const hasWindowHistory = ref(false);
 
+const { t } = useI18n();
 const defaultRow = (): { email: string | null } => ({
   email: null,
 });
 
 const row = ref(defaultRow());
 
-const showSuccessMessage = ref(false);
+const successMessage = ref('');
 const errorMessage = ref('');
+const isForgotPasswordLoading = ref(false);
 
-const onSubmit = async () => {
-  try {
-    // Reset messages
-    showSuccessMessage.value = false;
-    errorMessage.value = '';
+const onSubmit = () => {
+  successMessage.value = '';
+  errorMessage.value = '';
 
-    // Here you would typically make an API call to request a password reset
-    // For demonstration, we'll simulate an API call with a timeout
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+  isForgotPasswordLoading.value = true;
 
-    // Simulating a successful response
-    console.log('Password reset requested for:', row.value.email);
-    showSuccessMessage.value = true;
-
-    // Clear the email input after successful submission
-    row.value.email = '';
-
-    // In a real application, you would handle the API response here
-    // If the API call is successful, show the success message
-    // If there's an error, set the error message
-  } catch (error) {
-    console.error('Error requesting password reset:', error);
-    errorMessage.value =
-      'An error occurred while requesting the password reset. Please try again.';
-  }
+  forgotPasswordService(row.value)
+    .then(() => {
+      successMessage.value = t(
+        'Password reset link sent successfully. Please check your email.'
+      );
+      row.value = defaultRow();
+    })
+    .catch(() => {
+      errorMessage.value = t(
+        'An error occurred while requesting the password reset. Please try again.'
+      );
+    })
+    .finally(() => {
+      isForgotPasswordLoading.value = false;
+    });
 };
 
 onMounted(() => {

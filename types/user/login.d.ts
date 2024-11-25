@@ -7,9 +7,10 @@ export interface ILoginResponse {
 }
 
 export interface ILogin {
-  username: string | null;
+  login: string | null;
   password: string | null;
   remember?: boolean;
+  'g-recaptcha-response'?: string | null;
 }
 
 export interface IAuthorization {
@@ -67,4 +68,11 @@ export interface IRegisterForm {
   'g-recaptcha-response'?: string | null;
   name?: string;
   age: number | null;
+}
+
+export interface IResetPasswordForm {
+  email: string | null;
+  password: string | null;
+  password_confirmation: string | null;
+  token: string | null;
 }

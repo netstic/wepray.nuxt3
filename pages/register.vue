@@ -46,7 +46,6 @@
         </template>
 
         <template v-if="isEmailChecked">
-          <div>{{ row.email }}</div>
           <WeprayFormInput
             v-model="row.age"
             :label="$t('Age')"
@@ -115,6 +114,13 @@
           >
         </p>
       </div>
+
+      <div
+        v-if="errorMessage"
+        class="mt-4 p-4 bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-200 rounded-md"
+      >
+        {{ errorMessage }}
+      </div>
     </div>
   </div>
 </template>
@@ -133,6 +139,8 @@ const hasWindowHistory = ref(false);
 
 const { login } = useAuth();
 
+const { t } = useI18n();
+
 const row = ref<IRegisterForm>({
   email: null,
   age: null,
@@ -144,6 +152,8 @@ const row = ref<IRegisterForm>({
 const isEmailChecked = ref(false);
 const isShowPassword = ref(false);
 const isShowPasswordConfirmation = ref(false);
+
+const errorMessage = ref('');
 
 const checkEmail = () => {
   if (!row.value.email) return;
@@ -166,12 +176,14 @@ const togglePasswordVisibility = (
 };
 
 const onRegister = () => {
+  errorMessage.value = '';
+
   const resCreate = createUserService(row.value);
 
   resCreate
     .then(() => {
       const resLogin = login({
-        username: row.value.email!,
+        login: row.value.email!,
         password: row.value.password!,
       });
 
@@ -179,9 +191,17 @@ const onRegister = () => {
         .then(() => {
           navigateTo('/pray');
         })
-        .catch((err) => useHandleError(err));
+        .catch(() => {
+          errorMessage.value = t(
+            'An error occurred while logging in. Please try again.'
+          );
+        });
     })
-    .catch((err) => useHandleError(err));
+    .catch(() => {
+      errorMessage.value = t(
+        'An error occurred while creating your account. Please try again.'
+      );
+    });
 };
 
 onMounted(() => {

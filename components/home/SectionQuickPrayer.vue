@@ -12,7 +12,7 @@
             rows="2"
             textarea-class="w-full flex-grow wp-input resize-none overflow-hidden"
           />
-          <button class="wp-btn wp-btn-blue" @click="submitQuickPrayer">
+          <button class="wp-btn wp-btn-blue" @click="openQuickPrayerDialog">
             {{ $t('Send') }}
           </button>
         </div>
@@ -23,14 +23,20 @@
         </p>
       </div>
     </div>
+
+    <HomeSectionQuickPrayerDialog ref="quickPrayerDialogRef" />
   </section>
 </template>
 
 <script setup lang="ts">
-const quickPrayer = ref('');
+import type { HomeSectionQuickPrayerDialog } from '#build/components';
 
-const submitQuickPrayer = () => {
-  console.log('Prayer submitted:', quickPrayer.value);
-  quickPrayer.value = '';
+const quickPrayer = ref('');
+const quickPrayerDialogRef = ref<InstanceType<
+  typeof HomeSectionQuickPrayerDialog
+> | null>(null);
+
+const openQuickPrayerDialog = () => {
+  quickPrayerDialogRef.value?.openDialog();
 };
 </script>

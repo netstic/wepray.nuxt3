@@ -53,25 +53,14 @@
           >
         </p>
       </div>
-      <!-- Success message -->
-      <div
-        v-if="successMessage"
-        class="mt-4 p-4 bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-200 rounded-md"
-      >
-        {{ successMessage }}
-      </div>
-      <!-- Error message -->
-      <div
-        v-if="errorMessage"
-        class="mt-4 p-4 bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-200 rounded-md"
-      >
-        {{ errorMessage }}
-      </div>
+
+      <WeprayNotifyBanner ref="notifyBannerRef" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { WeprayNotifyBanner } from '#build/components';
 import { ref } from 'vue';
 import { forgotPasswordService } from '~/services/user';
 
@@ -82,32 +71,27 @@ definePageMeta({
 
 const hasWindowHistory = ref(false);
 
-const { t } = useI18n();
 const defaultRow = (): { email: string | null } => ({
   email: null,
 });
 
 const row = ref(defaultRow());
 
-const successMessage = ref('');
-const errorMessage = ref('');
+const notifyBannerRef = ref<InstanceType<typeof WeprayNotifyBanner>>();
 const isForgotPasswordLoading = ref(false);
 
 const onSubmit = () => {
-  successMessage.value = '';
-  errorMessage.value = '';
-
   isForgotPasswordLoading.value = true;
 
   forgotPasswordService(row.value)
     .then(() => {
-      successMessage.value = t(
+      notifyBannerRef.value?.notifySuccess(
         'Password reset link sent successfully. Please check your email.'
       );
       row.value = defaultRow();
     })
     .catch(() => {
-      errorMessage.value = t(
+      notifyBannerRef.value?.notifyError(
         'An error occurred while requesting the password reset. Please try again.'
       );
     })

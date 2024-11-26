@@ -44,52 +44,68 @@
         />
       </div>
 
-      <recaptcha
-        id="g-recaptcha-quick-prayer"
-        class="inline-flex items-center px-4 py-2"
-        @error="onError"
-        @success="onSuccess"
-        @expired="onExpired"
-      />
-
-      <WeprayButton type="submit" class="mt-4 wp-btn wp-btn-blue">{{
-        $t('Send')
-      }}</WeprayButton>
+      <WeprayButton
+        type="submit"
+        class="mt-4 wp-btn wp-btn-blue"
+        :loading="isSubmitLoading"
+        >{{ $t('Send') }}</WeprayButton
+      >
     </form>
+
+    <WeprayNotifyBanner ref="notifyBannerRef" />
   </WeprayDialog>
 </template>
 
 <script setup lang="ts">
+import type { WeprayNotifyBanner } from '#build/components';
 import { useCountries } from '~/composables/useCountries';
+import { postPublicQuickPrayerService } from '~/services/post';
 import type { IPostPublicQuickPrayer } from '~/types/post/public';
 
 const isDialogOpen = ref(false);
 
-const row = ref<IPostPublicQuickPrayer>({
+const defaultRow = (): IPostPublicQuickPrayer => ({
   name: null,
   email: null,
   country: null,
   city: null,
-  'g-recaptcha-response': null,
+  body: null,
 });
 
-const onSubmit = () => {};
+const { executeRecaptcha } = useGoogleRecaptcha();
 
-const onSuccess = (token: string) => {
-  row.value['g-recaptcha-response'] = token;
+const row = ref<IPostPublicQuickPrayer>(defaultRow());
+const notifyBannerRef = ref<InstanceType<typeof WeprayNotifyBanner>>();
+const isSubmitLoading = ref(false);
+
+const onSubmit = async () => {
+  isSubmitLoading.value = true;
+
+  const { token } = await executeRecaptcha(RecaptchaAction.post);
+
+  postPublicQuickPrayerService({ ...row.value, 'g-recaptcha-response': token })
+    .then(() => {
+      notifyBannerRef.value?.notifySuccess('Prayer sent successfully.');
+      row.value = defaultRow();
+    })
+    .catch(() => {
+      notifyBannerRef.value?.notifyError(
+        'An error occurred while sending your prayer. Please try again.'
+      );
+    })
+    .finally(() => {
+      isSubmitLoading.value = false;
+    });
 };
 
-const onError = () => {};
-
-const onExpired = () => {
-  row.value['g-recaptcha-response'] = null;
-};
-
-const openDialog = () => {
+const openDialog = (quickPrayer: string) => {
+  row.value = defaultRow();
   isDialogOpen.value = true;
+  row.value.body = quickPrayer;
 };
 
 const closeDialog = () => {
+  row.value = defaultRow();
   isDialogOpen.value = false;
 };
 

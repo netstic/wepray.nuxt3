@@ -3,7 +3,8 @@ export interface IPostPublicQuickPrayer {
   email: string | null;
   country: string | null;
   city: string | null;
-  'g-recaptcha-response': string | null;
+  body: string | null;
+  'g-recaptcha-response'?: string | null;
 }
 
 export interface IPostResponse {

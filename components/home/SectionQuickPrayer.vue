@@ -37,6 +37,6 @@ const quickPrayerDialogRef = ref<InstanceType<
 > | null>(null);
 
 const openQuickPrayerDialog = () => {
-  quickPrayerDialogRef.value?.openDialog();
+  quickPrayerDialogRef.value?.openDialog(quickPrayer.value);
 };
 </script>

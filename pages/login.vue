@@ -69,12 +69,7 @@
         </p>
       </div>
 
-      <div
-        v-if="errorMessage"
-        class="mt-4 p-4 bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-200 rounded-md"
-      >
-        {{ errorMessage }}
-      </div>
+      <WeprayNotifyBanner ref="notifyBannerRef" />
 
       <div class="mt-8">
         <div class="relative">
@@ -116,6 +111,7 @@
 </template>
 
 <script setup lang="ts">
+import type { WeprayNotifyBanner } from '#build/components';
 import { ref } from 'vue';
 import type { TAuthProvider } from '~/types/user/auth';
 import type { ILogin } from '~/types/user/login';
@@ -129,9 +125,7 @@ const hasWindowHistory = ref(false);
 const { login, isLoggedIn, logout, setTokenAndAuthMe, token } = useAuth();
 const { executeRecaptcha } = useGoogleRecaptcha();
 
-const { t } = useI18n();
-
-const errorMessage = ref('');
+const notifyBannerRef = ref<InstanceType<typeof WeprayNotifyBanner>>();
 const isLoginLoading = ref(false);
 const row = ref<ILogin>({
   login: null,
@@ -153,7 +147,6 @@ const onLogin = async () => {
     return handleUnauthorized();
   }
 
-  errorMessage.value = '';
   isLoginLoading.value = true;
 
   const { token } = await executeRecaptcha(RecaptchaAction.login);
@@ -163,7 +156,7 @@ const onLogin = async () => {
       navigateTo('/pray');
     })
     .catch(() => {
-      errorMessage.value = t(
+      notifyBannerRef.value?.notifyError(
         'An error occurred while logging in. Please try again.'
       );
     })

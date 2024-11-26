@@ -67,14 +67,13 @@
         </WeprayButton>
       </form>
 
-      <div v-if="message" :class="['mt-4 text-center text-sm', messageClass]">
-        {{ message }}
-      </div>
+      <WeprayNotifyMessage ref="notifyMessageRef" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { WeprayNotifyMessage } from '#build/components';
 import { ref } from 'vue';
 import { resetPasswordService } from '~/services/user';
 import type { IResetPasswordForm } from '~/types/user/login';
@@ -85,8 +84,6 @@ definePageMeta({
 });
 
 const hasWindowHistory = ref(false);
-
-const { t } = useI18n();
 
 const route = useRoute();
 
@@ -100,8 +97,7 @@ const row = ref<IResetPasswordForm>({
 const isSubmitLoading = ref(false);
 const isShowPassword = ref(false);
 const isShowPasswordConfirmation = ref(false);
-const message = ref('');
-const messageClass = ref('');
+const notifyMessageRef = ref<InstanceType<typeof WeprayNotifyMessage>>();
 
 const togglePasswordVisibility = (
   passwordTipo: 'password' | 'passwordConfirmation'
@@ -115,8 +111,7 @@ const togglePasswordVisibility = (
 
 const onSubmit = () => {
   if (row.value.password !== row.value.password_confirmation) {
-    message.value = t('Passwords do not match.');
-    messageClass.value = 'text-red-600 dark:text-red-400';
+    notifyMessageRef.value?.notifyError('Passwords do not match.');
     return;
   }
 
@@ -124,16 +119,18 @@ const onSubmit = () => {
 
   resetPasswordService(row.value)
     .then((res) => {
-      message.value = t('Password reset successful. Redirecting to login...');
-      messageClass.value = 'text-green-600 dark:text-green-400';
+      notifyMessageRef.value?.notifySuccess(
+        'Password reset successful. Redirecting to login...'
+      );
 
       setTimeout(() => {
         navigateTo('/login');
       }, 2000);
     })
     .catch(() => {
-      message.value = t('An error occurred. Please try again.');
-      messageClass.value = 'text-red-600 dark:text-red-400';
+      notifyMessageRef.value?.notifyError(
+        'An error occurred. Please try again.'
+      );
     })
     .finally(() => {
       isSubmitLoading.value = false;

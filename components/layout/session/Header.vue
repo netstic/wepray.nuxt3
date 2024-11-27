@@ -46,6 +46,7 @@
           >
         </div>
       </template>
+      <slot v-else></slot>
     </div>
   </header>
 </template>

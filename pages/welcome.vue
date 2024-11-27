@@ -17,23 +17,19 @@
               v-if="currentStep.id === 'feature'"
               v-for="(item, index) in currentStep.options"
               :key="index"
-              class="bg-white flex gap-2 sm:gap-4 lg:w-1/2 mx-auto w-full sm:w-2/3 dark:bg-gray-800 rounded-2xl p-4 transform transition-all duration-300 hover:scale-105"
+              class="bg-white flex flex-col gap-2 sm:gap-4 lg:w-1/2 mx-auto w-full sm:w-2/3 dark:bg-gray-800 rounded-2xl p-4 transform transition-all duration-300 hover:scale-105"
             >
-              <component
-                :is="item.icon"
-                v-if="item.icon"
-                class="w-16 h-16 text-blue-600 dark:text-blue-400"
-              />
-              <div class="flex-1">
-                <h3
-                  class="text-lg flex items-center font-semibold mb-2 text-blue-600 dark:text-blue-400"
-                >
+              <div
+                class="flex items-center gap-4 text-blue-600 dark:text-blue-400"
+              >
+                <component :is="item.icon" v-if="item.icon" size="lg" />
+                <h3 class="text-lg font-semibold">
                   {{ item.title }}
                 </h3>
-                <p class="text-gray-700 dark:text-gray-300">
-                  {{ item.text }}
-                </p>
               </div>
+              <p class="text-gray-700 dark:text-gray-300">
+                {{ item.text }}
+              </p>
             </div>
             <button
               v-else
@@ -51,6 +47,7 @@
                 :is="option.icon"
                 v-if="option.icon"
                 class="wp-btn-session-item-icon"
+                size="xl"
               />
               <span class="wp-btn-session-item-text">{{ option.text }}</span>
             </button>
@@ -65,7 +62,7 @@
             :disabled="!canContinue"
             class="wp-btn-session-submit w-full sm:w-auto"
           >
-            Continue
+            {{ t('Continue') }}
           </button>
         </template>
       </LayoutSessionFooter>
@@ -74,9 +71,18 @@
 </template>
 
 <script setup lang="ts">
-import Wp from '~/components/logo/Wp.vue';
 import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import AlarmOutline from '~/components/icon/AlarmOutline.vue';
+import UserHeartOutline from '~/components/icon/UserHeartOutline.vue';
+import BookOutline from '~/components/icon/BookOutline.vue';
+import HeartShareOutline from '~/components/icon/HeartShareOutline.vue';
+import UsersGroupOutline from '~/components/icon/UsersGroupOutline.vue';
+import StarsOutline from '~/components/icon/StarsOutline.vue';
+import ThreeSmall from '~/components/icon/ThreeSmall.vue';
+import FiveSmall from '~/components/icon/FiveSmall.vue';
+import TenSmall from '~/components/icon/TenSmall.vue';
+import TwentySmall from '~/components/icon/TwentySmall.vue';
 
 definePageMeta({
   colorMode: 'dark',
@@ -104,17 +110,17 @@ const stepperOptions: Record<string, IStepperOption[]> = {
     {
       value: 'daily_habit',
       text: t('Daily prayer routine'),
-      icon: markRaw(Wp),
+      icon: markRaw(AlarmOutline),
     },
     {
       value: 'community_connection',
       text: t('Connect with community'),
-      icon: markRaw(Wp),
+      icon: markRaw(UserHeartOutline),
     },
     {
       value: 'study_prayer',
       text: t('Find new ways to pray'),
-      icon: markRaw(Wp),
+      icon: markRaw(BookOutline),
     },
   ],
   feature: [
@@ -123,47 +129,63 @@ const stepperOptions: Record<string, IStepperOption[]> = {
       text: t(
         'Take your prayer life to a new level, receiving new requests and suggestions daily'
       ),
-      icon: markRaw(Wp),
+      icon: markRaw(StarsOutline),
     },
     {
       title: t('Share your heart'),
       text: t(
         'Submit prayer requests and receive support from a caring community'
       ),
-      icon: markRaw(Wp),
+      icon: markRaw(HeartShareOutline),
     },
     {
       title: t('Connect with Others'),
       text: t(
         'Help other people praying for them and sending encouragement messages'
       ),
-      icon: markRaw(Wp),
+      icon: markRaw(UsersGroupOutline),
     },
   ],
   daily: [
-    { value: 3, text: "3 Prayers / Day - I'm new to praying" },
-    { value: 5, text: '5 Prayers / Day - I already pray daily' },
-    { value: 10, text: "10 Prayers / Day - I'm growing" },
-    { value: 20, text: '20+ Prayers / Day - I want to challenge myself' },
+    {
+      value: 3,
+      text: t("I'm new to praying"),
+      icon: markRaw(ThreeSmall),
+    },
+    {
+      value: 5,
+      text: t('I already pray daily'),
+      icon: markRaw(FiveSmall),
+    },
+    {
+      value: 10,
+      text: t("I'm growing"),
+      icon: markRaw(TenSmall),
+    },
+    {
+      value: 20,
+      text: t('I want a challenge'),
+      icon: markRaw(TwentySmall),
+    },
   ],
 };
 
 const stepper = ref([
   {
     id: 'goal',
-    title: 'Choose your goal...',
+    title: t('Choose your goal...'),
     options: stepperOptions.goal,
     selectedOption: null,
   },
   {
     id: 'feature',
-    title: 'We can help you!',
+    title: t('We can help you!'),
     options: stepperOptions.feature,
     selectedOption: { value: true },
   },
   {
     id: 'daily',
-    title: 'What is your daily goal?',
+    title: t('What is your daily goal?'),
     options: stepperOptions.daily,
     selectedOption: null,
   },

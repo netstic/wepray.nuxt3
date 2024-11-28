@@ -30,6 +30,10 @@
   @apply bg-blue-600 hover:bg-blue-700 text-white;
 }
 
+.wp-btn-blue-light {
+  @apply bg-blue-300 hover:bg-blue-400 text-gray-800;
+}
+
 .wp-btn-icon {
   @apply rounded-[50%] transition-colors hover:bg-stone-100;
 }

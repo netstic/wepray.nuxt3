@@ -1,5 +1,9 @@
 <template>
-  <button :type="props.type" :disabled="props.disabled || props.loading">
+  <button
+    :type="props.type"
+    :disabled="props.disabled || props.loading"
+    :class="$attrs.class ?? 'wp-btn'"
+  >
     <template v-if="props.loading">
       <LoaderButtonSubmit />
     </template>

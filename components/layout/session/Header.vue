@@ -12,7 +12,7 @@
         @click="emit('back')"
         class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
       >
-        <IconArrowLeft class="h-6 w-6" />
+        <IconX class="h-6 w-6" />
       </button>
       <template v-if="props.progress">
         <div
@@ -21,7 +21,7 @@
           <div
             class="bg-blue-600 h-2.5 rounded-full transition-all duration-500 ease-in-out"
             :style="{
-              width: `${Math.min(Math.max(props.progress.barWidth, 0), 100)}%`,
+              width: barWidth + '%',
             }"
           ></div>
         </div>
@@ -41,8 +41,7 @@
             />
           </svg>
           <span class="font-semibold"
-            >{{ props.progress.todayGoalCount }} /
-            {{ props.progress.dailyGoalCount }}</span
+            >{{ props.progress.current }} / {{ props.progress.total }}</span
           >
         </div>
       </template>
@@ -55,9 +54,8 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 export interface ILayoutSessionHeaderProgress {
-  barWidth: number;
-  todayGoalCount: number;
-  dailyGoalCount: number;
+  current: number;
+  total: number;
 }
 
 const props = defineProps<{
@@ -69,6 +67,18 @@ const emit = defineEmits<{
 }>();
 
 const isScrolled = ref(false);
+
+const barWidth = computed(() => {
+  if (
+    props.progress?.current !== undefined &&
+    props.progress?.total !== undefined
+  ) {
+    const progressPercentage =
+      (props.progress.current / props.progress.total) * 100;
+    return Math.min(Math.max(progressPercentage, 0), 100);
+  }
+  return 0;
+});
 
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 0;

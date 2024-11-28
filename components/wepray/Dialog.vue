@@ -1,11 +1,15 @@
 <template>
   <div v-if="model" class="custom-dialog">
-    <div class="rounded-lg bg-white pt-6 pb-4 px-4 relative">
+    <div
+      class="rounded-lg bg-white dark:bg-gray-800 pt-6 pb-4 px-4 relative"
+      :style="{ maxWidth: props.maxWidth }"
+    >
       <div
-        class="absolute bg-white rounded-full p-2 cursor-pointer -top-4 -right-4"
+        v-if="!props.noCloseButton"
+        class="absolute bg-white dark:bg-gray-800 rounded-full p-2 cursor-pointer -top-4 -right-4"
         @click="onClose"
       >
-        <IconX class="text-gray-600" />
+        <IconX class="text-gray-600 dark:text-gray-400" />
       </div>
       <slot></slot>
     </div>
@@ -14,6 +18,11 @@
 
 <script setup lang="ts">
 const model = defineModel<boolean>({ default: false });
+
+const props = defineProps<{
+  noCloseButton?: boolean;
+  maxWidth?: string;
+}>();
 
 const emit = defineEmits<{
   close: [value: void];

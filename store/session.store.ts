@@ -1,14 +1,16 @@
 import type { ILayoutSessionHeaderProgress } from '~/components/layout/session/Header.vue';
+import type { ISession, ISessionItem } from '~/types/session';
 
 export const useSessionStore = defineStore({
   id: 'session-store',
   state: () => ({
     session: {
+      currentCardIndex: 0,
       currentProgress: 0,
       lists: [
         {
           id: 1,
-          lista: {
+          list: {
             id: 1,
             title: 'Weekly Prayer',
           },
@@ -24,7 +26,13 @@ export const useSessionStore = defineStore({
               avatar: '/favicon.ico',
               location: 'California, USA',
               content: "Praying for your mother's recovery.",
-              reactions: {},
+              reactions: {
+                '👍': 2,
+                '❤️': 1,
+                '🙏': 3,
+                '😊': 1,
+                '🕯️': 1,
+              },
               showReactions: false,
             },
             {
@@ -41,7 +49,7 @@ export const useSessionStore = defineStore({
         },
         {
           id: 2,
-          lista: {
+          list: {
             id: 1,
             title: 'Weekly Prayer',
           },
@@ -55,7 +63,7 @@ export const useSessionStore = defineStore({
         },
         {
           id: 3,
-          lista: {
+          list: {
             id: 1,
             title: 'Weekly Prayer',
           },
@@ -69,7 +77,7 @@ export const useSessionStore = defineStore({
         },
         {
           id: 1,
-          lista: {
+          list: {
             id: 2,
             title: 'Community Prayers',
           },
@@ -102,7 +110,7 @@ export const useSessionStore = defineStore({
         },
         {
           id: 2,
-          lista: {
+          list: {
             id: 2,
             title: 'Community Prayers',
           },
@@ -116,7 +124,7 @@ export const useSessionStore = defineStore({
         },
         {
           id: 3,
-          lista: {
+          list: {
             id: 2,
             title: 'Community Prayers',
           },
@@ -129,24 +137,39 @@ export const useSessionStore = defineStore({
           prayedCount: 234,
         },
       ],
-    },
+    } as ISession,
   }),
   getters: {
-    progress(state): ILayoutSessionHeaderProgress {
+    currentCard(): ISessionItem | undefined | null {
+      return this.session.lists[this.session.currentCardIndex];
+    },
+    progress(): ILayoutSessionHeaderProgress {
       return {
-        current: state.session.currentProgress,
-        total: state.session.lists.length,
+        current: this.session.currentProgress,
+        total: this.session.lists.length,
       };
+    },
+    isLastCard(): boolean {
+      return this.session.currentCardIndex >= this.session.lists.length - 1;
     },
   },
   actions: {
+    nextCard() {
+      if (this.isLastCard) return;
+      this.session.currentCardIndex += 1;
+    },
     incrementCurrentProgress() {
       if (this.session.currentProgress >= 50) return;
       this.session.currentProgress += 1;
+      this.incrementPrayedCount();
     },
     decrementCurrentProgress() {
       if (this.session.currentProgress <= 1) return;
       this.session.currentProgress -= 1;
+    },
+    incrementPrayedCount() {
+      if (this.isLastCard) return;
+      this.session.lists[this.session.currentCardIndex].prayedCount += 1;
     },
   },
 });

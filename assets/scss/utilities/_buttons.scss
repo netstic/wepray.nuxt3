@@ -18,6 +18,10 @@
   @apply bg-transparent;
 }
 
+.wp-btn-disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
 .wp-btn-plain {
   @apply hover:bg-transparent;
 }

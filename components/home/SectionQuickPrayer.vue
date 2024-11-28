@@ -12,7 +12,12 @@
             rows="2"
             textarea-class="w-full flex-grow wp-input resize-none overflow-hidden"
           />
-          <button class="wp-btn wp-btn-blue" @click="openQuickPrayerDialog">
+          <button
+            :disabled="isSendDisabled"
+            class="wp-btn wp-btn-blue"
+            :class="{ 'wp-btn-disabled': isSendDisabled }"
+            @click="openQuickPrayerDialog"
+          >
             {{ $t('Send') }}
           </button>
         </div>
@@ -24,7 +29,10 @@
       </div>
     </div>
 
-    <HomeSectionQuickPrayerDialog ref="quickPrayerDialogRef" />
+    <HomeSectionQuickPrayerDialog
+      ref="quickPrayerDialogRef"
+      @submit="quickPrayer = ''"
+    />
   </section>
 </template>
 
@@ -35,6 +43,8 @@ const quickPrayer = ref('');
 const quickPrayerDialogRef = ref<InstanceType<
   typeof HomeSectionQuickPrayerDialog
 > | null>(null);
+
+const isSendDisabled = computed(() => quickPrayer.value.length < 15);
 
 const openQuickPrayerDialog = () => {
   quickPrayerDialogRef.value?.openDialog(quickPrayer.value);

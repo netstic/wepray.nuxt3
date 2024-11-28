@@ -5,13 +5,16 @@
     </div>
     <div v-else>
       <LayoutSessionHeader @back="goBack" />
-      <LayoutSessionMain>
+      <LayoutSessionMain
+        :class="[currentStep?.id === 'start' ? 'h-screen' : '']"
+      >
         <transition name="fade" mode="out-in">
           <LayoutSessionMainContent
             v-if="currentStep"
             :key="currentStep.id"
             :title="currentStep.title"
             class="app-layout-width"
+            :class="[currentStep?.id === 'start' ? 'pt-[64px] pb-[250px]' : '']"
           >
             <div
               v-if="currentStep.id === 'feature'"
@@ -31,6 +34,19 @@
                 {{ item.text }}
               </p>
             </div>
+
+            <div
+              v-else-if="currentStep.id === 'start'"
+              class="flex flex-1 flex-col gap-4 text-center my-auto justify-center items-center"
+            >
+              <h1 class="text-4xl font-bold">
+                {{ $t('Lets start!') }}
+              </h1>
+              <h2 class="text-lg text-gray-700 dark:text-gray-300 max-w-lg">
+                {{ currentStep.options[0].text }}
+              </h2>
+            </div>
+
             <button
               v-else
               v-for="(option, optionId) in currentStep.options"
@@ -62,7 +78,9 @@
             :disabled="!canContinue"
             class="wp-btn-session-submit w-full sm:w-auto"
           >
-            {{ t('Continue') }}
+            {{
+              currentStep?.id === 'start' ? t('Start Praying') : t('Continue')
+            }}
           </button>
         </template>
       </LayoutSessionFooter>
@@ -86,11 +104,11 @@ import TwentySmall from '~/components/icon/TwentySmall.vue';
 
 definePageMeta({
   colorMode: 'dark',
-  middleware: (from) => {
-    if ((useCookie('welcome').value as any)?.daily) {
-      return navigateTo('/pray');
-    }
-  },
+  // middleware: (from) => {
+  //   if ((useCookie('welcome').value as any)?.daily) {
+  //     return navigateTo('/pray');
+  //   }
+  // },
 });
 
 const { t } = useI18n();
@@ -168,12 +186,19 @@ const stepperOptions: Record<string, IStepperOption[]> = {
       icon: markRaw(TwentySmall),
     },
   ],
+  start: [
+    {
+      text: t(
+        'Start your first prayer session, praying for the requests we have specially prepared for you.'
+      ),
+    },
+  ],
 };
 
 const stepper = ref([
   {
     id: 'goal',
-    title: t('Choose your goal...'),
+    title: t('My goal is...'),
     options: stepperOptions.goal,
     selectedOption: null,
   },
@@ -188,6 +213,12 @@ const stepper = ref([
     title: t('What is your daily goal?'),
     options: stepperOptions.daily,
     selectedOption: null,
+  },
+  {
+    id: 'start',
+    title: '',
+    options: stepperOptions.start,
+    selectedOption: { value: true },
   },
 ]);
 
@@ -212,7 +243,7 @@ const nextStep = () => {
   if (!currentStep.value) return;
   const currentStepIndex = stepper.value.indexOf(currentStep.value);
 
-  if (currentStep.value?.id !== 'feature') {
+  if (!['feature', 'start'].includes(currentStep.value?.id)) {
     if (!welcomeCookie.value) {
       setWelcomeCookie({});
     }
@@ -223,7 +254,11 @@ const nextStep = () => {
     setWelcomeCookie(welcomeCookie.value);
   }
 
+  console.log('currentStepIndex', currentStepIndex);
+  console.log('stepper.value.length', stepper.value.length);
+
   if (currentStepIndex < stepper.value.length - 1) {
+    console.log('navigateTo', stepper.value[currentStepIndex + 1].id);
     return navigateTo({
       name: 'welcome',
       query: { step: stepper.value[currentStepIndex + 1].id },

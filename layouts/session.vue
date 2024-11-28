@@ -1,10 +1,10 @@
 <template>
-  <div v-if="!progress" class="wp-loader-navigation">
+  <div v-if="!currentProgress" class="wp-loader-navigation">
     <LoaderNavigation />
   </div>
   <div v-else id="session-layout">
     <LayoutSessionHeader
-      :progress="progress"
+      :progress="currentProgress"
       @click="hasWindowHistory ? $router.go(-1) : navigateTo('/session')"
     />
     <LayoutSessionMain>
@@ -18,7 +18,7 @@ import { useSessionStore } from '~/store/session.store';
 
 // const { sessionCookie, setSessionCookie, progress } = useSession();
 const sessionStore = useSessionStore();
-const { progress } = storeToRefs(sessionStore);
+const { currentProgress } = storeToRefs(sessionStore);
 
 const hasWindowHistory = ref(false);
 

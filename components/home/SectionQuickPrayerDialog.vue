@@ -47,7 +47,9 @@
       <WeprayButton
         type="submit"
         class="mt-4 wp-btn wp-btn-blue"
+        :class="{ 'wp-btn-disabled': !row.body }"
         :loading="isSubmitLoading"
+        :disabled="!row.body"
         >{{ $t('Send') }}</WeprayButton
       >
     </form>
@@ -61,6 +63,8 @@ import type { WeprayNotifyBanner } from '#build/components';
 import { useCountries } from '~/composables/useCountries';
 import { postPublicQuickPrayerService } from '~/services/post';
 import type { IPostPublicQuickPrayer } from '~/types/post/public';
+
+const emit = defineEmits(['submit']);
 
 const isDialogOpen = ref(false);
 
@@ -87,6 +91,7 @@ const onSubmit = async () => {
     .then(() => {
       notifyBannerRef.value?.notifySuccess('Prayer sent successfully.');
       row.value = defaultRow();
+      emit('submit');
     })
     .catch(() => {
       notifyBannerRef.value?.notifyError(

@@ -1,224 +1,231 @@
 <template>
   <transition name="fade" mode="out-in">
-    <LayoutSessionMainContent
-      v-if="currentCard"
-      :key="currentCard.id"
-      :title="$t(currentCard.list.title)"
-      class="app-layout-width pb-10 sm:pb-28"
-    >
-      <div class="flex flex-col sm:w-2/3 mx-auto gap-1">
-        <div
-          class="flex items-start flex-col gap-2 bg-white dark:border dark:border-gray-700 dark:bg-gray-800 min-h-44 rounded-2xl shadow-md sm:shadow-2xl p-6"
-        >
-          <div class="flex items-center gap-4 mb-1">
-            <Avatar :src="currentCard.avatar" :username="currentCard.title" />
-            <h2 class="text-xl font-bold">{{ currentCard.title }}</h2>
-          </div>
-          <p
-            class="text-gray-700 dark:text-gray-300"
-            :class="{
-              'line-clamp-4':
-                !isReadMore && currentCard.content?.split(' ').length > 62,
-            }"
-          >
-            {{ currentCard.content }}
-          </p>
-          <p
-            v-if="!isReadMore && currentCard.content?.split(' ').length > 62"
-            class="text-blue-400 cursor-pointer text-end w-full"
-            @click="isReadMore = true"
-          >
-            {{ $t('Read more') }}
-          </p>
-          <p
-            v-else-if="isReadMore"
-            class="text-blue-400 cursor-pointer text-end w-full"
-            @click="isReadMore = false"
-          >
-            {{ $t('Show less') }}
-          </p>
-        </div>
-        <div class="flex justify-end items-center mb-8 mr-1">
+    <div v-if="isSessionLoading" class="wp-loader-navigation">
+      <LoaderNavigation />
+    </div>
+    <div v-else>
+      <LayoutSessionMainContent
+        v-if="currentCard"
+        :key="currentCard.id"
+        :title="$t(currentCard.list.title)"
+        class="app-layout-width pb-10 sm:pb-28"
+      >
+        <div class="flex flex-col sm:w-2/3 mx-auto gap-1">
           <div
-            class="flex gap-4 items-center bg-white dark:border dark:border-gray-700 dark:bg-gray-800 rounded-xl px-4 py-2 shadow-md sm:shadow-xl"
+            class="flex items-start flex-col gap-2 bg-white dark:border dark:border-gray-700 dark:bg-gray-800 min-h-44 rounded-2xl shadow-md sm:shadow-2xl p-6"
           >
-            <SessionIconPrayFireworks
-              ref="iconPrayRef"
-              @click="onIconPray"
-              :prayer-count="currentCard.prayedCount"
-            />
-            <button
-              @click="toggleComments(currentCard.id)"
-              class="flex items-center text-green-600 dark:text-green-400"
+            <div class="flex items-center gap-4 mb-1">
+              <Avatar :src="currentCard.avatar" :username="currentCard.title" />
+              <h2 class="text-xl font-bold">{{ currentCard.title }}</h2>
+            </div>
+            <p
+              class="text-gray-700 dark:text-gray-300"
+              :class="{
+                'line-clamp-4':
+                  !isReadMore && currentCard.content?.split(' ').length > 62,
+              }"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                />
-              </svg>
-              <span>{{ currentCard.comments?.length }}</span>
-            </button>
-            <button
-              @click="toggleNotes(currentCard.id)"
-              class="flex items-center text-blue-600 dark:text-blue-400"
+              {{ currentCard.content }}
+            </p>
+            <p
+              v-if="!isReadMore && currentCard.content?.split(' ').length > 62"
+              class="text-blue-400 cursor-pointer text-end w-full"
+              @click="isReadMore = true"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                />
-              </svg>
-              <span>{{ currentCard.notes?.length }}</span>
-            </button>
+              {{ $t('Read more') }}
+            </p>
+            <p
+              v-else-if="isReadMore"
+              class="text-blue-400 cursor-pointer text-end w-full"
+              @click="isReadMore = false"
+            >
+              {{ $t('Show less') }}
+            </p>
           </div>
-        </div>
-
-        <div class="flex justify-end items-center">
-          <transition name="fade">
-            <div v-if="showComments" class="space-y-10 mb-10 -mt-2 flex-1">
-              <div class="mt-2 -mb-4 flex">
-                <div class="ml-4 sm:ml-14"></div>
-                <WeprayFormInput
-                  v-model="newComment"
-                  @keyup.enter="addComment"
-                  :placeholder="$t('Add a comment...')"
-                  class="flex-1"
-                  input-class="w-full px-4 py-2 rounded-lg bg-white dark:bg-gray-800 shadow-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          <div class="flex justify-end items-center mb-8 mr-1">
+            <div
+              class="flex gap-4 items-center bg-white dark:border dark:border-gray-700 dark:bg-gray-800 rounded-xl px-4 py-2 shadow-md sm:shadow-xl"
+            >
+              <SessionIconPrayFireworks
+                ref="iconPrayRef"
+                @click="onIconPray"
+                :prayer-count="currentCard.prayedCount"
+              />
+              <button
+                @click="toggleComments(currentCard.id)"
+                class="flex items-center text-green-600 dark:text-green-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  <template #append>
-                    <button type="button" @click="addComment">
-                      <IconSend />
-                    </button>
-                  </template>
-                </WeprayFormInput>
-                <div class="mr-4 sm:mr-14"></div>
-              </div>
-
-              <div v-if="loading" class="space-y-4">
-                <div
-                  v-for="i in 3"
-                  :key="i"
-                  class="animate-pulse flex space-x-4"
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                  />
+                </svg>
+                <span>{{ currentCard.comments?.length }}</span>
+              </button>
+              <button
+                @click="toggleNotes(currentCard.id)"
+                class="flex items-center text-blue-600 dark:text-blue-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+                <span>{{ currentCard.notes?.length }}</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex justify-end items-center">
+            <transition name="fade">
+              <div v-if="showComments" class="space-y-10 mb-10 -mt-2 flex-1">
+                <div class="mt-2 -mb-4 flex">
+                  <div class="ml-4 sm:ml-14"></div>
+                  <WeprayFormInput
+                    v-model="newComment"
+                    @keyup.enter="addComment"
+                    :placeholder="$t('Add a comment...')"
+                    class="flex-1"
+                    input-class="w-full px-4 py-2 rounded-lg bg-white dark:bg-gray-800 shadow-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <template #append>
+                      <button type="button" @click="addComment">
+                        <IconSend />
+                      </button>
+                    </template>
+                  </WeprayFormInput>
+                  <div class="mr-4 sm:mr-14"></div>
+                </div>
+
+                <div v-if="loading" class="space-y-4">
                   <div
-                    class="rounded-full bg-gray-300 dark:bg-gray-600 h-12 w-12"
-                  ></div>
-                  <div class="flex-1 space-y-4 py-1">
+                    v-for="i in 3"
+                    :key="i"
+                    class="animate-pulse flex space-x-4"
+                  >
                     <div
-                      class="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4"
+                      class="rounded-full bg-gray-300 dark:bg-gray-600 h-12 w-12"
                     ></div>
-                    <div class="space-y-2">
+                    <div class="flex-1 space-y-4 py-1">
                       <div
-                        class="h-4 bg-gray-300 dark:bg-gray-600 rounded"
+                        class="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4"
                       ></div>
-                      <div
-                        class="h-4 bg-gray-300 dark:bg-gray-600 rounded w-5/6"
-                      ></div>
+                      <div class="space-y-2">
+                        <div
+                          class="h-4 bg-gray-300 dark:bg-gray-600 rounded"
+                        ></div>
+                        <div
+                          class="h-4 bg-gray-300 dark:bg-gray-600 rounded w-5/6"
+                        ></div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <transition-group name="fade">
-                <div
-                  v-if="!loading"
-                  v-for="(comment, commentId) in currentCard?.comments"
-                  :key="commentId"
-                  class="flex flex-col sm:mx-8"
-                  :class="commentId % 2 === 0 ? 'items-start' : 'items-end'"
-                >
+                <transition-group name="fade">
                   <div
-                    class="bg-white dark:bg-gray-800 rounded-2xl sm:w-auto md:w-4/5 shadow-md sm:shadow-lg p-4 pb-8"
+                    v-if="!loading"
+                    v-for="(comment, commentId) in currentCard?.comments"
+                    :key="commentId"
+                    class="flex flex-col sm:mx-8"
+                    :class="commentId % 2 === 0 ? 'items-start' : 'items-end'"
                   >
-                    <div class="flex flex-col">
-                      <p class="min-h-12">{{ comment.content }}</p>
-                      <div
-                        class="flex items-center relative z-20 w-full -mb-6 space-x-2"
-                        :class="
-                          commentId % 2 === 0 ? 'justify-end' : 'justify-start'
-                        "
-                      >
-                        <button
-                          @click="toggleReactions(comment.id)"
-                          class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                    <div
+                      class="bg-white dark:bg-gray-800 rounded-2xl sm:w-auto md:w-4/5 shadow-md sm:shadow-lg p-4 pb-8"
+                    >
+                      <div class="flex flex-col">
+                        <p class="min-h-12">{{ comment.content }}</p>
+                        <div
+                          class="flex items-center relative z-20 w-full -mb-6 space-x-2"
+                          :class="
+                            commentId % 2 === 0
+                              ? 'justify-end'
+                              : 'justify-start'
+                          "
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
+                          <button
+                            @click="toggleReactions(comment.id)"
+                            class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                           >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                        </button>
-                        <div v-if="comment.showReactions" class="absolute">
-                          <div
-                            class="absolute bottom-full left-0 mb-2 bg-white dark:bg-gray-700 rounded-lg shadow-lg p-2 flex space-x-2"
-                          >
-                            <button
-                              v-for="reaction in reactions"
-                              :key="reaction"
-                              @click="addReaction(comment.id, reaction)"
-                              class="text-2xl"
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-6 w-6"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
                             >
-                              {{ reaction }}
-                            </button>
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            </svg>
+                          </button>
+                          <div v-if="comment.showReactions" class="absolute">
+                            <div
+                              class="absolute bottom-full left-0 mb-2 bg-white dark:bg-gray-700 rounded-lg shadow-lg p-2 flex space-x-2"
+                            >
+                              <button
+                                v-for="reaction in reactions"
+                                :key="reaction"
+                                @click="addReaction(comment.id, reaction)"
+                                class="text-2xl"
+                              >
+                                {{ reaction }}
+                              </button>
+                            </div>
+                          </div>
+                          <div
+                            v-if="Object.keys(comment.reactions).length > 0"
+                            class="flex items-center space-x-1"
+                          >
+                            <span
+                              v-for="(count, reaction) in comment.reactions"
+                              :key="reaction"
+                              class="text-sm"
+                            >
+                              {{ reaction }} {{ count }}
+                            </span>
                           </div>
                         </div>
-                        <div
-                          v-if="Object.keys(comment.reactions).length > 0"
-                          class="flex items-center space-x-1"
-                        >
-                          <span
-                            v-for="(count, reaction) in comment.reactions"
-                            :key="reaction"
-                            class="text-sm"
-                          >
-                            {{ reaction }} {{ count }}
-                          </span>
-                        </div>
+                        <Avatar
+                          :src="comment.avatar"
+                          :username="comment.name"
+                          :from="comment.location"
+                          chip
+                          size="xl"
+                          class="-mb-14"
+                          :class="commentId % 2 === 0 ? 'ml-2' : 'mr-2'"
+                          :align="commentId % 2 === 0 ? 'start' : 'end'"
+                        />
                       </div>
-                      <Avatar
-                        :src="comment.avatar"
-                        :username="comment.name"
-                        :from="comment.location"
-                        chip
-                        size="xl"
-                        class="-mb-14"
-                        :class="commentId % 2 === 0 ? 'ml-2' : 'mr-2'"
-                        :align="commentId % 2 === 0 ? 'start' : 'end'"
-                      />
                     </div>
                   </div>
-                </div>
-              </transition-group>
-            </div>
-          </transition>
+                </transition-group>
+              </div>
+            </transition>
+          </div>
         </div>
-      </div>
-    </LayoutSessionMainContent>
+      </LayoutSessionMainContent>
+    </div>
   </transition>
 
   <ClientOnly>
@@ -232,7 +239,9 @@
             >
               <LogoWp size="xl" />
               <span class="text-lg sm:text-xl">{{
-                isLastCard ? 'Thanks for your prayers!' : randomPrayedMessage
+                isLastCard
+                  ? $t('Thanks for your prayers!')
+                  : $t(randomPrayedMessage)
               }}</span>
             </div>
           </transition>
@@ -269,7 +278,11 @@ const iconPrayRef = ref<InstanceType<typeof SessionIconPrayFireworks>>();
 const { incrementTodayPrayerCount, updateTodayWelcomeCookie } =
   useWelcomeSession();
 const sessionStore = useSessionStore();
-const { currentCard, isLastCard } = storeToRefs(sessionStore);
+const {
+  currentCard,
+  isLastCard,
+  isLoading: isSessionLoading,
+} = storeToRefs(sessionStore);
 
 const showComments = ref(false);
 const loading = ref(true);
@@ -320,11 +333,16 @@ const goNext = () => {
     onPrayAnimation();
     return;
   } else if (isLastCard.value) {
+    restartSessionValues();
     navigateTo('/session/finish');
     return;
   }
 
   sessionStore.nextCard();
+  restartSessionValues();
+};
+
+const restartSessionValues = () => {
   isPrayed.value = false;
   showComments.value = false;
   isReadMore.value = false;
@@ -376,6 +394,10 @@ const addComment = () => {
     newComment.value = '';
   }
 };
+
+onMounted(() => {
+  sessionStore.initSession();
+});
 
 onBeforeMount(() => {
   updateTodayWelcomeCookie();

@@ -3,5 +3,5 @@
 }
 
 .wp-loader-navigation {
-  @apply w-full h-screen flex items-center justify-center;
+  @apply w-full h-full fixed top-0 left-0 bg-gray-100 flex items-center justify-center z-[9999];
 }

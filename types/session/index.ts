@@ -1,6 +1,8 @@
 export interface ISession {
   currentCardIndex: number;
   currentProgress: number;
+  prayerCount: number;
+  isLoading: boolean;
   lists: ISessionItem[];
 }
 

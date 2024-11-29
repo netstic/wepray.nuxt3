@@ -10,9 +10,12 @@
 definePageMeta({
   layout: false,
   middleware: (from) => {
-    if (!(useCookie('welcome').value as any)?.daily) {
-      return navigateTo({ path: '/welcome', query: { step: 'daily_goal' } });
-    }
+    // const {isGuestLoggedIn} = useAuth();
+    // const guestToken = useCookie('guest_token');
+    // const token = useCookie('token');
+    // if (!guestToken.value || !token.value || !guestToken.value?.daily) {
+    //   return navigateTo({ path: '/welcome', query: { step: 'daily_goal' } });
+    // }
   },
 });
 

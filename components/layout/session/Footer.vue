@@ -1,7 +1,7 @@
 <template>
   <footer
     :class="[
-      'fixed z-[9999] bottom-0 right-0 left-0 bg-gray-100 dark:bg-gray-900 sm:border-t border-gray-300 dark:border-gray-700',
+      'fixed z-[9000] bottom-0 right-0 left-0 bg-gray-100 dark:bg-gray-900 sm:border-t border-gray-300 dark:border-gray-700',
       { 'border-t': !isScrolledUp },
     ]"
   >

@@ -24,7 +24,7 @@ onMounted(() => {
   callbackAuth(provider, query)
     .then(({ data }) => {
       window.opener.postMessage(
-        { responseToken: data.authorisation.token, provider },
+        { responseToken: data.authorization.token, provider },
         window.location.origin
       );
       window.close();

@@ -1,11 +1,19 @@
-import { authUserMe } from '~/services/auth';
+import { authGuestMe, authUserMe } from '~/services/auth';
 import type { TAuthProvider } from '~/types/user/auth';
-import type { ILoginResponse, ILogin, IUser } from '~/types/user/login';
+import type {
+  ILoginResponse,
+  ILogin,
+  IUser,
+  IGuest,
+  IGuestLoginResponse,
+} from '~/types/user/login';
 
 export const useAuth = () => {
   const user = useState<IUser | null>('user', () => null);
+  const guest = useState<IGuest | null>('guest', () => null);
 
   const token = useCookie('token');
+  const guestToken = useCookie('guest_token');
 
   const resetAuth = () => {
     user.value = null;
@@ -22,6 +30,12 @@ export const useAuth = () => {
     return getAuthMe();
   };
 
+  const setGuestTokenAndAuthMe = (token: string) => {
+    useCookie('guest_token').value = token;
+    useApi().defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    return getGuestAuthMe();
+  };
+
   const getAuthMe = () => {
     const resp = authUserMe();
     resp.then(
@@ -35,16 +49,31 @@ export const useAuth = () => {
     return resp;
   };
 
+  const getGuestAuthMe = () => {
+    console.log(useApi().defaults.headers.common['Authorization']);
+    console.log(guestToken.value);
+    const resp = authGuestMe();
+    resp.then(
+      ({ data }) => {
+        guest.value = data;
+      },
+      (e) => {
+        guest.value = null;
+      }
+    );
+    return resp;
+  };
+
   const login = (payload: ILogin, headers?: Record<string, string>) => {
     const resp = useApi().post<ILoginResponse>('/api/v1/auth/login', payload, {
       headers,
     });
     resp.then(
       ({ data }) => {
-        token.value = data.authorisation.token;
+        token.value = data.authorization.token;
         useApi().defaults.headers.common[
           'Authorization'
-        ] = `Bearer ${data.authorisation.token}`;
+        ] = `Bearer ${data.authorization.token}`;
         getAuthMe();
       },
       (e) => {}
@@ -52,8 +81,10 @@ export const useAuth = () => {
     return resp;
   };
 
-  const logout = () => {
-    const resp = useApi().post('/api/v1/auth/logout');
+  const logout = (payload: { token: string | null }) => {
+    const resp = useApi().post<IGuestLoginResponse>('/api/v1/auth/logout', {
+      token: payload.token,
+    });
 
     resp.then(() => {
       resetAuth();
@@ -69,10 +100,22 @@ export const useAuth = () => {
         params: query,
       }
     );
-    // resp.then(({ data }) => {
-    //   token.value = data.authorisation.token as string;
-    //   setTokenAndAuthMe(data.authorisation.token);
-    // });
+    return resp;
+  };
+
+  const guestLoginOrCreate = () => {
+    const resp = useApi().post<IGuestLoginResponse>('/api/v1/guest/login', {
+      token: guestToken.value,
+    });
+
+    resp.then(
+      ({ data }) => {
+        guestToken.value = data.authorization.token;
+        setGuestTokenAndAuthMe(data.authorization.token);
+      },
+      (e) => {}
+    );
+
     return resp;
   };
 
@@ -83,6 +126,10 @@ export const useAuth = () => {
     }
     return '@';
   });
+
+  const isGuestLoggedIn = computed(
+    () => guestToken.value != null && guest.value != null
+  );
 
   return {
     token,
@@ -95,5 +142,11 @@ export const useAuth = () => {
     setTokenAndAuthMe,
     logout,
     userName,
+    // guest
+    guest,
+    guestToken,
+    isGuestLoggedIn,
+    guestLoginOrCreate,
+    setGuestTokenAndAuthMe,
   };
 };

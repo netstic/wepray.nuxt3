@@ -3,7 +3,7 @@
 export interface ILoginResponse {
   status: string;
   user: User;
-  authorisation: IAuthorization;
+  authorization: IAuthorization;
 }
 
 export interface ILogin {
@@ -75,4 +75,28 @@ export interface IResetPasswordForm {
   password: string | null;
   password_confirmation: string | null;
   token: string | null;
+}
+
+export interface IGuest {
+  id?: number;
+  token: string;
+  fingerprint: string | null;
+  goal: string | null;
+  daily_goal: number | null;
+  is_first_session: boolean;
+  today: string | null;
+  today_prayer_count: number;
+  total_prayer_count: number;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string;
+  converted_at: string | null;
+  user_id: number | null;
+}
+
+export interface IGuestLoginResponse {
+  status: string;
+  message: string;
+  guest: IGuest;
+  authorization: IAuthorization;
 }

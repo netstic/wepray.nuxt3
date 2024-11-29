@@ -105,11 +105,17 @@ import { useWelcomeSession } from '~/composables/useWelcomeSession';
 
 definePageMeta({
   colorMode: 'dark',
-  // middleware: (from) => {
-  //   if ((useCookie('welcome').value as any)?.daily) {
-  //     return navigateTo('/pray');
-  //   }
-  // },
+  middleware: (from) => {
+    const { guest, isLoggedIn, isGuestLoggedIn, guestLoginOrCreate } =
+      useAuth();
+    if (guest.value?.daily_goal || isLoggedIn.value) {
+      return navigateTo('/pray');
+    }
+
+    if (!isGuestLoggedIn.value) {
+      guestLoginOrCreate();
+    }
+  },
 });
 
 const { t } = useI18n();
@@ -292,12 +298,6 @@ watch(route, () => {
 onBeforeMount(() => {
   if (!route.query.step) {
     navigateTo({ name: 'welcome', query: { step: stepper.value[0].id } });
-  }
-});
-
-onMounted(() => {
-  if (!welcomeCookie.value) {
-    setWelcomeCookie({});
   }
 });
 </script>

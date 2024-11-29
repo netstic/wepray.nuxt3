@@ -12,7 +12,8 @@
         @click="emit('back')"
         class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
       >
-        <IconX class="h-6 w-6" />
+        <IconX v-if="props.progress" />
+        <IconArrowLeft v-else />
       </button>
       <template v-if="props.progress">
         <div

@@ -1,7 +1,7 @@
 <template>
   <footer
     :class="[
-      'fixed bottom-0 right-0 left-0 bg-gray-100 dark:bg-gray-900 sm:border-t border-gray-300 dark:border-gray-700',
+      'fixed z-[9999] bottom-0 right-0 left-0 bg-gray-100 dark:bg-gray-900 sm:border-t border-gray-300 dark:border-gray-700',
       { 'border-t': !isScrolledUp },
     ]"
   >
@@ -10,10 +10,10 @@
     >
       <slot v-if="!$slots.prepend && !$slots.append"></slot>
       <template v-else>
-        <div class="w-full text-start">
+        <div class="w-full text-start pl-0 sm:pl-4 lg:pl-0">
           <slot name="prepend"> </slot>
         </div>
-        <div class="w-full text-end">
+        <div class="w-full text-end pr-0 sm:pr-4 lg:pr-0">
           <slot name="append"> </slot>
         </div>
       </template>

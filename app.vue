@@ -26,12 +26,13 @@
 </script>
 
 <style>
-/* .fade-enter-active,
+.fade-enter-active,
 .fade-leave-active {
-  transition: all 0.2s;
+  transition: opacity 0.5s ease;
 }
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-} */
+}
 </style>

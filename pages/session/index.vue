@@ -1,5 +1,5 @@
 <template>
-  <TransitionFade>
+  <transition name="fade" mode="out-in">
     <LayoutSessionMainContent
       v-if="currentCard"
       :key="currentCard.id"
@@ -42,27 +42,11 @@
           <div
             class="flex gap-4 items-center bg-white dark:border dark:border-gray-700 dark:bg-gray-800 rounded-xl px-4 py-2 shadow-md sm:shadow-xl"
           >
-            <button
-              class="flex items-center text-red-600 dark:text-red-400"
+            <SessionIconPrayFireworks
+              ref="iconPrayRef"
               @click="onIconPray"
-            >
-              <IconHandsPray class="mr-1" />
-              <!-- <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </svg> -->
-              <span>{{ currentCard.prayedCount }}</span>
-            </button>
+              :prayer-count="currentCard.prayedCount"
+            />
             <button
               @click="toggleComments(currentCard.id)"
               class="flex items-center text-green-600 dark:text-green-400"
@@ -235,23 +219,23 @@
         </div>
       </div>
     </LayoutSessionMainContent>
-  </TransitionFade>
+  </transition>
 
   <ClientOnly>
     <Teleport to="#session-layout">
       <LayoutSessionFooter>
         <template #prepend>
-          <TransitionFade>
+          <transition name="fade" mode="out-in">
             <div
               v-if="isPrayed"
-              class="flex items-center justify-center gap-2 mb-2"
+              class="flex items-center justify-center sm:justify-start gap-2 mb-2"
             >
               <LogoWp size="xl" />
               <span class="text-lg sm:text-xl">{{
                 isLastCard ? 'Thanks for your prayers!' : randomPrayedMessage
               }}</span>
             </div>
-          </TransitionFade>
+          </transition>
         </template>
         <template #append>
           <button
@@ -270,14 +254,20 @@
 </template>
 
 <script setup lang="ts">
+import type { SessionIconPrayFireworks } from '#build/components';
+import { useWelcomeSession } from '~/composables/useWelcomeSession';
 import { useSessionStore } from '~/store/session.store';
 
 definePageMeta({
   layout: 'session',
-  colorMode: 'dark',
+  colorMode: 'light',
   middleware: 'session',
 });
 
+const iconPrayRef = ref<InstanceType<typeof SessionIconPrayFireworks>>();
+
+const { incrementTodayPrayerCount, updateTodayWelcomeCookie } =
+  useWelcomeSession();
 const sessionStore = useSessionStore();
 const { currentCard, isLastCard } = storeToRefs(sessionStore);
 
@@ -310,42 +300,34 @@ const submitButtonText = computed(() => {
   return 'Continue';
 });
 
+const onPrayAnimation = () => {
+  shufflePrayedMessage();
+  isPrayed.value = true;
+  sessionStore.incrementCurrentProgress();
+  iconPrayRef.value?.startAnimation();
+  incrementTodayPrayerCount();
+};
+
 const onIconPray = () => {
   if (!isPrayed.value) {
-    shufflePrayedMessage();
-    isPrayed.value = true;
-    sessionStore.incrementCurrentProgress();
+    onPrayAnimation();
     return;
   }
 };
 
 const goNext = () => {
   if (!isPrayed.value) {
-    shufflePrayedMessage();
-    isPrayed.value = true;
-    sessionStore.incrementCurrentProgress();
+    onPrayAnimation();
     return;
-    // const animationTime = setTimeout(() => {
-    // sessionStore.nextCard();
-    // isPrayed.value = false;
-    //   clearTimeout(animationTime);
-    // }, 2000);
   } else if (isLastCard.value) {
+    navigateTo('/session/finish');
     return;
   }
 
   sessionStore.nextCard();
   isPrayed.value = false;
-
-  // if (currentCardIndex.value < prayerCards.value.length - 1) {
-  //   currentCardIndex.value++;
-  //   showComments.value = false;
-  //   isReadMore.value = false;
-  //   setSessionCookie({
-  //     ...sessionCookie.value,
-  //     prayerCount: sessionCookie.value.prayerCount + 1,
-  //   });
-  // }
+  showComments.value = false;
+  isReadMore.value = false;
 };
 
 const toggleComments = (cardId: number) => {
@@ -394,4 +376,8 @@ const addComment = () => {
     newComment.value = '';
   }
 };
+
+onBeforeMount(() => {
+  updateTodayWelcomeCookie();
+});
 </script>

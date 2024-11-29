@@ -101,6 +101,7 @@ import ThreeSmall from '~/components/icon/ThreeSmall.vue';
 import FiveSmall from '~/components/icon/FiveSmall.vue';
 import TenSmall from '~/components/icon/TenSmall.vue';
 import TwentySmall from '~/components/icon/TwentySmall.vue';
+import { useWelcomeSession } from '~/composables/useWelcomeSession';
 
 definePageMeta({
   colorMode: 'dark',
@@ -113,7 +114,7 @@ definePageMeta({
 
 const { t } = useI18n();
 
-const { welcomeCookie, setWelcomeCookie } = useSession();
+const { welcomeCookie, setWelcomeCookie } = useWelcomeSession();
 
 const route = useRoute();
 
@@ -209,7 +210,7 @@ const stepper = ref([
     selectedOption: { value: true },
   },
   {
-    id: 'daily',
+    id: 'daily_goal',
     title: t('What is your daily goal?'),
     options: stepperOptions.daily,
     selectedOption: null,
@@ -248,22 +249,23 @@ const nextStep = () => {
       setWelcomeCookie({});
     }
 
+    if (currentStep.value?.id === 'daily_goal') {
+      welcomeCookie.value.isFirstTimeUser = true;
+    }
+
     welcomeCookie.value[currentStep.value?.id] =
       currentStep.value?.selectedOption?.value;
 
     setWelcomeCookie(welcomeCookie.value);
   }
 
-  console.log('currentStepIndex', currentStepIndex);
-  console.log('stepper.value.length', stepper.value.length);
-
   if (currentStepIndex < stepper.value.length - 1) {
-    console.log('navigateTo', stepper.value[currentStepIndex + 1].id);
     return navigateTo({
       name: 'welcome',
       query: { step: stepper.value[currentStepIndex + 1].id },
     });
   }
+
   navigateTo('/session');
 };
 
@@ -299,15 +301,3 @@ onMounted(() => {
   }
 });
 </script>
-
-<style lang="scss" scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>

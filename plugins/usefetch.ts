@@ -10,7 +10,7 @@ export default defineNuxtPlugin(() => {
   }
 
   const $apiFetch = $fetch.create({
-    baseURL: 'http://localhost:8000',
+    baseURL: 'http://localhost:8890',
     headers: headers,
     onRequest(config) {
       console.log('onRequest', config);

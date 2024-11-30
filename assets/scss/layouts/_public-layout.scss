@@ -1,0 +1,11 @@
+.public-layout-width {
+  max-width: 1024px;
+}
+
+.public-layout-padding {
+  @apply px-4 sm:px-10 lg:px-4;
+}
+
+.layout-public-content-wrapper {
+  max-width: 1280px;
+}

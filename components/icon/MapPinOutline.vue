@@ -1,0 +1,31 @@
+<template>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    :class="props.customClass ?? [classIconSize, 'icon-default']"
+  >
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+    <path
+      d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"
+    />
+  </svg>
+</template>
+
+<script setup lang="ts">
+import type { TCustomClass, TIconSize } from '~/types/utils/icon';
+
+const props = defineProps<{
+  customClass?: TCustomClass;
+  size?: TIconSize;
+}>();
+
+const classIconSize = computed(() => getIconSize(props.size!));
+</script>
+
+<style scoped></style>

@@ -1,3 +1,12 @@
+export interface IPostPublicQuickPrayer {
+  name: string | null;
+  email: string | null;
+  country: string | null;
+  city: string | null;
+  body: string | null;
+  'g-recaptcha-response'?: string | null;
+}
+
 export interface IPostResponse {
   current_page: number;
   data: IPostPublic[];

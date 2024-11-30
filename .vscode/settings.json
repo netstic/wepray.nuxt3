@@ -1,0 +1,14 @@
+{
+  "conventionalCommits.scopes": [
+    "home",
+    "signup",
+    "login",
+    "register",
+    "session"
+  ],
+  "cSpell.words": [
+    "RECAPTCHA",
+    "SITEKEY",
+    "Wepray"
+  ]
+}

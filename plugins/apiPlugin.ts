@@ -11,7 +11,7 @@ export default defineNuxtPlugin(() => {
     headers['Authorization'] = `Bearer ${token.value}`;
   }
 
-  const api = axios.create({ baseURL: 'http://localhost:8000', headers });
+  const api = axios.create({ baseURL: 'http://localhost:8890', headers });
   return {
     provide: {
       api,

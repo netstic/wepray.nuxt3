@@ -50,8 +50,6 @@ export const useAuth = () => {
   };
 
   const getGuestAuthMe = () => {
-    console.log(useApi().defaults.headers.common['Authorization']);
-    console.log(guestToken.value);
     const resp = authGuestMe();
     resp.then(
       ({ data }) => {
@@ -59,8 +57,23 @@ export const useAuth = () => {
       },
       (e) => {
         guest.value = null;
+        if (e.response.status === 401) {
+          refreshGuestToken();
+        }
       }
     );
+    return resp;
+  };
+
+  const refreshGuestToken = () => {
+    const resp = useApi().post<IGuestLoginResponse>('/api/v1/guest/refresh');
+    resp.then(({ data }) => {
+      guestToken.value = data.authorization.token;
+      guest.value = data.guest;
+      useApi().defaults.headers.common[
+        'Authorization'
+      ] = `Bearer ${data.authorization.token}`;
+    });
     return resp;
   };
 
@@ -111,7 +124,10 @@ export const useAuth = () => {
     resp.then(
       ({ data }) => {
         guestToken.value = data.authorization.token;
-        setGuestTokenAndAuthMe(data.authorization.token);
+        useApi().defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${data.authorization.token}`;
+        getGuestAuthMe();
       },
       (e) => {}
     );
@@ -148,5 +164,6 @@ export const useAuth = () => {
     isGuestLoggedIn,
     guestLoginOrCreate,
     setGuestTokenAndAuthMe,
+    getGuestAuthMe,
   };
 };

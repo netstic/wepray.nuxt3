@@ -2,8 +2,8 @@
   <button
     class="flex items-center relative focus:outline-none"
     :class="{
-      'text-red-600 dark:text-red-400': !hasAnimated,
-      'text-green-600 dark:text-green-400': hasAnimated,
+      'text-gray-600 dark:text-gray-400': !hasAnimated,
+      'text-red-600 dark:text-red-400': hasAnimated,
     }"
   >
     <IconHandsPray class="mr-1" />
@@ -16,7 +16,7 @@
       <div
         v-for="particle in particles"
         :key="particle.id"
-        class="absolute rounded-full bg-green-500"
+        class="absolute rounded-full bg-red-500"
         :style="{
           width: `${particle.size}px`,
           height: `${particle.size}px`,

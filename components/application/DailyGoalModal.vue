@@ -1,10 +1,17 @@
 <template>
   <transition name="fade" mode="out-in">
-    <div v-if="!route.query.step" class="wp-loader-navigation">
-      <LoaderNavigation />
-    </div>
-    <div v-else>
-      <LayoutSessionHeader @back="goBack" />
+    <div
+      v-if="isOpen"
+      class="fixed top-0 left-0 w-full h-full bg-black/50 z-[9998]"
+    >
+      <div class="app-layout-width mx-auto relative">
+        <button
+          @click="closeModal"
+          class="relative top-4 left-4 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+        >
+          <IconX />
+        </button>
+      </div>
       <LayoutSessionMain
         :class="[currentStep?.id === 'start' ? 'h-screen' : '']"
       >
@@ -36,7 +43,7 @@
             </div>
 
             <div
-              v-else-if="currentStep.id === 'start'"
+              v-if="currentStep.id === 'start'"
               class="flex flex-1 flex-col gap-4 text-center my-auto justify-center items-center"
             >
               <h1 class="text-4xl font-bold">
@@ -92,23 +99,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useRoute } from 'vue-router';
-import AlarmOutline from '~/components/icon/AlarmOutline.vue';
-import UserHeartOutline from '~/components/icon/UserHeartOutline.vue';
-import BookOutline from '~/components/icon/BookOutline.vue';
-import HeartShareOutline from '~/components/icon/HeartShareOutline.vue';
-import UsersGroupOutline from '~/components/icon/UsersGroupOutline.vue';
-import StarsOutline from '~/components/icon/StarsOutline.vue';
 import { updateGuestWelcomeService } from '~/services/guest';
 
-definePageMeta({
-  colorMode: 'dark',
-});
-
 const { guest } = useAuth();
+const isOpen = ref(false);
 const isNextStepLoading = ref(false);
-const route = useRoute();
 
 interface IStepperOption {
   title?: string;
@@ -117,40 +112,6 @@ interface IStepperOption {
   icon?: any;
 }
 const stepperOptions: Record<string, IStepperOption[]> = {
-  goal: [
-    {
-      value: 'daily_habit',
-      text: 'Daily prayer routine',
-      icon: markRaw(AlarmOutline),
-    },
-    {
-      value: 'community_connection',
-      text: 'Connect with community',
-      icon: markRaw(UserHeartOutline),
-    },
-    {
-      value: 'study_prayer',
-      text: 'Find new ways to pray',
-      icon: markRaw(BookOutline),
-    },
-  ],
-  feature: [
-    {
-      title: 'Upgrade your prayer life',
-      text: 'Take your prayer life to a new level, receiving new requests and suggestions daily',
-      icon: markRaw(StarsOutline),
-    },
-    {
-      title: 'Share your heart',
-      text: 'Submit prayer requests and receive support from a caring community',
-      icon: markRaw(HeartShareOutline),
-    },
-    {
-      title: 'Connect with Others',
-      text: 'Help other people praying for them and sending encouragement messages',
-      icon: markRaw(UsersGroupOutline),
-    },
-  ],
   daily: [
     {
       value: 3,
@@ -189,18 +150,6 @@ interface IStepper {
 
 const stepper = ref<IStepper[]>([
   {
-    id: 'goal',
-    title: 'My goal is...',
-    options: stepperOptions.goal,
-    selectedOption: null,
-  },
-  {
-    id: 'feature',
-    title: 'We can help you!',
-    options: stepperOptions.feature,
-    selectedOption: { value: true },
-  },
-  {
     id: 'daily_goal',
     title: 'What is your daily goal?',
     options: stepperOptions.daily,
@@ -214,9 +163,7 @@ const stepper = ref<IStepper[]>([
   },
 ]);
 
-const currentStep = ref(
-  stepper.value.find((step) => step.id === route.query.step)
-);
+const currentStep = ref(stepper.value[0]);
 
 const canContinue = computed(() => {
   return !!currentStep.value?.selectedOption?.value;
@@ -236,10 +183,8 @@ const nextStep = async () => {
   isNextStepLoading.value = true;
   const currentStepIndex = stepper.value.indexOf(currentStep.value);
 
-  if (!['feature', 'start'].includes(currentStep.value?.id) && guest.value) {
-    if (currentStep.value?.id === 'goal') {
-      guest.value.goal = currentStep.value?.selectedOption?.value as string;
-    } else if (currentStep.value?.id === 'daily_goal') {
+  if (!['start'].includes(currentStep.value?.id) && guest.value) {
+    if (currentStep.value?.id === 'daily_goal') {
       guest.value.daily_goal = currentStep.value?.selectedOption
         ?.value as number;
     }
@@ -250,40 +195,25 @@ const nextStep = async () => {
   isNextStepLoading.value = false;
 
   if (currentStepIndex < stepper.value.length - 1) {
-    return navigateTo({
-      name: 'welcome',
-      query: { step: stepper.value[currentStepIndex + 1].id },
-    });
+    return (currentStep.value = stepper.value[currentStepIndex + 1]);
   }
 
+  closeModal();
   navigateTo('/session');
 };
 
-const goBack = () => {
-  if (!currentStep.value) return;
-  const currentStepIndex = stepper.value.indexOf(currentStep.value);
-  if (currentStepIndex > 0) {
-    return navigateTo({
-      name: 'welcome',
-      query: { step: stepper.value[currentStepIndex - 1].id },
-    });
-  }
-  navigateTo('/pray');
+const openModal = () => {
+  isOpen.value = true;
 };
 
-watch(route, () => {
-  if (route.query.step) {
-    currentStep.value = stepper.value.find(
-      (step) => step.id === route.query.step
-    );
-  }
-});
+const closeModal = () => {
+  isOpen.value = false;
+};
 
-onBeforeMount(() => {
-  if (!route.query.step) {
-    navigateTo({ name: 'welcome', query: { step: stepper.value[0].id } });
-  }
-
-  useAuth().guestLoginOrCreate();
+defineExpose({
+  openModal,
+  closeModal,
 });
 </script>
+
+<style scoped></style>

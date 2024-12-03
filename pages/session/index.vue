@@ -10,7 +10,7 @@
         :title="$t(currentCard.list.title)"
         class="app-layout-width pb-10 sm:pb-28"
       >
-        <div class="flex flex-col sm:w-2/3 mx-auto gap-1">
+        <div class="flex flex-col w-96 sm:w-[30rem] mx-auto gap-1">
           <div
             class="flex items-start flex-col gap-2 bg-white dark:border dark:border-gray-700 dark:bg-gray-800 min-h-44 rounded-2xl shadow-md sm:shadow-2xl p-6"
           >
@@ -18,29 +18,7 @@
               <Avatar :src="currentCard.avatar" :username="currentCard.title" />
               <h2 class="text-xl font-bold">{{ currentCard.title }}</h2>
             </div>
-            <p
-              class="text-gray-700 dark:text-gray-300"
-              :class="{
-                'line-clamp-4':
-                  !isReadMore && currentCard.content?.split(' ').length > 62,
-              }"
-            >
-              {{ currentCard.content }}
-            </p>
-            <p
-              v-if="!isReadMore && currentCard.content?.split(' ').length > 62"
-              class="text-blue-400 cursor-pointer text-end w-full"
-              @click="isReadMore = true"
-            >
-              {{ $t('Read more') }}
-            </p>
-            <p
-              v-else-if="isReadMore"
-              class="text-blue-400 cursor-pointer text-end w-full"
-              @click="isReadMore = false"
-            >
-              {{ $t('Show less') }}
-            </p>
+            <SessionCardContent :content="currentCard.content" />
           </div>
           <div class="flex justify-end items-center mb-8 mr-1">
             <div
@@ -96,9 +74,9 @@
 
           <div class="flex justify-end items-center">
             <transition name="fade">
-              <div v-if="showComments" class="space-y-10 mb-10 -mt-2 flex-1">
+              <div v-if="showComments" class="space-y-14 mb-10 -mt-2 flex-1">
                 <div class="mt-2 -mb-4 flex">
-                  <div class="ml-4 sm:ml-14"></div>
+                  <div class="ml-4 sm:ml-8"></div>
                   <WeprayFormInput
                     v-model="newComment"
                     @keyup.enter="addComment"
@@ -112,7 +90,7 @@
                       </button>
                     </template>
                   </WeprayFormInput>
-                  <div class="mr-4 sm:mr-14"></div>
+                  <div class="mr-4 sm:mr-8"></div>
                 </div>
 
                 <div v-if="loading" class="space-y-4">
@@ -144,16 +122,16 @@
                     v-if="!loading"
                     v-for="(comment, commentId) in currentCard?.comments"
                     :key="commentId"
-                    class="flex flex-col sm:mx-8"
+                    class="flex flex-col"
                     :class="commentId % 2 === 0 ? 'items-start' : 'items-end'"
                   >
                     <div
-                      class="bg-white dark:bg-gray-800 rounded-2xl sm:w-auto md:w-4/5 shadow-md sm:shadow-lg p-4 pb-8"
+                      class="bg-white dark:bg-gray-800 rounded-2xl w-4/5 shadow-md sm:shadow-lg p-4 pb-8"
                     >
                       <div class="flex flex-col">
-                        <p class="min-h-12">{{ comment.content }}</p>
+                        <SessionCardContent :content="comment.content" />
                         <div
-                          class="flex items-center relative z-20 w-full -mb-6 space-x-2"
+                          class="flex items-center relative z-20 w-full min-h-12 -mb-6 space-x-2"
                           :class="
                             commentId % 2 === 0
                               ? 'justify-end'
@@ -265,12 +243,13 @@
 <script setup lang="ts">
 import type { SessionIconPrayFireworks } from '#build/components';
 import { useWelcomeSession } from '~/composables/useWelcomeSession';
+import { updateGuestTodayService } from '~/services/guest';
 import { useSessionStore } from '~/store/session.store';
 
 definePageMeta({
   layout: 'session',
   colorMode: 'light',
-  middleware: 'session',
+  middleware: 'welcome',
 });
 
 const iconPrayRef = ref<InstanceType<typeof SessionIconPrayFireworks>>();
@@ -400,6 +379,9 @@ onMounted(() => {
 });
 
 onBeforeMount(() => {
-  updateTodayWelcomeCookie();
+  const { guest } = useAuth();
+  updateGuestTodayService().then(({ data }) => {
+    guest.value = data.guest;
+  });
 });
 </script>

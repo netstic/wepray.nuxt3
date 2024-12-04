@@ -1,6 +1,21 @@
-# Nuxt 3 Minimal Starter
+# 🙏 WePray.org
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+> "Peçam em meu nome e receberão, e terão alegria completa". (João 16:24 NVT)
+
+WePray.org é um ambiente que incentiva você a orar mais. Uma iniciativa em parceria com a associação ministerial da Igreja Adventista do Sétimo Dia através do projeto "Unidos em Oração".
+
+## Sobre o Projeto
+
+O WePray permite que você:
+- Envie pedidos de oração
+- Agradeça pelas bênçãos recebidas
+- Monte sua própria lista de oração
+- Marque pedidos como favoritos
+- Acompanhe as respostas às orações
+
+Ajude a construir o reino de Deus neste mundo por meio de suas orações!
+
+## Recursos Técnicos
 
 ## Setup
 

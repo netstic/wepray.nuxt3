@@ -1,5 +1,5 @@
 <template>
-  <WeprayDialog v-model="isOpen" class="max-h-[80vh] overflow-y-auto">
+  <WeprayDialog v-model="isOpen">
     <h2 class="text-lg font-bold">Users Prayed</h2>
     <LoaderButtonSubmit v-if="isLoading" />
     <div v-else class="space-y-4 mt-4 max-h-[40vh] overflow-y-auto">

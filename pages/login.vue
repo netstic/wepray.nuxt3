@@ -179,7 +179,7 @@ const onAuthProvider = (provider: TAuthProvider) => {
 
   if (!isAuthProviderOpen.value || windowHandle?.closed) {
     windowHandle = window.open(
-      `http://localhost:8890/auth/provider/redirect/${provider}`,
+      `http://localhost:8890/api/auth/provider/redirect/${provider}`,
       '_blank',
       windowFeatures
     );

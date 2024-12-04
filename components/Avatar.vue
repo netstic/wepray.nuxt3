@@ -4,12 +4,12 @@
     :class="props.align === 'end' ? 'flex-row-reverse' : ''"
   >
     <div
-      class="bg-white dark:bg-gray-800 relative z-10 rounded-full flex items-center justify-center ring-offset-base-100 ring-offset-2"
-      :class="classAvatarSize"
+      class="bg-blue-500 text-white relative z-10 rounded-full flex items-center justify-center ring-offset-base-100 ring-offset-2"
+      :class="[classAvatarSize, classAvatarPlaceholderSize]"
       :title="props.username"
     >
-      <span v-if="!isImg" class="text-3xl">
-        {{ letter }}
+      <span v-if="!isImg" class="font-bold">
+        {{ avatarPlaceholder }}
       </span>
       <img v-else :src="props.src" :alt="props.username" />
     </div>
@@ -32,6 +32,7 @@
 </template>
 <script setup lang="ts">
 import type { TAvatarSize } from '~/types/utils/avatar';
+import { getAvatarPlaceholderSize } from '~/utils/avatar';
 
 const props = defineProps<{
   src?: string;
@@ -43,6 +44,9 @@ const props = defineProps<{
 }>();
 
 const classAvatarSize = computed(() => getAvatarSize(props.size!));
+const classAvatarPlaceholderSize = computed(() =>
+  getAvatarPlaceholderSize(props.size!)
+);
 
 const isImg = computed(() => {
   return props.src ? true : false;
@@ -52,7 +56,7 @@ const username = computed(() => {
   return props.username ?? '';
 });
 
-const letter = computed(() => {
+const avatarPlaceholder = computed(() => {
   return username.value.substring(0, 2).toUpperCase();
 });
 </script>

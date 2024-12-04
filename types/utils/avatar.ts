@@ -4,11 +4,11 @@
 //   lg: 'Avatar-lg',
 
 export interface IAvatarSize {
-  xs: 'avatar-xs';
-  sm: 'avatar-sm';
-  md: 'avatar-md';
-  lg: 'avatar-lg';
-  xl: 'avatar-xl';
+  xs: 'avatar-xs' | 'text-sm';
+  sm: 'avatar-sm' | 'text-md';
+  md: 'avatar-md' | 'text-lg';
+  lg: 'avatar-lg' | 'text-xl';
+  xl: 'avatar-xl' | 'text-2xl';
 }
 
 export type TAvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';

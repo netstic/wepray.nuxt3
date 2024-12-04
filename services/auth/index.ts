@@ -5,6 +5,6 @@ export const authUserMe = () => {
   return useApi().get<IUser>('/api/user');
 };
 
-export const authGuestMe = () => {
-  return useApi().get<IGuest>('/api/v1/guest/me');
+export const authGuestMe = (headers?: Record<string, string>) => {
+  return useApi().get<IGuest>('/api/v1/guest/me', { headers });
 };

@@ -1,143 +1,31 @@
+import type { AxiosResponse } from 'axios';
 import type { ILayoutSessionHeaderProgress } from '~/components/layout/session/Header.vue';
+import {
+  getGuestQuickSessionService,
+  updateGuestPostPrayedService,
+} from '~/services/post/guest';
+import { getPostCommentsService } from '~/services/post/post';
 import type { ISession, ISessionItem } from '~/types/session';
 
 export const useSessionStore = defineStore({
   id: 'session-store',
   state: (): ISession => ({
+    prayedMessages: [
+      'God bless you!',
+      'May peace be with you!',
+      'Wishing you joy and blessings!',
+      'Stay blessed!',
+    ],
     currentCardIndex: 0,
     currentProgress: 0,
-    prayerCount: 0,
     isLoading: true,
-    lists: [
-      {
-        id: 1,
-        list: {
-          id: 1,
-          title: 'Weekly Prayer',
-        },
-        avatar: '/favicon.ico',
-        title: "Jack O' Brien",
-        content:
-          'Please pray for my mother who is battling cancer. Please pray for my mother who is battling cancer. Please pray for my mother who is battling cancer. Please pray for my mother who is battling cancer. Please pray for my mother who is battling cancer. Please pray for my mother who is battling cancer. Please pray for my mother who is battling cancer.',
-        notes: [],
-        comments: [
-          {
-            id: 1,
-            name: 'John Doe',
-            avatar: '/favicon.ico',
-            location: 'California, USA',
-            content: "Praying for your mother's recovery.",
-            reactions: {
-              '👍': 2,
-              '❤️': 1,
-              '🙏': 3,
-              '😊': 1,
-              '🕯️': 1,
-            },
-            showReactions: false,
-          },
-          {
-            id: 2,
-            name: 'Jane Smith',
-            avatar: '/favicon.ico',
-            location: 'London, UK',
-            content: 'Sending positive thoughts your way.',
-            reactions: {},
-            showReactions: false,
-          },
-        ],
-        prayedCount: 156,
-      },
-      {
-        id: 2,
-        list: {
-          id: 1,
-          title: 'Weekly Prayer',
-        },
-        avatar: '/favicon.ico',
-        title: 'Prayer for Guidance',
-        content:
-          "I'm facing a difficult decision in my career. Please pray for wisdom and clarity.",
-        notes: [],
-        comments: [],
-        prayedCount: 89,
-      },
-      {
-        id: 3,
-        list: {
-          id: 1,
-          title: 'Weekly Prayer',
-        },
-        avatar: '/favicon.ico',
-        title: 'Prayer for Peace',
-        content: 'Praying for peace in conflict-ridden areas around the world.',
-        notes: [],
-        comments: [],
-        prayedCount: 234,
-      },
-      {
-        id: 1,
-        list: {
-          id: 2,
-          title: 'Community Prayers',
-        },
-        avatar: '/favicon.ico',
-        title: "Jack O' Brien",
-        content:
-          'Please pray for my mother who is battling cancer. Please pray for my mother who is battling cancer. Please pray for my mother who is battling cancer. Please pray for my mother who is battling cancer. Please pray for my mother who is battling cancer. Please pray for my mother who is battling cancer. Please pray for my mother who is battling cancer.',
-        notes: [],
-        comments: [
-          {
-            id: 1,
-            name: 'John Doe',
-            avatar: '/favicon.ico',
-            location: 'California, USA',
-            content: "Praying for your mother's recovery.",
-            reactions: {},
-            showReactions: false,
-          },
-          {
-            id: 2,
-            name: 'Jane Smith',
-            avatar: '/favicon.ico',
-            location: 'London, UK',
-            content: 'Sending positive thoughts your way.',
-            reactions: {},
-            showReactions: false,
-          },
-        ],
-        prayedCount: 156,
-      },
-      {
-        id: 2,
-        list: {
-          id: 2,
-          title: 'Community Prayers',
-        },
-        avatar: '/favicon.ico',
-        title: 'Prayer for Guidance',
-        content:
-          "I'm facing a difficult decision in my career. Please pray for wisdom and clarity.",
-        notes: [],
-        comments: [],
-        prayedCount: 89,
-      },
-      {
-        id: 3,
-        list: {
-          id: 2,
-          title: 'Community Prayers',
-        },
-        avatar: '/favicon.ico',
-        title: 'Prayer for Peace',
-        content: 'Praying for peace in conflict-ridden areas around the world.',
-        notes: [],
-        comments: [],
-        prayedCount: 234,
-      },
-    ],
+    lists: [],
   }),
   getters: {
+    isUserOrGuestLoggedIn(): 'guest' | 'user' | null {
+      const { isGuestLoggedIn, isLoggedIn } = useAuth();
+      return isLoggedIn.value ? 'user' : isGuestLoggedIn.value ? 'guest' : null;
+    },
     currentCard(): ISessionItem | undefined | null {
       return this.lists[this.currentCardIndex];
     },
@@ -147,33 +35,78 @@ export const useSessionStore = defineStore({
         total: this.lists.length,
       };
     },
+    randomPrayedMessage(): string {
+      return this.currentCard?.isPrayed
+        ? this.prayedMessages[
+            Math.floor(Math.random() * this.prayedMessages.length)
+          ]
+        : '';
+    },
     isLastCard(): boolean {
       return this.currentCardIndex! >= this.lists.length - 1;
     },
   },
   actions: {
+    initSession() {
+      if (this.isUserOrGuestLoggedIn == 'guest') {
+        const resp = getGuestQuickSessionService()
+          .then(({ data }) => {
+            this.lists = data.posts;
+          })
+          .finally(() => (this.isLoading = false));
+
+        return resp;
+      }
+    },
+
     nextCard() {
       if (this.isLastCard) return;
       this.currentCardIndex! += 1;
     },
-    incrementCurrentProgress() {
-      if (this.currentProgress >= 50) return;
-      this.currentProgress += 1;
-      this.prayerCount += 1;
-      this.incrementPrayedCount();
-    },
-    decrementCurrentProgress() {
-      if (this.currentProgress <= 1) return;
-      this.currentProgress -= 1;
-      this.prayerCount -= 1;
-    },
-    incrementPrayedCount() {
-      if (this.isLastCard) return;
-      this.lists[this.currentCardIndex!].prayedCount += 1;
+
+    pray() {
+      if (this.currentCard?.isPrayed || !this.currentCard)
+        return Promise.resolve();
+
+      let resp: Promise<void | AxiosResponse<any, any>> = Promise.resolve();
+
+      if (this.isUserOrGuestLoggedIn == 'guest') {
+        resp = updateGuestPostPrayedService(this.currentCard?.id!);
+      } else if (this.isUserOrGuestLoggedIn == 'user') {
+        // resp = updatePostPrayedService(this.currentCard?.id!);
+      }
+
+      resp.then(() => {
+        this.incrementCurrentProgress();
+        this.incrementCardPrayedCount();
+      });
+
+      return resp;
     },
 
-    initSession() {
-      this.isLoading = false;
+    incrementCurrentProgress() {
+      if (this.currentProgress >= this.lists.length) return;
+      this.currentProgress += 1;
+    },
+
+    incrementCardPrayedCount() {
+      this.lists[this.currentCardIndex!].prayedCount += 1;
+      this.lists[this.currentCardIndex!].isPrayed = true;
+    },
+
+    showCurrentCardComments() {
+      if (this.currentCard?.commentCount && !this.currentCard?.comments) {
+        const resp = getPostCommentsService(this.currentCard?.id).then(
+          ({ data }) => {
+            if (this.currentCard) {
+              this.currentCard.comments = data.comments;
+            }
+          }
+        );
+        return resp;
+      }
+
+      return Promise.resolve();
     },
   },
 });

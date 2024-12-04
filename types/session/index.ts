@@ -1,21 +1,27 @@
 export interface ISession {
+  prayedMessages: string[];
   currentCardIndex: number;
   currentProgress: number;
-  prayerCount: number;
   isLoading: boolean;
   lists: ISessionItem[];
 }
 
 export interface ISessionItem {
   id: number;
-  avatar: string;
   title: string;
-  content: string;
+  avatar: string;
+  contentTitle: string;
+  content: ISessionItemContent;
   notes: ISessionNote[];
+  notesCount?: number;
   comments: ISessionComment[];
+  commentCount?: number;
   prayedCount: number;
+  isPrayed: boolean;
+}
 
-  list: ISessionList;
+export interface ISessionItemContent {
+  body?: string;
 }
 
 export interface ISessionList {

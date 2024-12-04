@@ -27,31 +27,37 @@
             <div
               class="flex gap-4 items-center bg-white dark:border dark:border-gray-700 dark:bg-gray-800 rounded-xl px-4 py-2 shadow-md sm:shadow-xl"
             >
-              <SessionIconPrayFireworks
-                ref="iconPrayRef"
-                @click="onIconPray"
-                :prayer-count="currentCard.prayedCount"
-              />
-              <button
-                @click="toggleComments(currentCard.id)"
-                class="flex items-center text-green-600 dark:text-green-400"
-              >
-                <IconCommentCircleOutline class="mr-1" />
-                <span>{{ currentCard.commentCount ?? 0 }}</span>
-              </button>
-              <button
-                @click="toggleNotes(currentCard.id)"
-                class="flex items-center text-blue-600 dark:text-blue-400"
-              >
-                <IconNotesOutline class="mr-1" />
-                <span>{{ currentCard.notesCount ?? 0 }}</span>
-              </button>
+              <WeprayTooltip :text="$t('Prayer count')" position="top">
+                <SessionIconPrayFireworks
+                  ref="iconPrayRef"
+                  @click="onIconPrayerCount"
+                  :prayer-count="currentCard.prayedCount"
+                />
+              </WeprayTooltip>
+              <WeprayTooltip :text="$t('Show comments')" position="top">
+                <button
+                  @click="toggleComments()"
+                  class="flex items-center text-green-600 dark:text-green-400"
+                >
+                  <IconCommentCircleOutline class="mr-1" />
+                  <span>{{ currentCard.commentCount ?? 0 }}</span>
+                </button>
+              </WeprayTooltip>
+              <WeprayTooltip :text="$t('Show notes')" position="top">
+                <button
+                  @click="toggleNotes(currentCard.id)"
+                  class="flex items-center text-blue-600 dark:text-blue-400"
+                >
+                  <IconNotesOutline class="mr-1" />
+                  <span>{{ currentCard.notesCount ?? 0 }}</span>
+                </button>
+              </WeprayTooltip>
             </div>
           </div>
 
           <div class="flex justify-end items-center">
             <transition name="fade">
-              <div v-if="showComments" class="space-y-14 mb-10 -mt-2 flex-1">
+              <div v-if="isShowComments" class="space-y-14 mb-10 -mt-2 flex-1">
                 <div class="mt-2 -mb-4 flex">
                   <div class="ml-4 sm:ml-8"></div>
                   <WeprayFormInput
@@ -70,7 +76,7 @@
                   <div class="mr-4 sm:mr-8"></div>
                 </div>
 
-                <div v-if="loading" class="space-y-4">
+                <div v-if="isCommentsLoading" class="space-y-4">
                   <div
                     v-for="i in 3"
                     :key="i"
@@ -96,7 +102,7 @@
                 </div>
                 <transition-group name="fade">
                   <div
-                    v-if="!loading"
+                    v-if="!isCommentsLoading"
                     v-for="(comment, commentId) in currentCard?.comments"
                     :key="commentId"
                     class="flex flex-col"
@@ -203,13 +209,11 @@
         </template>
         <template #append>
           <button
-            class="w-full sm:w-auto relative z-20"
-            :class="
-              isPrayed ? 'wp-btn-session-success' : 'wp-btn-session-submit'
-            "
+            class="w-full sm:w-auto relative z-20 wp-btn-session-submit"
+            :disabled="!isPrayed"
             @click="goNext"
           >
-            {{ submitButtonText }}
+            {{ isLastCard ? $t('Finish Session') : $t('Next') }}
           </button>
         </template>
       </LayoutSessionFooter>
@@ -224,7 +228,6 @@ import type {
   PostUsersPrayedDialog,
   SessionIconPrayFireworks,
 } from '#build/components';
-import { useWelcomeSession } from '~/composables/useWelcomeSession';
 import { updateGuestTodayService } from '~/services/guest';
 import { useSessionStore } from '~/store/session.store';
 
@@ -237,16 +240,16 @@ definePageMeta({
 const iconPrayRef = ref<InstanceType<typeof SessionIconPrayFireworks>>();
 const usersPrayedDialogRef = ref<InstanceType<typeof PostUsersPrayedDialog>>();
 
-const { incrementTodayPrayerCount } = useWelcomeSession();
 const sessionStore = useSessionStore();
 const {
   currentCard,
   isLastCard,
   isLoading: isSessionLoading,
+  randomPrayedMessage,
 } = storeToRefs(sessionStore);
 
-const showComments = ref(false);
-const loading = ref(true);
+const isShowComments = ref(false);
+const isCommentsLoading = ref(true);
 const newComment = ref('');
 const isReadMore = ref(false);
 
@@ -254,41 +257,20 @@ const reactions = ['👍', '❤️', '🙏', '😊', '🕯️'];
 
 const isPrayed = ref(false);
 
-const prayedMessages = [
-  'God bless you!',
-  'May peace be with you!',
-  'Wishing you joy and blessings!',
-  'Stay blessed!',
-];
-
-const randomPrayedMessage = ref('');
-
-const shufflePrayedMessage = () => {
-  randomPrayedMessage.value =
-    prayedMessages[Math.floor(Math.random() * prayedMessages.length)];
+const prayForCurrentCard = () => {
+  sessionStore.pray().then(() => {
+    iconPrayRef.value?.startAnimation();
+    isPrayed.value = true;
+  });
 };
 
-const submitButtonText = computed(() => {
-  if (!isPrayed.value) return 'Pray';
-  else if (isLastCard.value) return 'Finish';
-  return 'Continue';
-});
-
-const onPrayAnimation = () => {
-  shufflePrayedMessage();
-  isPrayed.value = true;
-  sessionStore.incrementCurrentProgress();
-  iconPrayRef.value?.startAnimation();
-  incrementTodayPrayerCount();
-};
-
-const onIconPray = () => {
+const onIconPrayerCount = () => {
   usersPrayedDialogRef.value?.openDialog(currentCard.value?.id!);
 };
 
 const goNext = () => {
   if (!isPrayed.value) {
-    onPrayAnimation();
+    prayForCurrentCard();
     return;
   } else if (isLastCard.value) {
     restartSessionValues();
@@ -302,17 +284,17 @@ const goNext = () => {
 
 const restartSessionValues = () => {
   isPrayed.value = false;
-  showComments.value = false;
+  isShowComments.value = false;
   isReadMore.value = false;
 };
 
-const toggleComments = (cardId: number) => {
-  showComments.value = !showComments.value;
-  if (showComments.value) {
-    loading.value = true;
-    setTimeout(() => {
-      loading.value = false;
-    }, 1500);
+const toggleComments = () => {
+  isShowComments.value = !isShowComments.value;
+  if (isShowComments.value) {
+    isCommentsLoading.value = true;
+    sessionStore
+      .showCurrentCardComments()
+      .finally(() => (isCommentsLoading.value = false));
   }
 };
 
@@ -353,8 +335,28 @@ const addComment = () => {
   }
 };
 
+watch(currentCard, () => {
+  const animationTimer = setTimeout(() => {
+    if (!isPrayed.value) prayForCurrentCard();
+    clearTimeout(animationTimer);
+  }, 1000);
+});
+
 onMounted(() => {
   sessionStore.initSession();
+
+  // Add beforeunload event listener
+  const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+    event.preventDefault();
+    event.returnValue = ''; // This will trigger the confirmation dialog
+  };
+
+  window.addEventListener('beforeunload', handleBeforeUnload);
+
+  // Cleanup the event listener on component unmount
+  onBeforeUnmount(() => {
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+  });
 });
 
 onBeforeMount(() => {

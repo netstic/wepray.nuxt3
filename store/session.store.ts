@@ -1,13 +1,23 @@
+import type { AxiosResponse } from 'axios';
 import type { ILayoutSessionHeaderProgress } from '~/components/layout/session/Header.vue';
-import { getGuestQuickSessionService } from '~/services/post/guest';
+import {
+  getGuestQuickSessionService,
+  updateGuestPostPrayedService,
+} from '~/services/post/guest';
+import { getPostCommentsService } from '~/services/post/post';
 import type { ISession, ISessionItem } from '~/types/session';
 
 export const useSessionStore = defineStore({
   id: 'session-store',
   state: (): ISession => ({
+    prayedMessages: [
+      'God bless you!',
+      'May peace be with you!',
+      'Wishing you joy and blessings!',
+      'Stay blessed!',
+    ],
     currentCardIndex: 0,
     currentProgress: 0,
-    prayerCount: 0,
     isLoading: true,
     lists: [],
   }),
@@ -25,37 +35,78 @@ export const useSessionStore = defineStore({
         total: this.lists.length,
       };
     },
+    randomPrayedMessage(): string {
+      return this.currentCard?.isPrayed
+        ? this.prayedMessages[
+            Math.floor(Math.random() * this.prayedMessages.length)
+          ]
+        : '';
+    },
     isLastCard(): boolean {
       return this.currentCardIndex! >= this.lists.length - 1;
     },
   },
   actions: {
+    initSession() {
+      if (this.isUserOrGuestLoggedIn == 'guest') {
+        const resp = getGuestQuickSessionService()
+          .then(({ data }) => {
+            this.lists = data.posts;
+          })
+          .finally(() => (this.isLoading = false));
+
+        return resp;
+      }
+    },
+
     nextCard() {
       if (this.isLastCard) return;
       this.currentCardIndex! += 1;
     },
-    incrementCurrentProgress() {
-      if (this.currentProgress >= 50) return;
-      this.currentProgress += 1;
-      this.prayerCount += 1;
-      this.incrementPrayedCount();
-    },
-    decrementCurrentProgress() {
-      if (this.currentProgress <= 1) return;
-      this.currentProgress -= 1;
-      this.prayerCount -= 1;
-    },
-    incrementPrayedCount() {
-      this.lists[this.currentCardIndex!].prayedCount += 1;
+
+    pray() {
+      if (this.currentCard?.isPrayed || !this.currentCard)
+        return Promise.resolve();
+
+      let resp: Promise<void | AxiosResponse<any, any>> = Promise.resolve();
+
+      if (this.isUserOrGuestLoggedIn == 'guest') {
+        resp = updateGuestPostPrayedService(this.currentCard?.id!);
+      } else if (this.isUserOrGuestLoggedIn == 'user') {
+        // resp = updatePostPrayedService(this.currentCard?.id!);
+      }
+
+      resp.then(() => {
+        this.incrementCurrentProgress();
+        this.incrementCardPrayedCount();
+      });
+
+      return resp;
     },
 
-    initSession() {
-      if (this.isUserOrGuestLoggedIn == 'guest') {
-        getGuestQuickSessionService().then(({ data }) => {
-          this.lists = data.posts;
-        });
+    incrementCurrentProgress() {
+      if (this.currentProgress >= this.lists.length) return;
+      this.currentProgress += 1;
+    },
+
+    incrementCardPrayedCount() {
+      this.lists[this.currentCardIndex!].prayedCount += 1;
+      this.lists[this.currentCardIndex!].isPrayed = true;
+    },
+
+    showCurrentCardComments() {
+      if (this.currentCard?.commentCount && !this.currentCard?.comments) {
+        const resp = getPostCommentsService(this.currentCard?.id).then(
+          ({ data }) => {
+            if (this.currentCard) {
+              this.currentCard.comments = data.comments;
+            }
+          }
+        );
+        return resp;
       }
-      this.isLoading = false;
+
+      return Promise.resolve();
     },
   },
 });

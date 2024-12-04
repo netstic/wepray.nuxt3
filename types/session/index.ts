@@ -1,7 +1,7 @@
 export interface ISession {
+  prayedMessages: string[];
   currentCardIndex: number;
   currentProgress: number;
-  prayerCount: number;
   isLoading: boolean;
   lists: ISessionItem[];
 }
@@ -17,6 +17,7 @@ export interface ISessionItem {
   comments: ISessionComment[];
   commentCount?: number;
   prayedCount: number;
+  isPrayed: boolean;
 }
 
 export interface ISessionItemContent {

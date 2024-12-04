@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  traefik:
+    image: traefik:v3.2
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedByDefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--providers.docker.network=wepray-network"
+      # - "--accesslog=true"
+      # - "--accesslog.filePath=/logs/access.log"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - wepray-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`localhost`)"
+      - "traefik.http.services.app.loadbalancer.server.port=3000"
+    depends_on:
+      - traefik
+    env_file:
+      - ./.env.dev.docker
+    networks:
+      - wepray-network
+
+networks:
+  wepray-network:
+    external: true

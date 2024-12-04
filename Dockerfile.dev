@@ -1,0 +1,20 @@
+# Use a Node.js base image
+FROM node:18
+
+# Set the working directory
+WORKDIR /app
+
+COPY package*.json ./
+COPY . .
+
+RUN npm install
+
+
+RUN npm cache clean --force
+ENV PATH ./node_modules/.bin/:$PATH
+RUN npm run build
+
+EXPOSE 3000
+ENV PATH  /app/node_modules/.bin/:$PATH
+# Start the development server
+CMD ["sh", "-c", "npm install && npm run dev  "]

@@ -8,14 +8,19 @@ export interface ISession {
 
 export interface ISessionItem {
   id: number;
-  avatar: string;
   title: string;
-  content: string;
+  avatar: string;
+  contentTitle: string;
+  content: ISessionItemContent;
   notes: ISessionNote[];
+  notesCount?: number;
   comments: ISessionComment[];
+  commentCount?: number;
   prayedCount: number;
+}
 
-  list: ISessionList;
+export interface ISessionItemContent {
+  body?: string;
 }
 
 export interface ISessionList {

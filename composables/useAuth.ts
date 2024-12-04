@@ -49,17 +49,14 @@ export const useAuth = () => {
     return resp;
   };
 
-  const getGuestAuthMe = () => {
-    const resp = authGuestMe();
+  const getGuestAuthMe = (headers?: Record<string, string>) => {
+    const resp = authGuestMe(headers);
     resp.then(
       ({ data }) => {
         guest.value = data;
       },
       (e) => {
         guest.value = null;
-        if (e.response.status === 401) {
-          refreshGuestToken();
-        }
       }
     );
     return resp;
@@ -165,5 +162,6 @@ export const useAuth = () => {
     guestLoginOrCreate,
     setGuestTokenAndAuthMe,
     getGuestAuthMe,
+    refreshGuestToken,
   };
 };

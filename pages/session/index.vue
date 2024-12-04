@@ -7,7 +7,7 @@
       <LayoutSessionMainContent
         v-if="currentCard"
         :key="currentCard.id"
-        :title="$t(currentCard.list.title)"
+        :title="$t(currentCard.title)"
         class="app-layout-width pb-10 sm:pb-28"
       >
         <div class="flex flex-col w-96 sm:w-[30rem] mx-auto gap-1">
@@ -15,10 +15,13 @@
             class="flex items-start flex-col gap-2 bg-white dark:border dark:border-gray-700 dark:bg-gray-800 min-h-44 rounded-2xl shadow-md sm:shadow-2xl p-6"
           >
             <div class="flex items-center gap-4 mb-1">
-              <Avatar :src="currentCard.avatar" :username="currentCard.title" />
-              <h2 class="text-xl font-bold">{{ currentCard.title }}</h2>
+              <Avatar
+                :src="currentCard.avatar"
+                :username="currentCard.contentTitle"
+              />
+              <h2 class="text-xl font-bold">{{ currentCard.contentTitle }}</h2>
             </div>
-            <SessionCardContent :content="currentCard.content" />
+            <SessionCardContent :content="currentCard.content?.body!" />
           </div>
           <div class="flex justify-end items-center mb-8 mr-1">
             <div
@@ -33,41 +36,15 @@
                 @click="toggleComments(currentCard.id)"
                 class="flex items-center text-green-600 dark:text-green-400"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                  />
-                </svg>
-                <span>{{ currentCard.comments?.length }}</span>
+                <IconCommentCircleOutline class="mr-1" />
+                <span>{{ currentCard.commentCount ?? 0 }}</span>
               </button>
               <button
                 @click="toggleNotes(currentCard.id)"
                 class="flex items-center text-blue-600 dark:text-blue-400"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  />
-                </svg>
-                <span>{{ currentCard.notes?.length }}</span>
+                <IconNotesOutline class="mr-1" />
+                <span>{{ currentCard.notesCount ?? 0 }}</span>
               </button>
             </div>
           </div>
@@ -238,24 +215,29 @@
       </LayoutSessionFooter>
     </Teleport>
   </ClientOnly>
+
+  <PostUsersPrayedDialog ref="usersPrayedDialogRef" />
 </template>
 
 <script setup lang="ts">
-import type { SessionIconPrayFireworks } from '#build/components';
+import type {
+  PostUsersPrayedDialog,
+  SessionIconPrayFireworks,
+} from '#build/components';
 import { useWelcomeSession } from '~/composables/useWelcomeSession';
 import { updateGuestTodayService } from '~/services/guest';
 import { useSessionStore } from '~/store/session.store';
 
 definePageMeta({
   layout: 'session',
-  colorMode: 'light',
+  colorMode: 'dark',
   middleware: 'welcome',
 });
 
 const iconPrayRef = ref<InstanceType<typeof SessionIconPrayFireworks>>();
+const usersPrayedDialogRef = ref<InstanceType<typeof PostUsersPrayedDialog>>();
 
-const { incrementTodayPrayerCount, updateTodayWelcomeCookie } =
-  useWelcomeSession();
+const { incrementTodayPrayerCount } = useWelcomeSession();
 const sessionStore = useSessionStore();
 const {
   currentCard,
@@ -301,10 +283,7 @@ const onPrayAnimation = () => {
 };
 
 const onIconPray = () => {
-  if (!isPrayed.value) {
-    onPrayAnimation();
-    return;
-  }
+  usersPrayedDialogRef.value?.openDialog(currentCard.value?.id!);
 };
 
 const goNext = () => {

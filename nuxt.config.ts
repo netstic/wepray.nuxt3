@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   i18n: {
     vueI18n: './i18n.config.ts', // if you are using custom path, default
   },
+
   css: ['~/assets/scss/main.scss'],
 
   vite: {
@@ -39,10 +40,14 @@ export default defineNuxtConfig({
       grecaptcha: {
         siteKey: process.env.RECAPTCHA_SITEKEY,
       },
+
+      apiBase: '', // can be overridden by NUXT_PUBLIC_API_BASE environment variable
     },
   },
 
   pinia: {
     storesDirs: ['./stores/**', './custom-folder/stores/**'],
   },
+
+  compatibilityDate: '2024-12-01',
 });

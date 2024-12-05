@@ -700,4 +700,26 @@ export default {
   'Enter your name': 'Introduce tu nombre',
   'Enter your country': 'Introduce tu país',
   'Enter your city': 'Introduce tu ciudad',
+  'Lets start!': '¡Comencemos!',
+  'Start Praying': 'Iniciar oración',
+  Continue: 'Continuar',
+  'Daily prayer routine': 'Rutina de oración diaria',
+  'Connect with community': 'Conectarse con la comunidad',
+  'Find new ways to pray': 'Encuentra nuevas formas de orar',
+  'Upgrade your prayer life': 'Mejora tu vida de oración',
+  'Take your prayer life to a new level, receiving new requests and suggestions daily':
+    'Toma tu vida de oración a un nuevo nivel, recibiendo nuevas solicitudes y sugerencias diariamente',
+  'Share your heart': 'Compartir tu corazón',
+  'Help other people praying for them and sending encouragement messages':
+    'Ayuda a otros a orar por ellos y enviar mensajes de aliento',
+  "I'm new to praying": 'Soy nuevo en orar',
+  'I already pray daily': 'Ya oro diariamente',
+  'I want to grow': 'Quiero crecer',
+  'I want a challenge': 'Quiero un desafío',
+  'prayers / day': 'oraciones / día',
+  'Start your first prayer session, praying for the requests we have specially prepared for you.':
+    'Inicia tu primera sesión de oración, orando por las solicitudes que hemos preparado especialmente para ti.',
+  'My goal is...': 'Mi objetivo es...',
+  'We can help you!': '¡Podemos ayudarte!',
+  'What is your daily goal?': '¿Cuál es tu objetivo diario?',
 };

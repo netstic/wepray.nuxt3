@@ -59,15 +59,27 @@
                   : 'wp-btn-session-item-unselected',
               ]"
             >
-              <component
-                :is="option.icon"
-                v-if="option.icon"
-                class="wp-btn-session-item-icon"
-                size="xl"
-              />
-              <span class="wp-btn-session-item-text">{{
-                $t(option.text)
-              }}</span>
+              <template v-if="currentStep.id === 'daily_goal'">
+                <div class="w-full flex items-center gap-2 justify-between">
+                  <span class="wp-btn-session-item-text">{{
+                    $t(option.text)
+                  }}</span>
+                  <span class="text-gray-500 dark:text-gray-400">
+                    {{ option.value }} {{ $t('prayers / day') }}
+                  </span>
+                </div>
+              </template>
+              <template v-else>
+                <component
+                  :is="option.icon"
+                  v-if="option.icon"
+                  class="wp-btn-session-item-icon"
+                  size="xl"
+                />
+                <span class="wp-btn-session-item-text">{{
+                  $t(option.text)
+                }}</span>
+              </template>
             </button>
           </LayoutSessionMainContent>
         </transition>
@@ -154,22 +166,22 @@ const stepperOptions: Record<string, IStepperOption[]> = {
   daily: [
     {
       value: 3,
-      text: "3 Prayers per day - I'm new to praying",
+      text: "I'm new to praying",
       // icon: markRaw(ThreeSmall),
     },
     {
       value: 5,
-      text: '5 Prayers per day - I already pray daily',
+      text: 'I already pray daily',
       // icon: markRaw(FiveSmall),
     },
     {
       value: 10,
-      text: '10 Prayers per day - I want to grow',
+      text: 'I want to grow',
       // icon: markRaw(TenSmall),
     },
     {
       value: 20,
-      text: '20 Prayers per day - I want a challenge',
+      text: 'I want a challenge',
       // icon: markRaw(TwentySmall),
     },
   ],

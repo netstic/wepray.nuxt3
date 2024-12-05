@@ -698,4 +698,27 @@ export default {
   'Enter your name': 'Enter your name',
   'Enter your country': 'Enter your country',
   'Enter your city': 'Enter your city',
+  Prayed2: 'Prayed',
+  'Lets start!': 'Lets start!',
+  'Start Praying': 'Start Praying',
+  Continue: 'Continue',
+  'Daily prayer routine': 'Daily prayer routine',
+  'Connect with community': 'Connect with community',
+  'Find new ways to pray': 'Find new ways to pray',
+  'Upgrade your prayer life': 'Upgrade your prayer life',
+  'Take your prayer life to a new level, receiving new requests and suggestions daily':
+    'Take your prayer life to a new level, receiving new requests and suggestions daily',
+  'Share your heart': 'Share your heart',
+  'Help other people praying for them and sending encouragement messages':
+    'Help other people praying for them and sending encouragement messages',
+  "I'm new to praying": "I'm new to praying",
+  'I already pray daily': 'I already pray daily',
+  'I want to grow': 'I want to grow',
+  'I want a challenge': 'I want a challenge',
+  'prayers / day': 'prayers / day',
+  'Start your first prayer session, praying for the requests we have specially prepared for you.':
+    'Start your first prayer session, praying for the requests we have specially prepared for you.',
+  'My goal is...': 'My goal is...',
+  'We can help you!': 'We can help you!',
+  'What is your daily goal?': 'What is your daily goal?',
 };

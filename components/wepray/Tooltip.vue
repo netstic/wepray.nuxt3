@@ -1,6 +1,11 @@
 <template>
   <div class="relative inline-block">
-    <div ref="triggerRef" @mouseenter="show" @mouseleave="hide">
+    <div
+      ref="triggerRef"
+      class="relative z-50"
+      @mouseenter="show"
+      @mouseleave="hide"
+    >
       <slot />
     </div>
 
@@ -8,7 +13,7 @@
       <div
         v-if="isVisible"
         ref="tooltipRef"
-        class="absolute z-50 px-2 py-1 text-sm text-white bg-gray-900 dark:bg-gray-700 rounded shadow-lg whitespace-nowrap"
+        class="absolute z-40 px-2 py-1 text-sm text-white bg-gray-900 dark:bg-gray-700 rounded shadow-lg whitespace-nowrap"
         :class="positionClasses"
       >
         {{ text }}
@@ -26,6 +31,7 @@ interface Props {
   text: string;
   position?: 'top' | 'right' | 'bottom' | 'left';
   offset?: number;
+  delay?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -36,6 +42,7 @@ const props = withDefaults(defineProps<Props>(), {
 const isVisible = ref(false);
 const triggerRef = ref<HTMLElement>();
 const tooltipRef = ref<HTMLElement>();
+let closeTimeout: ReturnType<typeof setTimeout> | null = null;
 
 const positionClasses = computed(() => {
   switch (props.position) {
@@ -68,17 +75,19 @@ const arrowClasses = computed(() => {
 });
 
 const show = () => {
-  const showTimer = setTimeout(() => {
-    isVisible.value = true;
-    clearTimeout(showTimer);
-  }, 200);
+  if (closeTimeout) {
+    clearTimeout(closeTimeout);
+    closeTimeout = null;
+  }
+  isVisible.value = true;
 };
 
 const hide = () => {
-  const hideTimer = setTimeout(() => {
-    isVisible.value = false;
-    clearTimeout(hideTimer);
-  }, 200);
+  closeTimeout = setTimeout(() => {
+    if (closeTimeout) {
+      isVisible.value = false;
+    }
+  }, props.delay ?? 100);
 };
 </script>
 

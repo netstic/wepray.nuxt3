@@ -29,6 +29,7 @@
             >
               <WeprayTooltip :text="$t('Prayer count')" position="top">
                 <SessionIconPrayFireworks
+                  v-model="currentCard.isPrayed"
                   ref="iconPrayRef"
                   @click="onIconPrayerCount"
                   :prayer-count="currentCard.prayedCount"
@@ -233,7 +234,7 @@ import { useSessionStore } from '~/store/session.store';
 
 definePageMeta({
   layout: 'session',
-  colorMode: 'dark',
+  colorMode: 'light',
   middleware: 'welcome',
 });
 

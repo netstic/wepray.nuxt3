@@ -43,7 +43,7 @@ export const useSessionStore = defineStore({
         : '';
     },
     isLastCard(): boolean {
-      return this.currentCardIndex! >= this.lists.length - 1;
+      return this.currentProgress >= this.lists.length;
     },
   },
   actions: {
@@ -65,8 +65,7 @@ export const useSessionStore = defineStore({
     },
 
     pray() {
-      if (this.currentCard?.isPrayed || !this.currentCard)
-        return Promise.resolve();
+      if (!this.currentCard) return Promise.resolve();
 
       let resp: Promise<void | AxiosResponse<any, any>> = Promise.resolve();
 
@@ -97,9 +96,9 @@ export const useSessionStore = defineStore({
     showCurrentCardComments() {
       if (this.currentCard?.commentCount && !this.currentCard?.comments) {
         const resp = getPostCommentsService(this.currentCard?.id).then(
-          ({ data }) => {
+          ({ data: { data } }) => {
             if (this.currentCard) {
-              this.currentCard.comments = data.comments;
+              this.currentCard.comments = data;
             }
           }
         );

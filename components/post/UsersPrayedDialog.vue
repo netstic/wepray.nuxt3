@@ -14,6 +14,12 @@
       >
         <Avatar size="sm" :username="user.name" :alt="user.name" />
         <p>{{ user.name }}</p>
+        <div
+          class="flex items-center text-sm bg-gray-100 dark:bg-gray-600 rounded-full px-2 py-1"
+        >
+          <IconHandsPray size="sm" class="mr-1" />
+          <span>{{ user.counter }}</span>
+        </div>
       </div>
     </div>
   </WeprayDialog>
@@ -21,10 +27,11 @@
 
 <script setup lang="ts">
 import { getUsersPrayedService } from '~/services/post/post';
+import type { IPostUserPrayed } from '~/types/post/post';
 
 const isOpen = ref(false);
 const isLoading = ref(false);
-const usersPrayed = ref<{ id: number; name: string }[]>([]);
+const usersPrayed = ref<IPostUserPrayed[]>([]);
 
 const openDialog = (postId: number) => {
   isOpen.value = true;

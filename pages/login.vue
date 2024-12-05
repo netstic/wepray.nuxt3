@@ -115,7 +115,7 @@ import type { WeprayNotifyBanner } from '#build/components';
 import { ref } from 'vue';
 import type { TAuthProvider } from '~/types/user/auth';
 import type { ILogin } from '~/types/user/login';
-
+const { public: publicConfig } = useRuntimeConfig();
 definePageMeta({
   colorMode: 'dark',
 });
@@ -179,7 +179,7 @@ const onAuthProvider = (provider: TAuthProvider) => {
 
   if (!isAuthProviderOpen.value || windowHandle?.closed) {
     windowHandle = window.open(
-      `http://localhost:8890/api/auth/provider/redirect/${provider}`,
+      `${publicConfig.apiBase}/auth/provider/redirect/${provider}`,
       '_blank',
       windowFeatures
     );

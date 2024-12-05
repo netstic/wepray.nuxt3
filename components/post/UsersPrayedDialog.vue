@@ -3,7 +3,7 @@
     <h2
       class="text-lg text-gray-700 dark:text-white font-bold text-center border-b border-b-gray-200 dark:border-b-gray-700"
     >
-      Users Prayed
+      {{ $t('Prayers') }}
     </h2>
     <LoaderButtonSubmit v-if="isLoading" />
     <div v-else class="space-y-4 mt-4 max-h-[40vh] overflow-y-auto px-2">

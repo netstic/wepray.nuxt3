@@ -39,7 +39,11 @@ export const useAuth = () => {
   const getAuthMe = () => {
     const resp = authUserMe();
     resp.then(
-      ({ data }) => {
+      ({
+        data: {
+          data: { data: data },
+        },
+      }) => {
         user.value = data;
       },
       (e) => {
@@ -52,7 +56,7 @@ export const useAuth = () => {
   const getGuestAuthMe = (headers?: Record<string, string>) => {
     const resp = authGuestMe(headers);
     resp.then(
-      ({ data }) => {
+      ({ data: { data: data } }) => {
         guest.value = data;
       },
       (e) => {
@@ -64,7 +68,8 @@ export const useAuth = () => {
 
   const refreshGuestToken = () => {
     const resp = useApi().post<IGuestLoginResponse>('/api/v1/guest/refresh');
-    resp.then(({ data }) => {
+    resp.then(({ data: { data: data } }) => {
+      console.log(data);
       guestToken.value = data.authorization.token;
       guest.value = data.guest;
       useApi().defaults.headers.common[
@@ -79,7 +84,7 @@ export const useAuth = () => {
       headers,
     });
     resp.then(
-      ({ data }) => {
+      ({ data: { data: data } }) => {
         token.value = data.authorization.token;
         useApi().defaults.headers.common[
           'Authorization'
@@ -119,7 +124,7 @@ export const useAuth = () => {
     });
 
     resp.then(
-      ({ data }) => {
+      ({ data: { data: data } }) => {
         guestToken.value = data.authorization.token;
         useApi().defaults.headers.common[
           'Authorization'

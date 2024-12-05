@@ -27,7 +27,7 @@
             <div
               class="flex gap-4 items-center bg-white dark:border dark:border-gray-700 dark:bg-gray-800 rounded-xl px-4 py-2 shadow-md sm:shadow-xl"
             >
-              <WeprayTooltip :text="$t('Prayer count')" position="top">
+              <WeprayTooltip :text="$t('Prayers')" position="top">
                 <SessionIconPrayFireworks
                   v-model="currentCard.isPrayed"
                   ref="iconPrayRef"
@@ -35,7 +35,7 @@
                   :prayer-count="currentCard.prayedCount"
                 />
               </WeprayTooltip>
-              <WeprayTooltip :text="$t('Show comments')" position="top">
+              <WeprayTooltip :text="$t('Comments')" position="top">
                 <button
                   @click="toggleComments()"
                   class="flex items-center text-green-600 dark:text-green-400"
@@ -44,9 +44,9 @@
                   <span>{{ currentCard.commentCount ?? 0 }}</span>
                 </button>
               </WeprayTooltip>
-              <WeprayTooltip :text="$t('Show notes')" position="top">
+              <WeprayTooltip :text="$t('Notes')" position="top">
                 <button
-                  @click="toggleNotes(currentCard.id)"
+                  @click="toggleNotes()"
                   class="flex items-center text-blue-600 dark:text-blue-400"
                 >
                   <IconNotesOutline class="mr-1" />
@@ -113,7 +113,7 @@
                       class="bg-white dark:bg-gray-800 rounded-2xl w-4/5 shadow-md sm:shadow-lg p-4 pb-8"
                     >
                       <div class="flex flex-col">
-                        <SessionCardContent :content="comment.content" />
+                        <SessionCardContent :content="comment.content?.body!" />
                         <div
                           class="flex items-center relative z-20 w-full min-h-12 -mb-6 space-x-2"
                           :class="
@@ -122,7 +122,7 @@
                               : 'justify-start'
                           "
                         >
-                          <button
+                          <!-- <button
                             @click="toggleReactions(comment.id)"
                             class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                           >
@@ -141,7 +141,7 @@
                               />
                             </svg>
                           </button>
-                          <div v-if="comment.showReactions" class="absolute">
+                          <div v-if="comment.isShowReactions" class="absolute">
                             <div
                               class="absolute bottom-full left-0 mb-2 bg-white dark:bg-gray-700 rounded-lg shadow-lg p-2 flex space-x-2"
                             >
@@ -166,14 +166,14 @@
                             >
                               {{ reaction }} {{ count }}
                             </span>
-                          </div>
+                          </div> -->
                         </div>
                         <Avatar
                           :src="comment.avatar"
                           :username="comment.name"
                           :from="comment.location"
                           chip
-                          size="xl"
+                          size="lg"
                           class="-mb-14"
                           :class="commentId % 2 === 0 ? 'ml-2' : 'mr-2'"
                           :align="commentId % 2 === 0 ? 'start' : 'end'"
@@ -234,7 +234,7 @@ import { useSessionStore } from '~/store/session.store';
 
 definePageMeta({
   layout: 'session',
-  colorMode: 'light',
+  colorMode: 'dark',
   middleware: 'welcome',
 });
 
@@ -251,6 +251,8 @@ const {
 
 const isShowComments = ref(false);
 const isCommentsLoading = ref(true);
+const isShowNotes = ref(false);
+const isNotesLoading = ref(true);
 const newComment = ref('');
 const isReadMore = ref(false);
 
@@ -270,12 +272,9 @@ const onIconPrayerCount = () => {
 };
 
 const goNext = () => {
-  if (!isPrayed.value) {
-    prayForCurrentCard();
-    return;
-  } else if (isLastCard.value) {
+  if (isLastCard.value) {
+    navigateTo('/pray');
     restartSessionValues();
-    navigateTo('/session/finish');
     return;
   }
 
@@ -290,6 +289,7 @@ const restartSessionValues = () => {
 };
 
 const toggleComments = () => {
+  isShowNotes.value = false;
   isShowComments.value = !isShowComments.value;
   if (isShowComments.value) {
     isCommentsLoading.value = true;
@@ -299,14 +299,21 @@ const toggleComments = () => {
   }
 };
 
-const toggleNotes = (cardId: number) => {
-  // Implement notes functionality
+const toggleNotes = () => {
+  isShowComments.value = false;
+  isShowNotes.value = !isShowNotes.value;
+  if (isShowNotes.value) {
+    isNotesLoading.value = true;
+    sessionStore
+      .showCurrentCardNotes()
+      .finally(() => (isNotesLoading.value = false));
+  }
 };
 
 const toggleReactions = (commentId: number) => {
   const comment = currentCard.value?.comments.find((c) => c.id === commentId);
   if (comment) {
-    comment.showReactions = !comment.showReactions;
+    comment.isShowReactions = !comment.isShowReactions;
   }
 };
 
@@ -317,7 +324,7 @@ const addReaction = (commentId: number, reaction: string) => {
       comment.reactions[reaction] = 0;
     }
     comment.reactions[reaction]++;
-    comment.showReactions = false;
+    comment.isShowReactions = false;
   }
 };
 
@@ -328,9 +335,11 @@ const addComment = () => {
       name: 'You',
       avatar: '/your-avatar.jpg',
       location: 'Your Location',
-      content: newComment.value,
+      content: {
+        body: newComment.value,
+      },
       reactions: {},
-      showReactions: false,
+      isShowReactions: false,
     });
     newComment.value = '';
   }
@@ -362,7 +371,7 @@ onMounted(() => {
 
 onBeforeMount(() => {
   const { guest } = useAuth();
-  updateGuestTodayService().then(({ data }) => {
+  updateGuestTodayService().then(({ data: { data: data } }) => {
     guest.value = data.guest;
   });
 });

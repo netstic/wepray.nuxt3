@@ -39,7 +39,9 @@ export interface ISessionComment {
   name: string;
   avatar: string;
   location: string;
-  content: string;
+  content: {
+    body?: string;
+  };
   reactions: { [key: string]: number };
-  showReactions: boolean;
+  isShowReactions: boolean;
 }

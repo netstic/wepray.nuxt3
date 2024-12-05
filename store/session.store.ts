@@ -4,7 +4,10 @@ import {
   getGuestQuickSessionService,
   updateGuestPostPrayedService,
 } from '~/services/post/guest';
-import { getPostCommentsService } from '~/services/post/post';
+import {
+  getPostCommentsService,
+  getPostNotesService,
+} from '~/services/post/post';
 import type { ISession, ISessionItem } from '~/types/session';
 
 export const useSessionStore = defineStore({
@@ -50,7 +53,7 @@ export const useSessionStore = defineStore({
     initSession() {
       if (this.isUserOrGuestLoggedIn == 'guest') {
         const resp = getGuestQuickSessionService()
-          .then(({ data }) => {
+          .then(({ data: { data: data } }) => {
             this.lists = data.posts;
           })
           .finally(() => (this.isLoading = false));
@@ -96,9 +99,32 @@ export const useSessionStore = defineStore({
     showCurrentCardComments() {
       if (this.currentCard?.commentCount && !this.currentCard?.comments) {
         const resp = getPostCommentsService(this.currentCard?.id).then(
-          ({ data: { data } }) => {
+          ({
+            data: {
+              data: { data: data },
+            },
+          }) => {
             if (this.currentCard) {
               this.currentCard.comments = data;
+            }
+          }
+        );
+        return resp;
+      }
+
+      return Promise.resolve();
+    },
+
+    showCurrentCardNotes() {
+      if (this.currentCard?.notesCount && !this.currentCard?.notes) {
+        const resp = getPostNotesService(this.currentCard?.id).then(
+          ({
+            data: {
+              data: { data: data },
+            },
+          }) => {
+            if (this.currentCard) {
+              this.currentCard.notes = data;
             }
           }
         );

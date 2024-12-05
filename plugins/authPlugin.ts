@@ -15,9 +15,6 @@ export default defineNuxtPlugin(async () => {
     await getGuestAuthMe().catch(async (err) => {
       if (err?.response?.status == 401) {
         await refreshGuestToken();
-        await getGuestAuthMe({
-          Authorization: `Bearer ${guestToken.value}`,
-        });
       }
     });
   }

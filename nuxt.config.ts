@@ -1,5 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  compatibilityDate: '2024-12-01',
+
   i18n: {
     vueI18n: './i18n.config.ts', // if you are using custom path, default
   },
@@ -41,13 +43,11 @@ export default defineNuxtConfig({
         siteKey: process.env.RECAPTCHA_SITEKEY,
       },
 
-      apiBase: '', // can be overridden by NUXT_PUBLIC_API_BASE environment variable
+      apiBase: process.env.NUXT_PUBLIC_API_BASE, // can be overridden by NUXT_PUBLIC_API_BASE environment variable
     },
   },
 
   pinia: {
     storesDirs: ['./stores/**', './custom-folder/stores/**'],
   },
-
-  compatibilityDate: '2024-12-01',
 });

@@ -10,7 +10,9 @@
         :title="$t(currentCard.title)"
         class="app-layout-width pb-10 sm:pb-28"
       >
-        <div class="flex flex-col w-96 sm:w-[30rem] mx-auto gap-1">
+        <div
+          class="flex flex-col max-w-96 sm:max-w-full sm:w-[30rem] mx-auto gap-1"
+        >
           <div
             class="flex items-start flex-col gap-2 bg-white dark:border dark:border-gray-700 dark:bg-gray-800 min-h-44 rounded-2xl shadow-md sm:shadow-2xl p-6"
           >
@@ -21,7 +23,10 @@
               />
               <h2 class="text-xl font-bold">{{ currentCard.contentTitle }}</h2>
             </div>
-            <SessionCardContent :content="currentCard.content?.body!" />
+            <SessionCardContent
+              :content="currentCard.content?.body!"
+              class="text-lg"
+            />
           </div>
           <div class="flex justify-end items-center mb-8 mr-1">
             <div
@@ -62,7 +67,7 @@
                 <div class="mt-2 -mb-4 flex">
                   <div class="ml-4 sm:ml-8"></div>
                   <WeprayFormInput
-                    v-model="newComment"
+                    v-model.trim="newComment"
                     @keyup.enter="addComment"
                     :placeholder="$t('Add a comment...')"
                     class="flex-1"
@@ -169,6 +174,7 @@
                           </div> -->
                         </div>
                         <Avatar
+                          v-if="isShowComments"
                           :src="comment.avatar"
                           :username="comment.name"
                           :from="comment.location"
@@ -221,11 +227,13 @@
     </Teleport>
   </ClientOnly>
 
+  <PostGuestCommentDialog ref="guestCommentDialogRef" />
   <PostUsersPrayedDialog ref="usersPrayedDialogRef" />
 </template>
 
 <script setup lang="ts">
 import type {
+  PostGuestCommentDialog,
   PostUsersPrayedDialog,
   SessionIconPrayFireworks,
 } from '#build/components';
@@ -240,6 +248,8 @@ definePageMeta({
 
 const iconPrayRef = ref<InstanceType<typeof SessionIconPrayFireworks>>();
 const usersPrayedDialogRef = ref<InstanceType<typeof PostUsersPrayedDialog>>();
+const guestCommentDialogRef =
+  ref<InstanceType<typeof PostGuestCommentDialog>>();
 
 const sessionStore = useSessionStore();
 const {
@@ -247,6 +257,7 @@ const {
   isLastCard,
   isLoading: isSessionLoading,
   randomPrayedMessage,
+  isUserOrGuestLoggedIn,
 } = storeToRefs(sessionStore);
 
 const isShowComments = ref(false);
@@ -273,8 +284,9 @@ const onIconPrayerCount = () => {
 
 const goNext = () => {
   if (isLastCard.value) {
-    navigateTo('/pray');
+    sessionStore.reset();
     restartSessionValues();
+    navigateTo('/pray');
     return;
   }
 
@@ -329,20 +341,13 @@ const addReaction = (commentId: number, reaction: string) => {
 };
 
 const addComment = () => {
-  if (newComment.value.trim()) {
-    currentCard.value?.comments.push({
-      id: Date.now(),
-      name: 'You',
-      avatar: '/your-avatar.jpg',
-      location: 'Your Location',
-      content: {
-        body: newComment.value,
-      },
-      reactions: {},
-      isShowReactions: false,
-    });
-    newComment.value = '';
+  if (isUserOrGuestLoggedIn.value == 'guest') {
+    guestCommentDialogRef.value?.openDialog();
+    return;
   }
+
+  sessionStore.addComment(newComment.value);
+  newComment.value = '';
 };
 
 watch(currentCard, () => {

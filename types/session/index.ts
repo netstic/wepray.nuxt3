@@ -13,9 +13,9 @@ export interface ISessionItem {
   contentTitle: string;
   content: ISessionItemContent;
   notes: ISessionNote[];
-  notesCount?: number;
+  notesCount: number;
   comments: ISessionComment[];
-  commentCount?: number;
+  commentCount: number;
   prayedCount: number;
   isPrayed: boolean;
 }
@@ -31,14 +31,16 @@ export interface ISessionList {
 
 export interface ISessionNote {
   id: number;
-  content: string;
+  content: {
+    body?: string;
+  };
 }
 
 export interface ISessionComment {
   id: number;
   name: string;
-  avatar: string;
-  location: string;
+  avatar: string | null;
+  location: string | null;
   content: {
     body?: string;
   };

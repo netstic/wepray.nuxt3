@@ -12,6 +12,10 @@ export const getPostCommentsService = (postId: number) => {
   return useApi().get(`/api/v1/post/${postId}/comments`);
 };
 
+export const addPostCommentService = (postId: number, comment: string) => {
+  return useApi().post(`/api/v1/post/${postId}/comment`, { comment });
+};
+
 export const getPostNotesService = (postId: number) => {
   return useApi().get(`/api/v1/post/${postId}/notes`);
 };

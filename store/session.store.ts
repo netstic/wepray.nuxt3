@@ -5,6 +5,7 @@ import {
   updateGuestPostPrayedService,
 } from '~/services/post/guest';
 import {
+  addPostCommentService,
   getPostCommentsService,
   getPostNotesService,
 } from '~/services/post/post';
@@ -50,6 +51,13 @@ export const useSessionStore = defineStore({
     },
   },
   actions: {
+    reset() {
+      this.currentCardIndex = 0;
+      this.currentProgress = 0;
+      this.lists = [];
+      this.isLoading = true;
+    },
+
     initSession() {
       if (this.isUserOrGuestLoggedIn == 'guest') {
         const resp = getGuestQuickSessionService()
@@ -113,6 +121,18 @@ export const useSessionStore = defineStore({
       }
 
       return Promise.resolve();
+    },
+
+    addComment(newComment: string) {
+      if (!this.currentCard) return;
+      const resp = addPostCommentService(this.currentCard?.id, newComment);
+      resp.then(({ data: { data: data } }) => {
+        if (this.currentCard) {
+          this.currentCard.commentCount += 1;
+          this.currentCard.comments?.unshift(data.comment);
+        }
+      });
+      return resp;
     },
 
     showCurrentCardNotes() {

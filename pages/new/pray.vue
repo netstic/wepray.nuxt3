@@ -199,11 +199,33 @@
       </div>
 
       <!-- Achievement Section -->
-      <div class="mt-8">
+      <div class="mt-8 relative">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Recent Achievements
         </h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 relative">
+          <div
+            v-if="!isLoggedIn"
+            class="absolute rounded-lg inset-0 bg-white dark:bg-gray-800 background-opacity-75 flex items-center justify-center"
+          >
+            <div class="text-center">
+              <h3
+                class="text-xl font-semibold text-gray-900 dark:text-white mb-2"
+              >
+                Unlock Achievements!
+              </h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">
+                Sign up to track your progress and earn special achievements on
+                your prayer journey.
+              </p>
+              <button
+                @click="navigateToSignUp"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+              >
+                Sign Up Now
+              </button>
+            </div>
+          </div>
           <div
             v-for="achievement in recentAchievements"
             :key="achievement.id"
@@ -225,6 +247,30 @@
             </p>
           </div>
         </div>
+
+        <!-- Overlay for non-registered users -->
+        <!-- <div
+          v-if="!isLoggedIn"
+          class="absolute inset-0 bg-white dark:bg-gray-800 background-opacity-75 flex items-center justify-center"
+        >
+          <div class="text-center">
+            <h3
+              class="text-xl font-semibold text-gray-900 dark:text-white mb-2"
+            >
+              Unlock Achievements!
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-4">
+              Sign up to track your progress and earn special achievements on
+              your prayer journey.
+            </p>
+            <button
+              @click="navigateToSignUp"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+            >
+              Sign Up Now
+            </button>
+          </div>
+        </div> -->
       </div>
     </main>
   </div>
@@ -250,6 +296,9 @@ const quickPrayerCount = ref(2);
 const activeUsers = ref(124);
 const guidedSessions = ref(15);
 const isDarkMode = ref(false);
+
+// New: Login state
+const isLoggedIn = ref(false);
 
 // Recent achievements
 const recentAchievements = ref([
@@ -287,8 +336,15 @@ const toggleDarkMode = () => {
 const startSession = (type) => {
   router.push(`/prayer-session/${type}`);
 };
+
+// New: Navigation to sign up page
+const navigateToSignUp = () => {
+  navigateTo('/register');
+};
 </script>
 
 <style>
-/* Add any custom styles here */
+.background-opacity-75 {
+  --tw-bg-opacity: 0.8;
+}
 </style>

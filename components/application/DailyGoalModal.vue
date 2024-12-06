@@ -2,7 +2,7 @@
   <transition name="fade" mode="out-in">
     <div
       v-if="isOpen"
-      class="fixed top-0 left-0 w-full h-full bg-black/50 z-[9998]"
+      class="fixed top-0 left-0 w-full h-full bg-gray-100/85 dark:bg-gray-900/85 z-[9998]"
     >
       <div class="app-layout-width mx-auto relative">
         <button

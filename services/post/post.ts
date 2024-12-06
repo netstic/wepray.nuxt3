@@ -20,6 +20,10 @@ export const getPostNotesService = (postId: number) => {
   return useApi().get(`/api/v1/post/${postId}/notes`);
 };
 
+export const addPostNoteService = (postId: number, note: string) => {
+  return useApi().post(`/api/v1/post/${postId}/note`, { note });
+};
+
 export const updatePostPrayedService = (postId: number) => {
   return useApi().post(`/api/v1/post/${postId}/pray`);
 };

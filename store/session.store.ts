@@ -4,11 +4,6 @@ import {
   getGuestQuickSessionService,
   updateGuestPostPrayedService,
 } from '~/services/post/guest';
-import {
-  addPostCommentService,
-  getPostCommentsService,
-  getPostNotesService,
-} from '~/services/post/post';
 import type { ISession, ISessionItem } from '~/types/session';
 
 export const useSessionStore = defineStore({
@@ -100,58 +95,19 @@ export const useSessionStore = defineStore({
     },
 
     incrementCardPrayedCount() {
-      this.lists[this.currentCardIndex!].prayedCount += 1;
-      this.lists[this.currentCardIndex!].isPrayed = true;
-    },
-
-    showCurrentCardComments() {
-      if (this.currentCard?.commentCount && !this.currentCard?.comments) {
-        const resp = getPostCommentsService(this.currentCard?.id).then(
-          ({
-            data: {
-              data: { data: data },
-            },
-          }) => {
-            if (this.currentCard) {
-              this.currentCard.comments = data;
-            }
-          }
-        );
-        return resp;
-      }
-
-      return Promise.resolve();
-    },
-
-    addComment(newComment: string) {
       if (!this.currentCard) return;
-      const resp = addPostCommentService(this.currentCard?.id, newComment);
-      resp.then(({ data: { data: data } }) => {
-        if (this.currentCard) {
-          this.currentCard.commentCount += 1;
-          this.currentCard.comments?.unshift(data.comment);
-        }
-      });
-      return resp;
+      this.currentCard.prayedCount += 1;
+      this.currentCard.isPrayed = true;
     },
 
-    showCurrentCardNotes() {
-      if (this.currentCard?.notesCount && !this.currentCard?.notes) {
-        const resp = getPostNotesService(this.currentCard?.id).then(
-          ({
-            data: {
-              data: { data: data },
-            },
-          }) => {
-            if (this.currentCard) {
-              this.currentCard.notes = data;
-            }
-          }
-        );
-        return resp;
-      }
+    incrementCardCommentCount() {
+      if (!this.currentCard) return;
+      this.currentCard.commentCount += 1;
+    },
 
-      return Promise.resolve();
+    incrementCardNoteCount() {
+      if (!this.currentCard) return;
+      this.currentCard.notesCount += 1;
     },
   },
 });

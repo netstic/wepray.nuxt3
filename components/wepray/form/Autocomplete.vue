@@ -19,12 +19,12 @@
       <!-- Dropdown menu -->
       <div
         v-show="showOptions && filteredOptions.length > 0"
-        class="absolute z-[999] w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto"
+        class="absolute z-[999] w-full mt-1 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto"
       >
         <div
           v-for="option in filteredOptions"
           :key="option.value"
-          class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+          class="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
           @click="selectOption(option)"
         >
           {{ option.label }}

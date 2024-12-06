@@ -66,14 +66,18 @@
               v-if="isShowComments"
               :post-id="currentCard.id"
               :is-user-or-guest-logged-in="isUserOrGuestLoggedIn"
-              @open-guest-comment-dialog="guestCommentDialogRef?.openDialog()"
+              @open-guest-comment-dialog="
+                guestBecomeUserDialogRef?.openDialog('comment')
+              "
               @add-comment="sessionStore.incrementCardCommentCount()"
             />
             <SessionPostNotes
               v-else-if="isShowNotes"
               :post-id="currentCard.id"
               :is-user-or-guest-logged-in="isUserOrGuestLoggedIn"
-              @open-guest-note-dialog="guestCommentDialogRef?.openDialog()"
+              @open-guest-note-dialog="
+                guestBecomeUserDialogRef?.openDialog('note')
+              "
               @add-note="sessionStore.incrementCardNoteCount()"
             />
           </transition>
@@ -113,13 +117,13 @@
     </Teleport>
   </ClientOnly>
 
-  <PostGuestCommentDialog ref="guestCommentDialogRef" />
+  <PostGuestBecomeUserDialog ref="guestBecomeUserDialogRef" />
   <PostUsersPrayedDialog ref="usersPrayedDialogRef" />
 </template>
 
 <script setup lang="ts">
 import type {
-  PostGuestCommentDialog,
+  PostGuestBecomeUserDialog,
   PostUsersPrayedDialog,
   SessionIconPrayFireworks,
   SessionPostComments,
@@ -135,8 +139,8 @@ definePageMeta({
 
 const iconPrayRef = ref<InstanceType<typeof SessionIconPrayFireworks>>();
 const usersPrayedDialogRef = ref<InstanceType<typeof PostUsersPrayedDialog>>();
-const guestCommentDialogRef =
-  ref<InstanceType<typeof PostGuestCommentDialog>>();
+const guestBecomeUserDialogRef =
+  ref<InstanceType<typeof PostGuestBecomeUserDialog>>();
 
 const sessionStore = useSessionStore();
 const {

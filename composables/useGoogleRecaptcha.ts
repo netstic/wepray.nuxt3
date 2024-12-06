@@ -2,6 +2,9 @@ import { useReCaptcha } from 'vue-recaptcha-v3';
 export class RecaptchaAction {
   public static readonly login = new RecaptchaAction('login');
   public static readonly post = new RecaptchaAction('post');
+  public static readonly guestBecomeUser = new RecaptchaAction(
+    'guestBecomeUser'
+  );
   private constructor(public readonly name: string) {}
 }
 /**

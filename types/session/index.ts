@@ -47,3 +47,13 @@ export interface ISessionComment {
   reactions: { [key: string]: number };
   isShowReactions: boolean;
 }
+
+export interface ISessionGuestRegister {
+  name: string | null;
+  username: string | null;
+  email: string | null;
+  country: string | null;
+  city: string | null;
+  'g-recaptcha-response'?: string;
+  password: string | null;
+}

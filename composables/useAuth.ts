@@ -1,4 +1,5 @@
 import { authGuestMe, authUserMe } from '~/services/auth';
+import type { IResponse } from '~/types';
 import type { TAuthProvider } from '~/types/user/auth';
 import type {
   ILoginResponse,
@@ -67,9 +68,10 @@ export const useAuth = () => {
   };
 
   const refreshGuestToken = () => {
-    const resp = useApi().post<IGuestLoginResponse>('/api/v1/guest/refresh');
+    const resp = useApi().post<IResponse<IGuestLoginResponse>>(
+      '/api/v1/guest/refresh'
+    );
     resp.then(({ data: { data: data } }) => {
-      console.log(data);
       guestToken.value = data.authorization.token;
       guest.value = data.guest;
       useApi().defaults.headers.common[
@@ -80,9 +82,13 @@ export const useAuth = () => {
   };
 
   const login = (payload: ILogin, headers?: Record<string, string>) => {
-    const resp = useApi().post<ILoginResponse>('/api/v1/auth/login', payload, {
-      headers,
-    });
+    const resp = useApi().post<IResponse<ILoginResponse>>(
+      '/api/v1/auth/login',
+      payload,
+      {
+        headers,
+      }
+    );
     resp.then(
       ({ data: { data: data } }) => {
         token.value = data.authorization.token;
@@ -96,10 +102,8 @@ export const useAuth = () => {
     return resp;
   };
 
-  const logout = (payload: { token: string | null }) => {
-    const resp = useApi().post<IGuestLoginResponse>('/api/v1/auth/logout', {
-      token: payload.token,
-    });
+  const logout = () => {
+    const resp = useApi().post<IGuestLoginResponse>('/api/v1/auth/logout');
 
     resp.then(() => {
       resetAuth();
@@ -119,9 +123,12 @@ export const useAuth = () => {
   };
 
   const guestLoginOrCreate = () => {
-    const resp = useApi().post<IGuestLoginResponse>('/api/v1/guest/login', {
-      token: guestToken.value,
-    });
+    const resp = useApi().post<IResponse<IGuestLoginResponse>>(
+      '/api/v1/guest/login',
+      {
+        token: guestToken.value,
+      }
+    );
 
     resp.then(
       ({ data: { data: data } }) => {

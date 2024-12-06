@@ -63,7 +63,7 @@ export default {
   'Old Password': 'Senha Antiga',
   Confirm: 'Confirme',
   'Confirm password': 'Confirme a Senha',
-  'Create Account': 'Criar Conta em português-Brasil',
+  'Create Account': 'Criar conta',
   'Remember me': 'Lembre-se de mim',
   'Forgot your password?': 'Esqueceu sua senha?',
   'Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.':

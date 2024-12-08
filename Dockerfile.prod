@@ -1,26 +1,47 @@
+# Build stage
 FROM node:20-alpine as build
 
 WORKDIR /app
 
-COPY package.json /app
+# Instalar pnpm globalmente
+RUN npm install -g pnpm
 
-RUN npm install
+# Copiar arquivos de configuração do pacote
+COPY package.json pnpm-lock.yaml ./
 
-COPY . /app
+# Instalar dependências
+RUN pnpm install
 
-RUN npm cache clean --force
-RUN rm -rf node_modules
-RUN rm -rf .nuxt
-RUN npm install
-RUN npm run build
+# Copiar o restante do código da aplicação
+COPY . .
 
-# Create a new Docker image and name it "prod"
+# Construir a aplicação
+RUN pnpm run build
+
+# Production stage
 FROM node:20-alpine as prod
 
 WORKDIR /app
 
-# Copy the built application from the "build" image into the "prod" image
+# Instalar pnpm globalmente
+RUN npm install -g pnpm
+
+# Copiar arquivos de configuração do pacote
+COPY package.json pnpm-lock.yaml ./
+
+# Instalar dependências de produção
+RUN pnpm install --prod
+
+# Copiar a aplicação construída do estágio de build
 COPY --from=build /app/.output /app/.output
 
-# Start is the same as before
+# Configurar variáveis de ambiente
+ENV HOST=0.0.0.0
+ENV PORT=3000
+ENV NODE_ENV=production
+
+# Expor a porta da aplicação
+EXPOSE 3000
+
+# Iniciar o servidor
 CMD ["node", ".output/server/index.mjs"]

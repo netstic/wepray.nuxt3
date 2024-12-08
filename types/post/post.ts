@@ -61,6 +61,15 @@ export interface IPostUser {
   profile: string;
 }
 
+export interface IPostUserPrayed {
+  id: number;
+  name: string;
+  counter: number;
+  post_id: number;
+  user_id: number;
+  username?: string;
+}
+
 export interface IPostAvatars {
   x60: string;
   x152: string;

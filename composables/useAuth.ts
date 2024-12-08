@@ -1,4 +1,5 @@
 import { authGuestMe, authUserMe } from '~/services/auth';
+import type { IResponse } from '~/types';
 import type { TAuthProvider } from '~/types/user/auth';
 import type {
   ILoginResponse,
@@ -39,7 +40,11 @@ export const useAuth = () => {
   const getAuthMe = () => {
     const resp = authUserMe();
     resp.then(
-      ({ data }) => {
+      ({
+        data: {
+          data: { data: data },
+        },
+      }) => {
         user.value = data;
       },
       (e) => {
@@ -49,12 +54,10 @@ export const useAuth = () => {
     return resp;
   };
 
-  const getGuestAuthMe = () => {
-    console.log(useApi().defaults.headers.common['Authorization']);
-    console.log(guestToken.value);
-    const resp = authGuestMe();
+  const getGuestAuthMe = (headers?: Record<string, string>) => {
+    const resp = authGuestMe(headers);
     resp.then(
-      ({ data }) => {
+      ({ data: { data: data } }) => {
         guest.value = data;
       },
       (e) => {
@@ -64,12 +67,30 @@ export const useAuth = () => {
     return resp;
   };
 
-  const login = (payload: ILogin, headers?: Record<string, string>) => {
-    const resp = useApi().post<ILoginResponse>('/api/v1/auth/login', payload, {
-      headers,
+  const refreshGuestToken = () => {
+    const resp = useApi().post<IResponse<IGuestLoginResponse>>(
+      '/api/v1/guest/refresh'
+    );
+    resp.then(({ data: { data: data } }) => {
+      guestToken.value = data.authorization.token;
+      guest.value = data.guest;
+      useApi().defaults.headers.common[
+        'Authorization'
+      ] = `Bearer ${data.authorization.token}`;
     });
+    return resp;
+  };
+
+  const login = (payload: ILogin, headers?: Record<string, string>) => {
+    const resp = useApi().post<IResponse<ILoginResponse>>(
+      '/api/v1/auth/login',
+      payload,
+      {
+        headers,
+      }
+    );
     resp.then(
-      ({ data }) => {
+      ({ data: { data: data } }) => {
         token.value = data.authorization.token;
         useApi().defaults.headers.common[
           'Authorization'
@@ -81,10 +102,8 @@ export const useAuth = () => {
     return resp;
   };
 
-  const logout = (payload: { token: string | null }) => {
-    const resp = useApi().post<IGuestLoginResponse>('/api/v1/auth/logout', {
-      token: payload.token,
-    });
+  const logout = () => {
+    const resp = useApi().post<IGuestLoginResponse>('/api/v1/auth/logout');
 
     resp.then(() => {
       resetAuth();
@@ -104,14 +123,20 @@ export const useAuth = () => {
   };
 
   const guestLoginOrCreate = () => {
-    const resp = useApi().post<IGuestLoginResponse>('/api/v1/guest/login', {
-      token: guestToken.value,
-    });
+    const resp = useApi().post<IResponse<IGuestLoginResponse>>(
+      '/api/v1/guest/login',
+      {
+        token: guestToken.value,
+      }
+    );
 
     resp.then(
-      ({ data }) => {
+      ({ data: { data: data } }) => {
         guestToken.value = data.authorization.token;
-        setGuestTokenAndAuthMe(data.authorization.token);
+        useApi().defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${data.authorization.token}`;
+        getGuestAuthMe();
       },
       (e) => {}
     );
@@ -148,5 +173,7 @@ export const useAuth = () => {
     isGuestLoggedIn,
     guestLoginOrCreate,
     setGuestTokenAndAuthMe,
+    getGuestAuthMe,
+    refreshGuestToken,
   };
 };

@@ -25,8 +25,8 @@ definePageMeta({
   layout: false,
   colorMode: 'light',
   middleware: () => {
-    const { isGuestLoggedIn, isLoggedIn } = useAuth();
-    if (isGuestLoggedIn.value || isLoggedIn.value) {
+    const { guestToken, token } = useAuth();
+    if (guestToken.value || token.value) {
       return navigateTo('/pray');
     }
   },

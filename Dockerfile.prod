@@ -1,0 +1,47 @@
+# Build stage
+FROM node:20-alpine as build
+
+WORKDIR /app
+
+# Instalar pnpm globalmente
+RUN npm install -g pnpm
+
+# Copiar arquivos de configuração do pacote
+COPY package.json pnpm-lock.yaml ./
+
+# Instalar dependências
+RUN pnpm install
+
+# Copiar o restante do código da aplicação
+COPY . .
+
+# Construir a aplicação
+RUN pnpm run build
+
+# Production stage
+FROM node:20-alpine as prod
+
+WORKDIR /app
+
+# Instalar pnpm globalmente
+RUN npm install -g pnpm
+
+# Copiar arquivos de configuração do pacote
+COPY package.json pnpm-lock.yaml ./
+
+# Instalar dependências de produção
+RUN pnpm install --prod
+
+# Copiar a aplicação construída do estágio de build
+COPY --from=build /app/.output /app/.output
+
+# Configurar variáveis de ambiente
+ENV HOST=0.0.0.0
+ENV PORT=3000
+ENV NODE_ENV=production
+
+# Expor a porta da aplicação
+EXPOSE 3000
+
+# Iniciar o servidor
+CMD ["node", ".output/server/index.mjs"]

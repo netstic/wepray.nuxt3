@@ -12,7 +12,7 @@
           <LayoutSessionMainContent
             v-if="currentStep"
             :key="currentStep.id"
-            :title="currentStep.title"
+            :title="$t(currentStep.title)"
             class="app-layout-width"
             :class="[currentStep?.id === 'start' ? 'pt-[64px] pb-[250px]' : '']"
           >
@@ -27,11 +27,11 @@
               >
                 <component :is="item.icon" v-if="item.icon" size="lg" />
                 <h3 class="text-lg font-semibold">
-                  {{ item.title }}
+                  {{ $t(item.title!) }}
                 </h3>
               </div>
               <p class="text-gray-700 dark:text-gray-300">
-                {{ item.text }}
+                {{ $t(item.text) }}
               </p>
             </div>
 
@@ -43,7 +43,7 @@
                 {{ $t('Lets start!') }}
               </h1>
               <h2 class="text-lg text-gray-700 dark:text-gray-300 max-w-lg">
-                {{ currentStep.options[0].text }}
+                {{ $t(currentStep.options[0].text) }}
               </h2>
             </div>
 
@@ -59,13 +59,27 @@
                   : 'wp-btn-session-item-unselected',
               ]"
             >
-              <component
-                :is="option.icon"
-                v-if="option.icon"
-                class="wp-btn-session-item-icon"
-                size="xl"
-              />
-              <span class="wp-btn-session-item-text">{{ option.text }}</span>
+              <template v-if="currentStep.id === 'daily_goal'">
+                <div class="w-full flex items-center gap-2 justify-between">
+                  <span class="wp-btn-session-item-text">{{
+                    $t(option.text)
+                  }}</span>
+                  <span class="text-gray-500 dark:text-gray-400">
+                    {{ option.value }} {{ $t('prayers / day') }}
+                  </span>
+                </div>
+              </template>
+              <template v-else>
+                <component
+                  :is="option.icon"
+                  v-if="option.icon"
+                  class="wp-btn-session-item-icon"
+                  size="xl"
+                />
+                <span class="wp-btn-session-item-text">{{
+                  $t(option.text)
+                }}</span>
+              </template>
             </button>
           </LayoutSessionMainContent>
         </transition>
@@ -73,15 +87,16 @@
 
       <LayoutSessionFooter>
         <template #append>
-          <button
+          <WeprayButton
             @click="nextStep"
             :disabled="!canContinue"
+            :loading="isNextStepLoading"
             class="wp-btn-session-submit w-full sm:w-auto"
           >
             {{
-              currentStep?.id === 'start' ? t('Start Praying') : t('Continue')
+              currentStep?.id === 'start' ? $t('Start Praying') : $t('Continue')
             }}
-          </button>
+          </WeprayButton>
         </template>
       </LayoutSessionFooter>
     </div>
@@ -97,31 +112,14 @@ import BookOutline from '~/components/icon/BookOutline.vue';
 import HeartShareOutline from '~/components/icon/HeartShareOutline.vue';
 import UsersGroupOutline from '~/components/icon/UsersGroupOutline.vue';
 import StarsOutline from '~/components/icon/StarsOutline.vue';
-import ThreeSmall from '~/components/icon/ThreeSmall.vue';
-import FiveSmall from '~/components/icon/FiveSmall.vue';
-import TenSmall from '~/components/icon/TenSmall.vue';
-import TwentySmall from '~/components/icon/TwentySmall.vue';
-import { useWelcomeSession } from '~/composables/useWelcomeSession';
+import { updateGuestWelcomeService } from '~/services/guest';
 
 definePageMeta({
   colorMode: 'dark',
-  middleware: (from) => {
-    const { guest, isLoggedIn, isGuestLoggedIn, guestLoginOrCreate } =
-      useAuth();
-    if (guest.value?.daily_goal || isLoggedIn.value) {
-      return navigateTo('/pray');
-    }
-
-    if (!isGuestLoggedIn.value) {
-      guestLoginOrCreate();
-    }
-  },
 });
 
-const { t } = useI18n();
-
-const { welcomeCookie, setWelcomeCookie } = useWelcomeSession();
-
+const { guest } = useAuth();
+const isNextStepLoading = ref(false);
 const route = useRoute();
 
 interface IStepperOption {
@@ -134,90 +132,89 @@ const stepperOptions: Record<string, IStepperOption[]> = {
   goal: [
     {
       value: 'daily_habit',
-      text: t('Daily prayer routine'),
+      text: 'Daily prayer routine',
       icon: markRaw(AlarmOutline),
     },
     {
       value: 'community_connection',
-      text: t('Connect with community'),
+      text: 'Connect with community',
       icon: markRaw(UserHeartOutline),
     },
     {
       value: 'study_prayer',
-      text: t('Find new ways to pray'),
+      text: 'Find new ways to pray',
       icon: markRaw(BookOutline),
     },
   ],
   feature: [
     {
-      title: t('Upgrade your prayer life'),
-      text: t(
-        'Take your prayer life to a new level, receiving new requests and suggestions daily'
-      ),
+      title: 'Upgrade your prayer life',
+      text: 'Take your prayer life to a new level, receiving new requests and suggestions daily',
       icon: markRaw(StarsOutline),
     },
     {
-      title: t('Share your heart'),
-      text: t(
-        'Submit prayer requests and receive support from a caring community'
-      ),
+      title: 'Share your heart',
+      text: 'Submit prayer requests and receive support from a caring community',
       icon: markRaw(HeartShareOutline),
     },
     {
-      title: t('Connect with Others'),
-      text: t(
-        'Help other people praying for them and sending encouragement messages'
-      ),
+      title: 'Connect with Others',
+      text: 'Help other people praying for them and sending encouragement messages',
       icon: markRaw(UsersGroupOutline),
     },
   ],
   daily: [
     {
       value: 3,
-      text: t("I'm new to praying"),
-      icon: markRaw(ThreeSmall),
+      text: "I'm new to praying",
+      // icon: markRaw(ThreeSmall),
     },
     {
       value: 5,
-      text: t('I already pray daily'),
-      icon: markRaw(FiveSmall),
+      text: 'I already pray daily',
+      // icon: markRaw(FiveSmall),
     },
     {
       value: 10,
-      text: t("I'm growing"),
-      icon: markRaw(TenSmall),
+      text: 'I want to grow',
+      // icon: markRaw(TenSmall),
     },
     {
       value: 20,
-      text: t('I want a challenge'),
-      icon: markRaw(TwentySmall),
+      text: 'I want a challenge',
+      // icon: markRaw(TwentySmall),
     },
   ],
   start: [
     {
-      text: t(
-        'Start your first prayer session, praying for the requests we have specially prepared for you.'
-      ),
+      text: 'Start your first prayer session, praying for the requests we have specially prepared for you.',
     },
   ],
 };
 
-const stepper = ref([
+interface IStepper {
+  id: string;
+  title: string;
+  options: IStepperOption[];
+  selectedOption: IStepperOption | null | { value: true };
+}
+
+const stepper = ref<IStepper[]>([
   {
     id: 'goal',
-    title: t('My goal is...'),
+    title: 'My goal is...',
     options: stepperOptions.goal,
     selectedOption: null,
   },
   {
     id: 'feature',
-    title: t('We can help you!'),
+    title: 'We can help you!',
     options: stepperOptions.feature,
     selectedOption: { value: true },
   },
   {
     id: 'daily_goal',
-    title: t('What is your daily goal?'),
+    title: 'What is your daily goal?',
     options: stepperOptions.daily,
     selectedOption: null,
   },
@@ -246,24 +243,23 @@ const isSelected = (option: any) => {
   return currentStep.value?.selectedOption === option;
 };
 
-const nextStep = () => {
+const nextStep = async () => {
   if (!currentStep.value) return;
+  isNextStepLoading.value = true;
   const currentStepIndex = stepper.value.indexOf(currentStep.value);
 
-  if (!['feature', 'start'].includes(currentStep.value?.id)) {
-    if (!welcomeCookie.value) {
-      setWelcomeCookie({});
+  if (!['feature', 'start'].includes(currentStep.value?.id) && guest.value) {
+    if (currentStep.value?.id === 'goal') {
+      guest.value.goal = currentStep.value?.selectedOption?.value as string;
+    } else if (currentStep.value?.id === 'daily_goal') {
+      guest.value.daily_goal = currentStep.value?.selectedOption
+        ?.value as number;
     }
 
-    if (currentStep.value?.id === 'daily_goal') {
-      welcomeCookie.value.isFirstTimeUser = true;
-    }
-
-    welcomeCookie.value[currentStep.value?.id] =
-      currentStep.value?.selectedOption?.value;
-
-    setWelcomeCookie(welcomeCookie.value);
+    await updateGuestWelcomeService(guest.value);
   }
+
+  isNextStepLoading.value = false;
 
   if (currentStepIndex < stepper.value.length - 1) {
     return navigateTo({
@@ -299,5 +295,7 @@ onBeforeMount(() => {
   if (!route.query.step) {
     navigateTo({ name: 'welcome', query: { step: stepper.value[0].id } });
   }
+
+  useAuth().guestLoginOrCreate();
 });
 </script>

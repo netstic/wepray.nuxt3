@@ -25,10 +25,13 @@
 </template>
 
 <script setup lang="ts">
+import { useSessionStore } from '~/store/session.store';
+
 const isDialogOpen = ref(false);
 
 const endSession = () => {
-  alert('endSession');
+  useSessionStore().reset();
+  navigateTo('/pray');
 };
 
 const openDialog = () => {

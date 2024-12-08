@@ -1,21 +1,27 @@
 export interface ISession {
+  prayedMessages: string[];
   currentCardIndex: number;
   currentProgress: number;
-  prayerCount: number;
   isLoading: boolean;
   lists: ISessionItem[];
 }
 
 export interface ISessionItem {
   id: number;
-  avatar: string;
   title: string;
-  content: string;
+  avatar: string;
+  contentTitle: string;
+  content: ISessionItemContent;
   notes: ISessionNote[];
+  notesCount: number;
   comments: ISessionComment[];
+  commentCount: number;
   prayedCount: number;
+  isPrayed: boolean;
+}
 
-  list: ISessionList;
+export interface ISessionItemContent {
+  body?: string;
 }
 
 export interface ISessionList {
@@ -25,15 +31,29 @@ export interface ISessionList {
 
 export interface ISessionNote {
   id: number;
-  content: string;
+  content: {
+    body?: string;
+  };
 }
 
 export interface ISessionComment {
   id: number;
   name: string;
-  avatar: string;
-  location: string;
-  content: string;
+  avatar: string | null;
+  location: string | null;
+  content: {
+    body?: string;
+  };
   reactions: { [key: string]: number };
-  showReactions: boolean;
+  isShowReactions: boolean;
+}
+
+export interface ISessionGuestRegister {
+  name: string | null;
+  username: string | null;
+  email: string | null;
+  country: string | null;
+  city: string | null;
+  'g-recaptcha-response'?: string;
+  password: string | null;
 }
